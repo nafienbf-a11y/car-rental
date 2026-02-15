@@ -44,7 +44,7 @@ const MonthlyBookingsChart = () => {
                 <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 shadow-2xl">
                     <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-1">{payload[0].payload.month}</p>
                     <p className="text-white font-bold">{payload[0].value} bookings</p>
-                    <p className="text-brand-blue text-sm font-semibold">${payload[0].payload.revenue.toLocaleString()}</p>
+                    <p className="text-brand-blue text-sm font-semibold">{payload[0].payload.revenue.toLocaleString()} MAD</p>
                 </div>
             );
         }

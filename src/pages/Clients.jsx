@@ -47,8 +47,8 @@ const Clients = () => {
     });
 
     // Get client booking count
-    const getClientBookingCount = (clientName) => {
-        return bookings.filter(b => b.customer === clientName).length;
+    const getClientBookingCount = (clientId) => {
+        return bookings.filter(b => b.clientId === clientId).length;
     };
 
     return (
@@ -194,7 +194,7 @@ const Clients = () => {
                                             </td>
                                             <td className="py-4 px-4">
                                                 <span className="px-3 py-1 bg-brand-blue/10 text-brand-blue rounded-lg text-xs font-bold">
-                                                    {getClientBookingCount(client.name)} bookings
+                                                    {getClientBookingCount(client.id)} bookings
                                                 </span>
                                             </td>
                                             <td className="py-4 px-4">

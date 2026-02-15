@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Upload } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import VehicleCard from '../components/fleet/VehicleCard';
 import AddVehicleModal from '../components/fleet/AddVehicleModal';
@@ -9,16 +9,39 @@ import LoadingSkeleton from '../components/common/LoadingSkeleton';
 import { useNotification } from '../context/NotificationContext';
 
 const Fleet = () => {
-    const { vehicles, addVehicle, updateVehicle, deleteVehicle, setVehicleMaintenance, setVehicleAvailable, searchTerm, setIsAddVehicleModalOpen, isAddVehicleModalOpen } = useApp();
+    const { vehicles, bookings, addVehicle, updateVehicle, deleteVehicle, setVehicleMaintenance, setVehicleAvailable, searchTerm, setIsAddVehicleModalOpen, isAddVehicleModalOpen, migrateVehicles } = useApp();
     const { showNotification } = useNotification();
     const [statusFilter, setStatusFilter] = useState('All');
     const [loading, setLoading] = useState(false);
     const [editingVehicle, setEditingVehicle] = useState(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [migrating, setMigrating] = useState(false);
 
-    // Filter vehicles
+    // Calculate dynamic status for all vehicles
+    const vehiclesWithStatus = useMemo(() => {
+        return vehicles.map(vehicle => {
+            // Maintenance overrides everything
+            if (vehicle.status === 'Maintenance') return vehicle;
+
+            // Check for active booking
+            const hasActiveBooking = bookings.some(b =>
+                b.vehicleId === vehicle.id &&
+                b.status === 'Active'
+            );
+
+            // If active booking, force Rented. Otherwise, force Available 
+            // (unless it was Maintenance, which is handled above).
+            // We override manual 'Rented' status if there is no active booking to ensure "Available as of today" is accurate.
+            return {
+                ...vehicle,
+                status: hasActiveBooking ? 'Rented' : 'Available'
+            };
+        });
+    }, [vehicles, bookings]);
+
+    // Filter vehicles based on dynamic status
     const filteredVehicles = useMemo(() => {
-        let result = vehicles;
+        let result = vehiclesWithStatus;
 
         // Filter by status
         if (statusFilter !== 'All') {
@@ -36,7 +59,7 @@ const Fleet = () => {
         }
 
         return result;
-    }, [vehicles, statusFilter, searchTerm]);
+    }, [vehiclesWithStatus, statusFilter, searchTerm]);
 
     const handleAddVehicle = (vehicle) => {
         addVehicle(vehicle);
@@ -72,6 +95,20 @@ const Fleet = () => {
         showNotification('Vehicle updated to Available', 'success');
     };
 
+    const handleMigrate = async () => {
+        if (!window.confirm('Import vehicles from local storage? This will skip duplicates.')) return;
+
+        setMigrating(true);
+        const result = await migrateVehicles();
+        setMigrating(false);
+
+        if (result.success) {
+            showNotification(result.message, 'success');
+        } else {
+            showNotification(result.message, 'error');
+        }
+    };
+
     const statusFilters = ['All', 'Available', 'Rented', 'Maintenance'];
 
     return (
@@ -82,13 +119,24 @@ const Fleet = () => {
                     <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">Fleet Management</h1>
                     <p className="text-zinc-500 font-medium tracking-tight">Manage your vehicle inventory</p>
                 </div>
-                <Button
-                    variant="primary"
-                    icon={Plus}
-                    onClick={() => setIsAddVehicleModalOpen(true)}
-                >
-                    Add Vehicle
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        variant="ghost"
+                        icon={Upload}
+                        onClick={handleMigrate}
+                        disabled={migrating}
+                        className="text-zinc-400 hover:text-white"
+                    >
+                        {migrating ? 'Importing...' : 'Import Legacy Data'}
+                    </Button>
+                    <Button
+                        variant="primary"
+                        icon={Plus}
+                        onClick={() => setIsAddVehicleModalOpen(true)}
+                    >
+                        Add Vehicle
+                    </Button>
+                </div>
             </div>
 
             {/* Status Filter Tabs */}

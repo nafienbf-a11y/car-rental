@@ -153,7 +153,10 @@ const DashboardTimeline = () => {
                     {/* Header Row (Days) */}
                     <div className="flex mb-4">
                         <div className="w-32 flex-shrink-0"></div> {/* Spacer for car names */}
-                        <div className="flex-1 grid grid-cols-[repeat(31,minmax(0,1fr))] gap-px">
+                        <div
+                            className="flex-1 grid gap-px"
+                            style={{ gridTemplateColumns: `repeat(${daysInMonth}, minmax(0, 1fr))` }}
+                        >
                             {days.map(day => {
                                 const isToday = isCurrentMonth && day === todayDay;
 
@@ -190,9 +193,14 @@ const DashboardTimeline = () => {
                                     </div>
 
                                     {/* Timeline Track */}
-                                    <div className="flex-1 relative h-8 bg-zinc-900/50 rounded-lg border border-zinc-800/50">
+                                    <div className={`flex-1 relative h-8 rounded-lg border ${vehicle.status === 'Maintenance'
+                                        ? 'bg-red-900/10 border-red-900/30'
+                                        : 'bg-zinc-900/50 border-zinc-800/50'}`}>
                                         {/* Grid Lines */}
-                                        <div className="absolute inset-0 grid grid-cols-[repeat(31,minmax(0,1fr))] gap-px pointer-events-none">
+                                        <div
+                                            className="absolute inset-0 grid gap-px pointer-events-none"
+                                            style={{ gridTemplateColumns: `repeat(${daysInMonth}, minmax(0, 1fr))` }}
+                                        >
                                             {days.map(day => {
                                                 const isToday = isCurrentMonth && day === todayDay;
                                                 return (
@@ -214,12 +222,9 @@ const DashboardTimeline = () => {
                                                 return (
                                                     <div
                                                         key={booking.id}
-                                                        className={`absolute top-1 bottom-1 rounded-md shadow-sm border border-opacity-20 ${booking.status === 'Active'
-                                                            ? 'bg-brand-blue/80 border-brand-blue'
-                                                            : 'bg-brand-red/80 border-brand-red'
-                                                            }`}
+                                                        className="absolute top-1 bottom-1 rounded-md shadow-sm border border-opacity-20 bg-brand-blue/80 border-brand-blue"
                                                         style={style}
-                                                        title={`${booking.customer}: ${new Date(booking.startDate).toLocaleDateString()} - ${new Date(booking.endDate).toLocaleDateString()}`}
+                                                        title={`${booking.id}: ${new Date(booking.startDate).toLocaleDateString()} - ${new Date(booking.endDate).toLocaleDateString()}`}
                                                     >
                                                     </div>
                                                 );

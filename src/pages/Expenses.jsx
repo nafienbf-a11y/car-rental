@@ -19,14 +19,14 @@ const Expenses = () => {
         return vehicles.find(v => v.id === vehicleId);
     };
 
-    const getCategoryColor = (type) => {
+    const getCategoryColor = (category) => {
         const colors = {
             Oil: 'primary',
             Tires: 'warning',
             Insurance: 'success',
             Repair: 'danger',
         };
-        return colors[type] || 'primary';
+        return colors[category] || 'primary';
     };
 
     const handleEdit = (expense) => {
@@ -45,7 +45,7 @@ const Expenses = () => {
         setEditingExpense(null);
     };
 
-    const totalExpenses = expenses.reduce((sum, e) => sum + e.cost, 0);
+    const totalExpenses = expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
 
     return (
         <div className="space-y-6">
@@ -154,15 +154,15 @@ const Expenses = () => {
                                         <span className="text-white font-bold text-sm">{getVehicleName(expense.vehicleId)}</span>
                                     </td>
                                     <td className="p-5">
-                                        <span className="px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest bg-zinc-900 text-zinc-400 border border-zinc-800">
-                                            {expense.type}
+                                        <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest bg-zinc-900 text-zinc-400 border border-zinc-800 ${getCategoryColor(expense.category)}`}>
+                                            {expense.category}
                                         </span>
                                     </td>
                                     <td className="p-5">
                                         <span className="text-zinc-400 text-sm font-medium">{expense.description}</span>
                                     </td>
                                     <td className="p-5">
-                                        <span className="text-brand-red font-black text-sm">{formatCurrency(expense.cost)}</span>
+                                        <span className="text-brand-red font-black text-sm">{formatCurrency(expense.amount)}</span>
                                     </td>
                                     <td className="p-5">
                                         <div className="flex items-center gap-2">

@@ -20,7 +20,7 @@ const Dashboard = () => {
                 const expenseDate = new Date(expense.date);
                 return expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear;
             })
-            .reduce((sum, expense) => sum + expense.cost, 0);
+            .reduce((sum, expense) => sum + (expense.amount || 0), 0); // Use .amount not .cost
     };
 
     // Generate dynamic recent activity
@@ -121,7 +121,7 @@ const Dashboard = () => {
                     color="blue"
                 />
                 <StatCard
-                    title="Monthly Maintenance"
+                    title="Monthly Expenses"
                     value={formatCurrency(getMonthlyMaintenance())}
                     icon={Wrench}
                     color="red"

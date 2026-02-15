@@ -20,11 +20,11 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
 
         const expenseData = {
             id: expense?.id || generateId('exp-'),
-            type: formData.type,
+            category: formData.type, // Map 'type' to 'category' for DB
             vehicleId: formData.vehicleId,
-            cost: parseFloat(formData.cost),
+            amount: parseFloat(formData.cost), // Send 'amount' to match DB column
             description: formData.description,
-            date: new Date().toLocaleDateString('en-CA') // YYYY-MM-DD in local time
+            date: formData.date // Use selected date
         };
 
         if (expense) {

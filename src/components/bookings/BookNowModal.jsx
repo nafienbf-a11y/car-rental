@@ -10,10 +10,11 @@ import { useApp } from '../../context/AppContext';
 import { useNotification } from '../../context/NotificationContext';
 
 const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) => {
-    const { bookings } = useApp();
+    const { bookings, clients } = useApp();
     const { showNotification } = useNotification();
     const [formData, setFormData] = useState({
         vehicleId: '',
+        clientId: '', // For linking to existing client
         customer: '',
         email: '',
         phone: '',
@@ -87,6 +88,22 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
 
 
     const availableVehicles = vehicles.filter(v => v.status !== 'Maintenance');
+
+    const handleClientSelect = (e) => {
+        const clientId = e.target.value;
+        if (!clientId) return;
+
+        const client = clients.find(c => c.id === clientId);
+        if (client) {
+            setFormData(prev => ({
+                ...prev,
+                clientId: client.id,
+                customer: client.name,
+                email: client.email,
+                phone: client.phone
+            }));
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -260,44 +277,25 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                                    Customer Name *
+                                    Select Client *
                                 </label>
-                                <input
-                                    type="text"
-                                    name="customer"
-                                    value={formData.customer}
-                                    onChange={handleChange}
+                                <select
+                                    name="clientId"
+                                    onChange={handleClientSelect}
+                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-white transition-colors font-bold appearance-none cursor-pointer"
+                                    value={formData.clientId || ''}
                                     required
-                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                                    placeholder="e.g., John Doe"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                                    Email Address *
-                                </label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                                    placeholder="john@example.com"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                                    Phone Number
-                                </label>
-                                <input
-                                    type="text"
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                                    placeholder="+1 234 567 890"
-                                />
+                                >
+                                    <option value="">Choose a client...</option>
+                                    {clients.map(c => (
+                                        <option key={c.id} value={c.id}>
+                                            {c.name} ({c.email})
+                                        </option>
+                                    ))}
+                                </select>
+                                <p className="text-[10px] text-zinc-600 mt-2">
+                                    Client not in the list? Add them in the <span className="text-zinc-400 font-bold">Clients</span> page first.
+                                </p>
                             </div>
 
                             {/* Mileage Tracking */}

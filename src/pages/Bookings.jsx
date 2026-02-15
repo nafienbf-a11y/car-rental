@@ -86,7 +86,6 @@ const Bookings = () => {
                                 <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Dates</th>
                                 <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Status</th>
                                 <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Total</th>
-                                <th className="text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest whitespace-nowrap">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-900">
@@ -130,16 +129,6 @@ const Bookings = () => {
                                         <div className="flex items-center gap-1 text-white font-black text-sm">
                                             {formatCurrency(booking.totalCost)}
                                         </div>
-                                    </td>
-                                    <td className="p-5 text-right">
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="text-[10px] uppercase tracking-widest"
-                                            onClick={() => handleEditBooking(booking)}
-                                        >
-                                            Edit
-                                        </Button>
                                     </td>
                                 </tr>
                             ))}
