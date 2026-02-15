@@ -32,7 +32,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     <div className="p-6 border-b border-zinc-800">
                         <div className="flex flex-col items-center gap-3">
                             <img
-                                src="/gatibi_rental_logo_2.png"
+                                src="/gatibi_rental_logo_1.png"
                                 alt="Gatibi Rental Logo"
                                 className="w-24 h-24 rounded-xl object-contain"
                             />
