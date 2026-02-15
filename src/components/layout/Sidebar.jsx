@@ -30,14 +30,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 <div className="flex flex-col h-full">
                     {/* Logo */}
                     <div className="p-6 border-b border-zinc-800">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-brand-red rounded-xl flex items-center justify-center">
-                                <Car className="w-6 h-6 text-white" />
-                            </div>
-                            <div>
-                                <h1 className="text-xl font-bold text-white tracking-tight">CarRental</h1>
-                                <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold">Admin Panel</p>
-                            </div>
+                        <div className="flex flex-col items-center gap-3">
+                            <img
+                                src="/gatibi_rental_logo_2.png"
+                                alt="Gatibi Rental Logo"
+                                className="w-24 h-24 rounded-xl object-contain"
+                            />
+                            <p className="text-[9px] text-zinc-400 uppercase tracking-wider font-medium leading-tight text-center">
+                                Embarquez pour l'aventure,<br />laissez-nous vous fournir les clés
+                            </p>
                         </div>
                     </div>
 

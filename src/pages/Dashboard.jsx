@@ -77,8 +77,7 @@ const Dashboard = () => {
             {/* Page Header with Actions */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">Dashboard</h1>
-                    <p className="text-zinc-500 font-medium tracking-tight">Welcome back! Here's your fleet overview.</p>
+                    <h2 className="text-3xl font-extrabold text-white tracking-tight mb-1">Welcome back! Here's your fleet overview</h2>
                 </div>
                 <div className="flex gap-3">
                     <Button

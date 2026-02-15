@@ -72,7 +72,7 @@ const DashboardTimeline = () => {
 
     return (
         <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl overflow-visible">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <div className="flex items-center gap-4">
                     <h3 className="text-xl font-extrabold text-white tracking-tight">Fleet Timeline</h3>
                     <div className="flex items-center gap-2 relative">
