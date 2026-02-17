@@ -21,10 +21,13 @@ function App() {
   // HashRouter doesn't handle pathname (e.g. /sqds), so we check it manually
   React.useEffect(() => {
     const path = window.location.pathname;
-    // Only redirect if we are NOT at root and NOT requesting a file
-    if (path !== '/' && path !== '/index.html' && !path.includes('.')) {
-      // redirect to root with #/404 if it's a real server path that the hash router can't see
-      window.location.href = `${window.location.origin}/#/404`;
+    // Get the base path from vite config (e.g., '/car-rental/' on GitHub Pages, '/' locally)
+    const basePath = import.meta.env.BASE_URL || '/';
+    const normalizedPath = path.endsWith('/') ? path : path + '/';
+    const normalizedBase = basePath.endsWith('/') ? basePath : basePath + '/';
+    // Only redirect if the path doesn't match the expected base and isn't requesting a file
+    if (normalizedPath !== normalizedBase && !path.endsWith('/index.html') && !path.includes('.')) {
+      window.location.href = `${window.location.origin}${basePath}#/404`;
     }
   }, []);
 
