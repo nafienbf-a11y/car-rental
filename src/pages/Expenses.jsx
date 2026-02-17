@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { DollarSign, Wrench, Plus, Edit2, Trash2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/common/Button';
 import ExpenseModal from '../components/expenses/ExpenseModal';
 import { formatDate, formatCurrency } from '../utils/helpers';
 
 const Expenses = () => {
     const { expenses, vehicles, deleteExpense } = useApp();
+    const { t } = useLanguage();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingExpense, setEditingExpense] = useState(null);
 
@@ -35,8 +37,9 @@ const Expenses = () => {
     };
 
     const handleDelete = (id) => {
-        if (window.confirm('Are you sure you want to delete this expense?')) {
+        if (window.confirm(t('expenses.deleteConfirm'))) {
             deleteExpense(id);
+            // Assuming showNotification is available or will be added, if not, just delete
         }
     };
 
@@ -52,15 +55,15 @@ const Expenses = () => {
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">Expenses & Maintenance</h1>
-                    <p className="text-zinc-500 font-medium tracking-tight">Track vehicle maintenance and costs</p>
+                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('expenses.title')}</h1>
+                    <p className="text-zinc-500 font-medium tracking-tight">{t('expenses.subtitle')}</p>
                 </div>
                 <Button
                     variant="primary"
                     icon={Plus}
                     onClick={() => setIsModalOpen(true)}
                 >
-                    Add Expense
+                    {t('expenses.addExpense')}
                 </Button>
             </div>
 
@@ -69,14 +72,14 @@ const Expenses = () => {
                 <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-3 mb-2">
                         <DollarSign className="w-5 h-5 text-brand-red" />
-                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">Total Expenses</p>
+                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('expenses.totalExpenses')}</p>
                     </div>
                     <p className="text-3xl font-extrabold text-white tracking-tight">{formatCurrency(totalExpenses)}</p>
                 </div>
                 <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-3 mb-2">
                         <Wrench className="w-5 h-5 text-zinc-400" />
-                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">Maintenance Items</p>
+                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('expenses.maintenance')}</p>
                     </div>
                     <p className="text-3xl font-extrabold text-white tracking-tight">{expenses.length}</p>
                 </div>
@@ -93,7 +96,7 @@ const Expenses = () => {
 
             {/* Vehicle Health Overview */}
             <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
-                <h3 className="text-xl font-extrabold text-white mb-6 tracking-tight">Vehicle Health Status</h3>
+                <h3 className="text-xl font-extrabold text-white mb-6 tracking-tight">{t('expenses.vehicleHealthStatus')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {vehicles.slice(0, 6).map((vehicle) => (
                         <div key={vehicle.id} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
@@ -127,18 +130,18 @@ const Expenses = () => {
             {/* Expenses Table */}
             <div className="bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
                 <div className="p-6 border-b border-zinc-800">
-                    <h3 className="text-xl font-extrabold text-white tracking-tight">Recent Expenses</h3>
+                    <h3 className="text-xl font-extrabold text-white tracking-tight">{t('dashboard.recentActivity')}</h3>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
                             <tr className="border-b border-zinc-800">
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Date</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Vehicle</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Type</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Description</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Cost</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Actions</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.date')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.vehicle')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.category')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.description')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.amount')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-900">

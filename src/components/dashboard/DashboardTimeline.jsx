@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import { getBlockedDates } from '../../utils/availability';
+
 import { useApp } from '../../context/AppContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 const DashboardTimeline = () => {
     const { vehicles, bookings } = useApp();
+    const { t, language } = useLanguage();
     const [currentDate, setCurrentDate] = useState(new Date());
 
     // Today detection
@@ -16,9 +19,11 @@ const DashboardTimeline = () => {
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
     const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
+    const getMonthName = (date) => {
+        return new Intl.DateTimeFormat(language === 'ar' ? 'ar-MA' : (language === 'fr' ? 'fr-FR' : 'en-US'), { month: 'long' }).format(date);
+    };
+
+
 
     const handlePrevMonth = () => {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
@@ -74,7 +79,7 @@ const DashboardTimeline = () => {
         <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl overflow-visible">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <div className="flex items-center gap-4">
-                    <h3 className="text-xl font-extrabold text-white tracking-tight">Fleet Timeline</h3>
+                    <h3 className="text-xl font-extrabold text-white tracking-tight">{t('dashboard.timeline')}</h3>
                     <div className="flex items-center gap-2 relative">
                         <button
                             onClick={handlePrevMonth}
@@ -90,25 +95,27 @@ const DashboardTimeline = () => {
                                 className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 rounded-lg text-sm font-bold text-white min-w-[160px] text-center transition-colors flex items-center justify-center gap-2"
                             >
                                 <Calendar className="w-4 h-4" />
-                                {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+                                {getMonthName(currentDate)} {currentDate.getFullYear()}
                             </button>
 
                             {showMonthPicker && (
                                 <div className="absolute top-full left-0 mt-2 bg-zinc-950 border border-zinc-800 rounded-xl p-4 shadow-2xl z-50 min-w-[280px]">
-                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-3">Select Month & Year</p>
+                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-3">{t('dashboard.selectMonthYear')}</p>
                                     <div className="grid grid-cols-3 gap-2 mb-4">
-                                        {monthNames.map((month, index) => (
-                                            <button
-                                                key={month}
-                                                onClick={() => handleMonthYearSelect(index, currentDate.getFullYear())}
-                                                className={`px-3 py-2 rounded-lg text-xs font-bold transition-colors ${index === currentDate.getMonth()
-                                                    ? 'bg-brand-blue text-white'
-                                                    : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
-                                                    }`}
-                                            >
-                                                {month.slice(0, 3)}
-                                            </button>
-                                        ))}
+                                        <div className="grid grid-cols-3 gap-2 mb-4">
+                                            {Array.from({ length: 12 }, (_, i) => new Date(2000, i, 1)).map((date, index) => (
+                                                <button
+                                                    key={index}
+                                                    onClick={() => handleMonthYearSelect(index, currentDate.getFullYear())}
+                                                    className={`px-3 py-2 rounded-lg text-xs font-bold transition-colors ${index === currentDate.getMonth()
+                                                        ? 'bg-brand-blue text-white'
+                                                        : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                                                        }`}
+                                                >
+                                                    {getMonthName(date).slice(0, 3)}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
                                     <div className="grid grid-cols-5 gap-2">
                                         {generateYearOptions().map(year => (
@@ -139,11 +146,11 @@ const DashboardTimeline = () => {
                 <div className="flex gap-4">
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded bg-brand-blue"></div>
-                        <span className="text-[10px] text-zinc-500 uppercase font-bold">Active</span>
+                        <span className="text-[10px] text-zinc-500 uppercase font-bold">{t('dashboard.active')}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded bg-brand-red"></div>
-                        <span className="text-[10px] text-zinc-500 uppercase font-bold">Maintenance</span>
+                        <span className="text-[10px] text-zinc-500 uppercase font-bold">{t('dashboard.maintenance')}</span>
                     </div>
                 </div>
             </div>
@@ -181,7 +188,7 @@ const DashboardTimeline = () => {
                     <div className="space-y-3">
                         {vehicles.length === 0 ? (
                             <div className="text-center py-8 text-zinc-500">
-                                <p className="text-sm font-medium">No vehicles yet. Add your first vehicle to see the timeline.</p>
+                                <p className="text-sm font-medium">{t('dashboard.noVehiclesTimeline')}</p>
                             </div>
                         ) : (
                             vehicles.map(vehicle => (

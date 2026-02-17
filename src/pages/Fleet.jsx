@@ -8,9 +8,12 @@ import LoadingSkeleton from '../components/common/LoadingSkeleton';
 
 import { useNotification } from '../context/NotificationContext';
 
+import { useLanguage } from '../context/LanguageContext';
+
 const Fleet = () => {
     const { vehicles, bookings, addVehicle, updateVehicle, deleteVehicle, setVehicleMaintenance, setVehicleAvailable, searchTerm, setIsAddVehicleModalOpen, isAddVehicleModalOpen, migrateVehicles } = useApp();
     const { showNotification } = useNotification();
+    const { t } = useLanguage();
     const [statusFilter, setStatusFilter] = useState('All');
     const [loading, setLoading] = useState(false);
     const [editingVehicle, setEditingVehicle] = useState(null);
@@ -63,7 +66,7 @@ const Fleet = () => {
 
     const handleAddVehicle = (vehicle) => {
         addVehicle(vehicle);
-        showNotification('Vehicle added successfully!', 'success');
+        showNotification(t('fleet.addedSuccess'), 'success');
     };
 
     const handleEditVehicle = (vehicle) => {
@@ -75,28 +78,28 @@ const Fleet = () => {
         updateVehicle(updatedVehicle.id, updatedVehicle);
         setIsEditModalOpen(false);
         setEditingVehicle(null);
-        showNotification('Vehicle updated successfully!', 'success');
+        showNotification(t('fleet.updatedSuccess'), 'success');
     };
 
     const handleDeleteVehicle = (id) => {
-        if (window.confirm('Are you sure you want to delete this vehicle?')) {
+        if (window.confirm(t('fleet.deleteConfirm'))) {
             deleteVehicle(id);
-            showNotification('Vehicle deleted successfully!', 'success');
+            showNotification(t('fleet.deletedSuccess'), 'success');
         }
     };
 
     const handleSetMaintenance = (id) => {
         setVehicleMaintenance(id);
-        showNotification('Vehicle marked as Out of Service', 'warning');
+        showNotification(t('fleet.maintenanceSuccess'), 'warning');
     };
 
     const handleSetAvailable = (id) => {
         setVehicleAvailable(id);
-        showNotification('Vehicle updated to Available', 'success');
+        showNotification(t('fleet.availableSuccess'), 'success');
     };
 
     const handleMigrate = async () => {
-        if (!window.confirm('Import vehicles from local storage? This will skip duplicates.')) return;
+        if (!window.confirm(t('fleet.importConfirm'))) return;
 
         setMigrating(true);
         const result = await migrateVehicles();
@@ -116,8 +119,8 @@ const Fleet = () => {
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">Fleet Management</h1>
-                    <p className="text-zinc-500 font-medium tracking-tight">Manage your vehicle inventory</p>
+                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('fleet.title')}</h1>
+                    <p className="text-zinc-500 font-medium tracking-tight">{t('fleet.subtitle')}</p>
                 </div>
                 <div className="flex gap-2">
                     <Button
@@ -127,14 +130,14 @@ const Fleet = () => {
                         disabled={migrating}
                         className="text-zinc-400 hover:text-white"
                     >
-                        {migrating ? 'Importing...' : 'Import Legacy Data'}
+                        {migrating ? t('fleet.importing') : t('fleet.importLegacy')}
                     </Button>
                     <Button
                         variant="primary"
                         icon={Plus}
                         onClick={() => setIsAddVehicleModalOpen(true)}
                     >
-                        Add Vehicle
+                        {t('fleet.addVehicle')}
                     </Button>
                 </div>
             </div>
@@ -150,7 +153,7 @@ const Fleet = () => {
                             : 'text-zinc-500 hover:bg-zinc-900 hover:text-white'
                             }`}
                     >
-                        {status}
+                        {t(`fleet.${status.toLowerCase()}`)}
                         {status !== 'All' && (
                             <span className="ml-2 opacity-50 font-medium">
                                 {vehicles.filter(v => v.status === status).length}
@@ -163,23 +166,23 @@ const Fleet = () => {
             {/* Fleet Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 shadow-xl">
-                    <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-1">Total Vehicles</p>
+                    <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-1">{t('fleet.totalVehicles')}</p>
                     <p className="text-2xl font-extrabold text-white tracking-tight">{vehicles.length}</p>
                 </div>
                 <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 shadow-xl">
-                    <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-1">Available</p>
+                    <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-1">{t('fleet.available')}</p>
                     <p className="text-2xl font-extrabold text-white tracking-tight">
                         {vehicles.filter(v => v.status === 'Available').length}
                     </p>
                 </div>
                 <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 shadow-xl">
-                    <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-1">Rented</p>
+                    <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-1">{t('fleet.rented')}</p>
                     <p className="text-2xl font-extrabold text-brand-blue tracking-tight">
                         {vehicles.filter(v => v.status === 'Rented').length}
                     </p>
                 </div>
                 <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 shadow-xl">
-                    <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-1">Maintenance</p>
+                    <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-1">{t('fleet.maintenance')}</p>
                     <p className="text-2xl font-extrabold text-brand-red tracking-tight">
                         {vehicles.filter(v => v.status === 'Maintenance').length}
                     </p>
@@ -206,11 +209,11 @@ const Fleet = () => {
                 </div>
             ) : (
                 <div className="glass-dark rounded-2xl p-12 text-center">
-                    <p className="text-slate-400 text-lg">No vehicles found</p>
+                    <p className="text-slate-400 text-lg">{t('fleet.noVehicles')}</p>
                     <p className="text-slate-500 text-sm mt-2">
                         {searchTerm
-                            ? 'Try adjusting your search or filters'
-                            : 'Add your first vehicle to get started'}
+                            ? t('fleet.adjustFilters')
+                            : t('fleet.startAdding')}
                     </p>
                 </div>
             )}

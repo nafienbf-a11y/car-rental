@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Users, Plus, Mail, Phone, Edit2, Trash2, MapPin } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/common/Button';
 import SearchBar from '../components/common/SearchBar';
 import ClientModal from '../components/clients/ClientModal';
 
 const Clients = () => {
     const { clients = [], addClient, updateClient, deleteClient, bookings = [] } = useApp();
+    const { t } = useLanguage();
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState(null);
@@ -30,7 +32,7 @@ const Clients = () => {
     };
 
     const handleDeleteClient = (id) => {
-        if (window.confirm('Are you sure you want to delete this client?')) {
+        if (window.confirm(t('clients.deleteConfirm'))) {
             deleteClient(id);
         }
     };
@@ -56,11 +58,11 @@ const Clients = () => {
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">Clients</h1>
-                    <p className="text-zinc-500 font-medium tracking-tight">Manage your customer database</p>
+                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('clients.title')}</h1>
+                    <p className="text-zinc-500 font-medium tracking-tight">{t('clients.subtitle')}</p>
                 </div>
                 <Button variant="primary" icon={Plus} onClick={handleAddClient}>
-                    Add Client
+                    {t('clients.addClient')}
                 </Button>
             </div>
 
@@ -72,7 +74,7 @@ const Clients = () => {
                             <Users className="w-6 h-6 text-brand-blue" />
                         </div>
                         <div>
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Total Clients</p>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('clients.totalClients')}</p>
                             <p className="text-2xl font-extrabold text-white">{clients.length}</p>
                         </div>
                     </div>
@@ -83,7 +85,7 @@ const Clients = () => {
                             <Mail className="w-6 h-6 text-brand-blue" />
                         </div>
                         <div>
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Active Bookings</p>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('clients.activeBookings')}</p>
                             <p className="text-2xl font-extrabold text-white">
                                 {bookings.filter(b => b.status === 'Active').length}
                             </p>
@@ -96,7 +98,7 @@ const Clients = () => {
                             <Phone className="w-6 h-6 text-brand-blue" />
                         </div>
                         <div>
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">New This Month</p>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('clients.newThisMonth')}</p>
                             <p className="text-2xl font-extrabold text-white">
                                 {clients.filter(c => {
                                     const created = new Date(c.createdAt);
@@ -115,7 +117,7 @@ const Clients = () => {
                     <SearchBar
                         value={searchTerm}
                         onChange={(val) => setSearchTerm(val)}
-                        placeholder="Search by name, email, or phone..."
+                        placeholder={t('clients.searchPlaceholder')}
                     />
                 </div>
             </div>
@@ -126,14 +128,14 @@ const Clients = () => {
                     <div className="text-center py-12">
                         <Users className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
                         <h3 className="text-xl font-bold text-white mb-2">
-                            {searchTerm ? 'No clients found' : 'No clients yet'}
+                            {searchTerm ? t('clients.noClientsFound') : t('clients.noClientsYet')}
                         </h3>
                         <p className="text-zinc-500 mb-6">
-                            {searchTerm ? 'Try adjusting your search' : 'Add your first client to get started'}
+                            {searchTerm ? t('clients.adjustSearch') : t('clients.startAdding')}
                         </p>
                         {!searchTerm && (
                             <Button variant="primary" icon={Plus} onClick={handleAddClient}>
-                                Add Your First Client
+                                {t('clients.addFirst')}
                             </Button>
                         )}
                     </div>
@@ -143,19 +145,19 @@ const Clients = () => {
                             <thead>
                                 <tr className="border-b border-zinc-800">
                                     <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                                        Client
+                                        {t('clients.table.client')}
                                     </th>
                                     <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                                        Contact
+                                        {t('clients.table.contact')}
                                     </th>
                                     <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                                        License
+                                        {t('clients.table.license')}
                                     </th>
                                     <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                                        Bookings
+                                        {t('clients.table.bookings')}
                                     </th>
                                     <th className="text-right py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                                        Actions
+                                        {t('clients.table.actions')}
                                     </th>
                                 </tr>
                             </thead>
@@ -166,7 +168,7 @@ const Clients = () => {
                                         <tr key={client.id || Math.random()} className="border-b border-zinc-800/50 hover:bg-zinc-900/30 transition-colors">
                                             <td className="py-4 px-4">
                                                 <div>
-                                                    <p className="font-bold text-white">{client.name || 'Unknown'}</p>
+                                                    <p className="font-bold text-white">{client.name || t('clients.unknown')}</p>
                                                     {client.address && (
                                                         <p className="text-xs text-zinc-500 flex items-center gap-1 mt-1">
                                                             <MapPin className="w-3 h-3" />
@@ -194,7 +196,7 @@ const Clients = () => {
                                             </td>
                                             <td className="py-4 px-4">
                                                 <span className="px-3 py-1 bg-brand-blue/10 text-brand-blue rounded-lg text-xs font-bold">
-                                                    {getClientBookingCount(client.id)} bookings
+                                                    {getClientBookingCount(client.id)} {t('clients.suffix')}
                                                 </span>
                                             </td>
                                             <td className="py-4 px-4">

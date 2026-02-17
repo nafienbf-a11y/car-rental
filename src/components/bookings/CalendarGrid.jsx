@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 import { getDayStatusColor } from '../../utils/availability';
 
 const CalendarGrid = ({
@@ -11,6 +12,8 @@ const CalendarGrid = ({
     blockedDates,
     disabled
 }) => {
+    const { language, t } = useLanguage();
+
     const getDaysInMonth = (date) => {
         const year = date.getFullYear();
         const month = date.getMonth();
@@ -36,9 +39,14 @@ const CalendarGrid = ({
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
     };
 
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
+    const monthName = new Intl.DateTimeFormat(language === 'ar' ? 'ar-MA' : (language === 'fr' ? 'fr-FR' : 'en-US'), { month: 'long' }).format(currentDate);
+
+    // Dynamic weekdays based on locale
+    const weekDays = Array.from({ length: 7 }, (_, i) => {
+        // Create a date for a known Sunday (e.g., 2024-01-07) and increment
+        const d = new Date(2024, 0, 7 + i);
+        return new Intl.DateTimeFormat(language === 'ar' ? 'ar-MA' : (language === 'fr' ? 'fr-FR' : 'en-US'), { weekday: 'short' }).format(d);
+    });
 
     return (
         <div className={`bg-zinc-950 border border-zinc-800 rounded-xl p-4 ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
@@ -53,7 +61,7 @@ const CalendarGrid = ({
                     <ChevronLeft className="w-5 h-5" />
                 </button>
                 <div className="text-white font-bold text-sm uppercase tracking-wider">
-                    {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+                    {monthName} {currentDate.getFullYear()}
                 </div>
                 <button
                     onClick={handleNextMonth}
@@ -66,7 +74,7 @@ const CalendarGrid = ({
 
             {/* Days Header */}
             <div className="grid grid-cols-7 mb-2">
-                {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
+                {weekDays.map(day => (
                     <div key={day} className="text-center text-[10px] font-bold text-zinc-500 uppercase">
                         {day}
                     </div>
@@ -112,15 +120,15 @@ const CalendarGrid = ({
             <div className="flex gap-4 mt-6 justify-center">
                 <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded bg-zinc-800 border border-zinc-700"></div>
-                    <span className="text-[10px] text-zinc-500 uppercase font-bold">Available</span>
+                    <span className="text-[10px] text-zinc-500 uppercase font-bold">{t('modals.calendar.available')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded bg-zinc-900 border border-zinc-800 bg-[linear-gradient(45deg,transparent_45%,#ef4444_45%,#ef4444_55%,transparent_55%)] bg-[length:6px_6px]"></div>
-                    <span className="text-[10px] text-zinc-500 uppercase font-bold">Booked</span>
+                    <span className="text-[10px] text-zinc-500 uppercase font-bold">{t('modals.calendar.booked')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded bg-brand-blue"></div>
-                    <span className="text-[10px] text-zinc-500 uppercase font-bold">Selected</span>
+                    <span className="text-[10px] text-zinc-500 uppercase font-bold">{t('modals.calendar.selected')}</span>
                 </div>
             </div>
         </div>

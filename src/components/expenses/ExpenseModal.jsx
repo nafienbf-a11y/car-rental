@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useLanguage } from '../../context/LanguageContext';
 import Button from '../common/Button';
 import { generateId } from '../../utils/helpers';
 
@@ -8,6 +9,7 @@ import { useNotification } from '../../context/NotificationContext';
 
 const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
     const { vehicles, addExpense, updateExpense } = useApp();
+    const { t } = useLanguage();
     const { showNotification } = useNotification();
     const [formData, setFormData] = useState({
         // ... existing state
@@ -29,10 +31,10 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
 
         if (expense) {
             updateExpense(expense.id, expenseData);
-            showNotification('Expense updated successfully!', 'success');
+            showNotification(t('modals.expense.notifications.updated'), 'success');
         } else {
             addExpense(expenseData);
-            showNotification('Expense added successfully!', 'success');
+            showNotification(t('modals.expense.notifications.added'), 'success');
         }
 
         onClose();
@@ -54,9 +56,9 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                 <div className="sticky top-0 bg-zinc-950 border-b border-zinc-800 p-6 flex items-center justify-between z-10">
                     <div>
                         <h2 className="text-2xl font-extrabold text-white tracking-tight">
-                            {expense ? 'Edit Expense' : 'Add Expense'}
+                            {expense ? t('modals.expense.titleEdit') : t('modals.expense.titleAdd')}
                         </h2>
-                        <p className="text-sm text-zinc-500 mt-1">Track vehicle maintenance and costs</p>
+                        <p className="text-sm text-zinc-500 mt-1">{t('modals.expense.subtitle')}</p>
                     </div>
                     <button
                         onClick={onClose}
@@ -71,7 +73,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                     {/* Type */}
                     <div>
                         <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
-                            Expense Type *
+                            {t('modals.expense.type')} *
                         </label>
                         <select
                             value={formData.type}
@@ -88,7 +90,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                     {/* Vehicle */}
                     <div>
                         <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
-                            Vehicle *
+                            {t('modals.expense.vehicle')} *
                         </label>
                         <select
                             value={formData.vehicleId}
@@ -96,7 +98,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                             className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
                             required
                         >
-                            <option value="">Select a vehicle</option>
+                            <option value="">{t('modals.expense.selectVehicle')}</option>
                             {vehicles.map(vehicle => (
                                 <option key={vehicle.id} value={vehicle.id}>
                                     {vehicle.brand} {vehicle.model} ({vehicle.plate})
@@ -108,7 +110,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                     {/* Cost */}
                     <div>
                         <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
-                            Cost (MAD) *
+                            {t('modals.expense.cost')} *
                         </label>
                         <input
                             type="number"
@@ -116,7 +118,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                             value={formData.cost}
                             onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
                             className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
-                            placeholder="0.00"
+                            placeholder={t('modals.expense.placeholderCost')}
                             required
                         />
                     </div>
@@ -124,7 +126,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                     {/* Date */}
                     <div>
                         <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
-                            Date *
+                            {t('modals.expense.date')} *
                         </label>
                         <input
                             type="date"
@@ -138,14 +140,14 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                     {/* Description */}
                     <div>
                         <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
-                            Description
+                            {t('modals.expense.description')}
                         </label>
                         <textarea
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent resize-none"
                             rows="3"
-                            placeholder="Additional details about this expense..."
+                            placeholder={t('modals.expense.placeholderDesc')}
                         />
                     </div>
 
@@ -157,14 +159,14 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                             onClick={onClose}
                             className="flex-1"
                         >
-                            Cancel
+                            {t('modals.common.cancel')}
                         </Button>
                         <Button
                             type="submit"
                             variant="primary"
                             className="flex-1"
                         >
-                            {expense ? 'Update Expense' : 'Add Expense'}
+                            {expense ? t('modals.expense.submitUpdate') : t('modals.expense.submitAdd')}
                         </Button>
                     </div>
                 </form>

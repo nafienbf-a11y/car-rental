@@ -1,9 +1,11 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useApp } from '../../context/AppContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 const MonthlyBookingsChart = () => {
     const { bookings } = useApp();
+    const { t } = useLanguage();
 
     // Calculate monthly data from real bookings
     const getMonthlyData = () => {
@@ -43,7 +45,7 @@ const MonthlyBookingsChart = () => {
             return (
                 <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 shadow-2xl">
                     <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-1">{payload[0].payload.month}</p>
-                    <p className="text-white font-bold">{payload[0].value} bookings</p>
+                    <p className="text-white font-bold">{payload[0].value} {t('dashboard.tooltips.bookings')}</p>
                     <p className="text-brand-blue text-sm font-semibold">{payload[0].payload.revenue.toLocaleString()} MAD</p>
                 </div>
             );
@@ -53,7 +55,7 @@ const MonthlyBookingsChart = () => {
 
     return (
         <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-6">Monthly Bookings</h3>
+            <h3 className="text-xl font-bold text-white mb-6">{t('dashboard.monthlyBookings')}</h3>
             <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={data}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />

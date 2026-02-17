@@ -6,11 +6,13 @@ import { Plus, Calendar as CalendarIcon, AlertTriangle } from 'lucide-react';
 import { generateId, calculateDays, formatCurrency } from '../../utils/helpers';
 import { getBlockedDates, validateBookingRange } from '../../utils/availability';
 import { useApp } from '../../context/AppContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 import { useNotification } from '../../context/NotificationContext';
 
 const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) => {
     const { bookings, clients } = useApp();
+    const { t } = useLanguage();
     const { showNotification } = useNotification();
     const [formData, setFormData] = useState({
         vehicleId: '',
@@ -119,7 +121,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
 
     const handleDateClick = (date) => {
         if (!formData.vehicleId) {
-            setError('Please select a vehicle first.');
+            setError(t('modals.bookNow.errors.selectVehicle'));
             return;
         }
 
@@ -173,11 +175,11 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
 
         // Validation
         if (!formData.startDate || !formData.endDate) {
-            setError('Please select a valid date range.');
+            setError(t('modals.bookNow.errors.invalidDates'));
             return;
         }
         if (!formData.startingKm) {
-            setError('Starting KM is required.');
+            setError(t('modals.bookNow.errors.startKmRequired'));
             return;
         }
 
@@ -190,12 +192,12 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
         if (booking && isReturnOverdue && !formData.endingKm) {
             // User requirement: "must be filled once the car is returned , once the date of today is superior of the end date"
             // We'll enforce it if they are Editing and the date is past.
-            setError('Ending KM is required for completed/past bookings.');
+            setError(t('modals.bookNow.errors.endKmRequired'));
             return;
         }
 
         if (formData.endingKm && Number(formData.endingKm) < Number(formData.startingKm)) {
-            setError('Ending KM cannot be less than Starting KM.');
+            setError(t('modals.bookNow.errors.endKmLess'));
             return;
         }
 
@@ -245,7 +247,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title={booking ? 'Edit Booking' : 'New Booking'}
+            title={booking ? t('modals.bookNow.titleEdit') : t('modals.bookNow.titleAdd')}
             size="lg" // Larger modal for calendar
         >
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -255,7 +257,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                         {/* Vehicle Selection */}
                         <div>
                             <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                                Select Vehicle *
+                                {t('modals.bookNow.selectVehicle')} *
                             </label>
                             <select
                                 name="vehicleId"
@@ -264,10 +266,10 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                 required
                                 className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-white transition-colors font-bold appearance-none cursor-pointer"
                             >
-                                <option value="">Choose a car...</option>
+                                <option value="">{t('modals.bookNow.chooseCar')}</option>
                                 {availableVehicles.map(v => (
                                     <option key={v.id} value={v.id}>
-                                        {v.brand} {v.model} ({v.plate}) - {formatCurrency(v.pricePerDay)}/day
+                                        {v.brand} {v.model} ({v.plate}) - {formatCurrency(v.pricePerDay)}/{t('common.day')}
                                     </option>
                                 ))}
                             </select>
@@ -277,7 +279,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                                    Select Client *
+                                    {t('modals.bookNow.selectClient')} *
                                 </label>
                                 <select
                                     name="clientId"
@@ -286,7 +288,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                     value={formData.clientId || ''}
                                     required
                                 >
-                                    <option value="">Choose a client...</option>
+                                    <option value="">{t('modals.bookNow.chooseClient')}</option>
                                     {clients.map(c => (
                                         <option key={c.id} value={c.id}>
                                             {c.name} ({c.email})
@@ -294,7 +296,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                     ))}
                                 </select>
                                 <p className="text-[10px] text-zinc-600 mt-2">
-                                    Client not in the list? Add them in the <span className="text-zinc-400 font-bold">Clients</span> page first.
+                                    {t('modals.bookNow.clientHint')}
                                 </p>
                             </div>
 
@@ -302,7 +304,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                             <div className="grid grid-cols-2 gap-4 pt-2 border-t border-zinc-800">
                                 <div>
                                     <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                                        Starting KM *
+                                        {t('modals.bookNow.startingKm')} *
                                     </label>
                                     <input
                                         type="number"
@@ -319,7 +321,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                 {booking && (
                                     <div>
                                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                                            Ending KM
+                                            {t('modals.bookNow.endingKm')}
                                         </label>
                                         <input
                                             type="number"
@@ -338,7 +340,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                     {/* Right Column: Calendar */}
                     <div className="space-y-4">
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Select Dates {formData.vehicleId ? '(Green: Available)' : '(Select Vehicle First)'}
+                            {t('modals.bookNow.selectDates')} {formData.vehicleId ? t('modals.bookNow.available') : t('modals.bookNow.selectFirst')}
                         </label>
 
                         <CalendarGrid
@@ -362,11 +364,11 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                         {/* Selection Summary */}
                         <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800/50">
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-xs text-zinc-500 uppercase font-bold">Start</span>
+                                <span className="text-xs text-zinc-500 uppercase font-bold">{t('modals.bookNow.start')}</span>
                                 <span className="text-sm text-white font-bold">{formData.startDate || '-'}</span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-xs text-zinc-500 uppercase font-bold">End</span>
+                                <span className="text-xs text-zinc-500 uppercase font-bold">{t('modals.bookNow.end')}</span>
                                 <span className="text-sm text-white font-bold">{formData.endDate || '-'}</span>
                             </div>
                         </div>
@@ -377,19 +379,19 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                 <div className="pt-6 border-t border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                     {totalDays > 0 && selectedVehicle ? (
                         <div>
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-0.5">Total Estimate</p>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-0.5">{t('modals.bookNow.totalEstimate')}</p>
                             <div className="flex items-baseline gap-2">
                                 <span className="text-3xl font-black text-white">{formatCurrency(totalCost)}</span>
-                                <span className="text-zinc-500 font-bold">for {totalDays} days</span>
+                                <span className="text-zinc-500 font-bold">{t('common.for')} {totalDays} {t('modals.bookNow.days')}</span>
                             </div>
                         </div>
                     ) : (
-                        <div className="text-zinc-600 font-medium italic">Select items to see estimate</div>
+                        <div className="text-zinc-600 font-medium italic">{t('modals.bookNow.selectItems')}</div>
                     )}
 
                     <div className="flex gap-3">
                         <Button variant="ghost" onClick={onClose} type="button" className="text-[10px] uppercase tracking-widest">
-                            Cancel
+                            {t('modals.common.cancel')}
                         </Button>
                         <Button
                             variant="primary"
@@ -397,7 +399,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                             className="text-[10px] uppercase tracking-widest"
                             disabled={!formData.startDate || !formData.endDate || !!error}
                         >
-                            Confirm Booking
+                            {t('modals.bookNow.confirmBooking')}
                         </Button>
                     </div>
                 </div>

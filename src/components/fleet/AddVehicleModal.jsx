@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
+import { useLanguage } from '../../context/LanguageContext';
 import { Plus } from 'lucide-react';
 import { generateId } from '../../utils/helpers';
 
 const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
+    const { t } = useLanguage();
     const [formData, setFormData] = useState({
         brand: '',
         model: '',
@@ -92,13 +94,13 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={vehicle ? "Edit Vehicle" : "Add New Vehicle"} size="lg">
+        <Modal isOpen={isOpen} onClose={onClose} title={vehicle ? t('modals.addVehicle.titleEdit') : t('modals.addVehicle.titleAdd')} size="lg">
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Brand */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Brand *
+                            {t('modals.addVehicle.brand')} *
                         </label>
                         <select
                             name="brand"
@@ -113,18 +115,18 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             required
                             className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-white transition-colors font-bold appearance-none cursor-pointer"
                         >
-                            <option value="">Select Brand</option>
+                            <option value="">{t('modals.addVehicle.selectBrand')}</option>
                             <option value="Renault">Renault</option>
                             <option value="Peugeot">Peugeot</option>
                             <option value="Dacia">Dacia</option>
-                            <option value="Other">Other</option>
+                            <option value="Other">{t('common.other')}</option>
                         </select>
                     </div>
 
                     {/* Model */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Model *
+                            {t('modals.addVehicle.model')} *
                         </label>
                         {['Renault', 'Peugeot', 'Dacia'].includes(formData.brand) ? (
                             <select
@@ -134,7 +136,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                                 required
                                 className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-white transition-colors font-bold appearance-none cursor-pointer"
                             >
-                                <option value="">Select Model</option>
+                                <option value="">{t('modals.addVehicle.selectModel')}</option>
                                 {formData.brand === 'Renault' && (
                                     <>
                                         <option value="CLIO">CLIO</option>
@@ -166,7 +168,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                                 onChange={handleChange}
                                 required
                                 className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                                placeholder="e.g., X5"
+                                placeholder={t('modals.addVehicle.placeholderModel')}
                             />
                         )}
                     </div>
@@ -174,7 +176,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                     {/* Year */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Year *
+                            {t('modals.addVehicle.year')} *
                         </label>
                         <input
                             type="number"
@@ -191,7 +193,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                     {/* License Plate */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            License Plate *
+                            {t('modals.addVehicle.plate')} *
                         </label>
                         <input
                             type="text"
@@ -200,14 +202,14 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             onChange={handleChange}
                             required
                             className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold uppercase"
-                            placeholder="e.g., ABC-1234"
+                            placeholder={t('modals.addVehicle.placeholderPlate')}
                         />
                     </div>
 
                     {/* Price Per Day */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Price Per Day ($) *
+                            {t('modals.addVehicle.price')} *
                         </label>
                         <input
                             type="number"
@@ -218,14 +220,14 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             min="0"
                             step="0.01"
                             className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                            placeholder="e.g., 120"
+                            placeholder={t('modals.addVehicle.placeholderPrice')}
                         />
                     </div>
 
                     {/* Category */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Category *
+                            {t('modals.addVehicle.category')} *
                         </label>
                         <select
                             name="category"
@@ -243,7 +245,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                     {/* Seats */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Seats *
+                            {t('modals.addVehicle.seats')} *
                         </label>
                         <input
                             type="number"
@@ -260,7 +262,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                     {/* Transmission */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Transmission *
+                            {t('modals.addVehicle.transmission')} *
                         </label>
                         <select
                             name="transmission"
@@ -276,7 +278,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                     {/* Fuel Type */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Fuel Type *
+                            {t('modals.addVehicle.fuel')} *
                         </label>
                         <select
                             name="fuel"
@@ -294,7 +296,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                     {/* Image URL */}
                     <div className="md:col-span-2">
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Image URL
+                            {t('modals.addVehicle.image')}
                         </label>
                         <input
                             type="url"
@@ -310,10 +312,10 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                 {/* Form Actions */}
                 <div className="flex gap-3 justify-end pt-6 border-t border-zinc-800">
                     <Button variant="ghost" onClick={onClose} type="button" className="text-[10px] uppercase tracking-widest">
-                        Cancel
+                        {t('modals.common.cancel')}
                     </Button>
                     <Button variant="primary" type="submit" className="text-[10px] uppercase tracking-widest">
-                        {vehicle ? 'Update Vehicle' : 'Add Vehicle'}
+                        {vehicle ? t('modals.addVehicle.submitUpdate') : t('modals.addVehicle.submitAdd')}
                     </Button>
                 </div>
             </form>

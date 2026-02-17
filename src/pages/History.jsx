@@ -1,12 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { Search, Download } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useLanguage } from '../context/LanguageContext';
 import SearchBar from '../components/common/SearchBar';
 import Button from '../components/common/Button';
 import { formatDate, formatCurrency, getStatusBadgeClass } from '../utils/helpers';
 
 const History = () => {
     const { bookings, vehicles } = useApp();
+    const { t } = useLanguage();
     const [localSearch, setLocalSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
@@ -43,8 +45,8 @@ const History = () => {
         <div className="space-y-6">
             {/* Page Header */}
             <div>
-                <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">Booking History</h1>
-                <p className="text-zinc-500 font-medium tracking-tight">Search and review all past bookings</p>
+                <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('history.title')}</h1>
+                <p className="text-zinc-500 font-medium tracking-tight">{t('history.subtitle')}</p>
             </div>
 
             {/* Search and Export */}
@@ -52,7 +54,7 @@ const History = () => {
                 <SearchBar
                     value={localSearch}
                     onChange={setLocalSearch}
-                    placeholder="Search by customer, plate, or booking ID..."
+                    placeholder={t('history.searchPlaceholder')}
                     className="w-full sm:w-96"
                 />
                 <Button variant="secondary" icon={Download} className="text-[10px] uppercase tracking-widest">
@@ -63,8 +65,8 @@ const History = () => {
             {/* Results Summary */}
             <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 shadow-lg">
                 <p className="text-zinc-400 text-sm font-medium">
-                    Showing <span className="font-extrabold text-white">{paginatedBookings.length}</span> of{' '}
-                    <span className="font-extrabold text-white">{filteredBookings.length}</span> bookings
+                    {t('common.showing')} <span className="font-extrabold text-white">{paginatedBookings.length}</span> {t('common.of')}{' '}
+                    <span className="font-extrabold text-white">{filteredBookings.length}</span> {t('clients.suffix')}
                 </p>
             </div>
 
@@ -74,14 +76,14 @@ const History = () => {
                     <table className="w-full">
                         <thead>
                             <tr className="border-b border-zinc-800 bg-zinc-900/50">
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Booking ID</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Date</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Customer</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Vehicle</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Plate</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Duration</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Status</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Total</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.id')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.date')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.customer')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.vehicle')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('common.plate')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.duration')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.status')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.total')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-900">
@@ -115,10 +117,10 @@ const History = () => {
                                     </td>
                                     <td className="p-5">
                                         <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${booking.status === 'Active' ? 'bg-white text-black border-white' :
-                                                booking.status === 'Completed' ? 'bg-zinc-900 text-zinc-400 border-zinc-800' :
-                                                    'bg-brand-red text-white border-brand-red font-semibold'
+                                            booking.status === 'Completed' ? 'bg-zinc-900 text-zinc-400 border-zinc-800' :
+                                                'bg-brand-red text-white border-brand-red font-semibold'
                                             }`}>
-                                            {booking.status}
+                                            {t(`bookings.${booking.status.toLowerCase()}`)}
                                         </span>
                                     </td>
                                     <td className="p-5">

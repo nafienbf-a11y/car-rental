@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, User, DollarSign, Plus } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/common/Button';
 import BookNowModal from '../components/bookings/BookNowModal';
 import { formatDate, formatCurrency, getStatusBadgeClass } from '../utils/helpers';
@@ -10,6 +11,7 @@ import { useNotification } from '../context/NotificationContext';
 const Bookings = () => {
     const { bookings, vehicles, addBooking, updateBooking, setIsNewBookingModalOpen, isNewBookingModalOpen } = useApp();
     const { showNotification } = useNotification();
+    const { t } = useLanguage();
     const [statusFilter, setStatusFilter] = useState('All');
     const [editingBooking, setEditingBooking] = useState(null);
 
@@ -20,7 +22,7 @@ const Bookings = () => {
 
     const handleUpdateBooking = (id, data) => {
         updateBooking(id, data);
-        showNotification('Booking updated successfully!', 'success');
+        showNotification(t('bookings.notifications.updated'), 'success');
         setIsNewBookingModalOpen(false);
         setEditingBooking(null);
     };
@@ -46,15 +48,15 @@ const Bookings = () => {
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">Bookings</h1>
-                    <p className="text-zinc-500 font-medium tracking-tight">Manage customer reservations</p>
+                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('bookings.title')}</h1>
+                    <p className="text-zinc-500 font-medium tracking-tight">{t('bookings.subtitle')}</p>
                 </div>
                 <Button
                     variant="primary"
                     icon={Plus}
                     onClick={() => setIsNewBookingModalOpen(true)}
                 >
-                    New Booking
+                    {t('bookings.newBooking')}
                 </Button>
             </div>
 
@@ -69,7 +71,7 @@ const Bookings = () => {
                             : 'text-zinc-500 hover:bg-zinc-900 hover:text-white'
                             }`}
                     >
-                        {status}
+                        {t(`bookings.${status.toLowerCase()}`)}
                     </button>
                 ))}
             </div>
@@ -80,12 +82,12 @@ const Bookings = () => {
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="border-b border-zinc-800">
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Booking ID</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Customer</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Vehicle</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Dates</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Status</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Total</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.id')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.customer')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.vehicle')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.dates')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.status')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.total')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-900">
@@ -122,7 +124,7 @@ const Bookings = () => {
                                             booking.status === 'Completed' ? 'bg-zinc-900 text-zinc-400 border-zinc-800' :
                                                 'bg-brand-red text-white border-brand-red font-semibold'
                                             }`}>
-                                            {booking.status}
+                                            {t(`bookings.${booking.status.toLowerCase()}`)}
                                         </span>
                                     </td>
                                     <td className="p-5">
@@ -143,7 +145,7 @@ const Bookings = () => {
                 onClose={handleCloseModal}
                 onAdd={(booking) => {
                     addBooking(booking);
-                    showNotification('Booking created successfully!', 'success');
+                    showNotification(t('bookings.notifications.created'), 'success');
                 }}
                 onUpdate={handleUpdateBooking}
                 vehicles={vehicles}

@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
+
+import { useLanguage } from '../../context/LanguageContext';
 import { generateId } from '../../utils/helpers';
 
 import { useNotification } from '../../context/NotificationContext';
 
 const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
+    const { t } = useLanguage();
     const { showNotification } = useNotification();
     const [formData, setFormData] = useState({
         name: '',
@@ -53,21 +56,21 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
         };
         onSubmit(clientData);
         if (client) {
-            showNotification('Client updated successfully!', 'success');
+            showNotification(t('modals.client.notifications.updated'), 'success');
         } else {
-            showNotification('Client added successfully!', 'success');
+            showNotification(t('modals.client.notifications.added'), 'success');
         }
         onClose();
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={client ? 'Edit Client' : 'Add New Client'} size="lg">
+        <Modal isOpen={isOpen} onClose={onClose} title={client ? t('modals.client.titleEdit') : t('modals.client.titleAdd')} size="lg">
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Full Name */}
                     <div className="md:col-span-2">
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Full Name *
+                            {t('modals.client.fullName')} *
                         </label>
                         <input
                             type="text"
@@ -76,14 +79,14 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             onChange={handleChange}
                             required
                             className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                            placeholder="e.g., John Doe"
+                            placeholder={t('modals.client.placeholderName')}
                         />
                     </div>
 
                     {/* Email */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Email *
+                            {t('modals.client.email')} *
                         </label>
                         <input
                             type="email"
@@ -92,14 +95,14 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             onChange={handleChange}
                             required
                             className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                            placeholder="john@example.com"
+                            placeholder={t('modals.client.placeholderEmail')}
                         />
                     </div>
 
                     {/* Phone */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Phone *
+                            {t('modals.client.phone')} *
                         </label>
                         <input
                             type="tel"
@@ -108,14 +111,14 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             onChange={handleChange}
                             required
                             className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                            placeholder="+1 234 567 8900"
+                            placeholder={t('modals.client.placeholderPhone')}
                         />
                     </div>
 
                     {/* Address */}
                     <div className="md:col-span-2">
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Address
+                            {t('modals.client.address')}
                         </label>
                         <input
                             type="text"
@@ -123,14 +126,14 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             value={formData.address}
                             onChange={handleChange}
                             className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                            placeholder="123 Main St, City, Country"
+                            placeholder={t('modals.client.placeholderAddress')}
                         />
                     </div>
 
                     {/* License Number */}
                     <div>
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            License Number
+                            {t('modals.client.license')}
                         </label>
                         <input
                             type="text"
@@ -138,14 +141,14 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             value={formData.licenseNumber}
                             onChange={handleChange}
                             className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                            placeholder="DL-123456"
+                            placeholder={t('modals.client.placeholderLicense')}
                         />
                     </div>
 
                     {/* Notes */}
                     <div className="md:col-span-2">
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            Notes
+                            {t('modals.client.notes')}
                         </label>
                         <textarea
                             name="notes"
@@ -153,7 +156,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             onChange={handleChange}
                             rows="3"
                             className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold resize-none"
-                            placeholder="Additional notes about the client..."
+                            placeholder={t('modals.client.placeholderNotes')}
                         />
                     </div>
                 </div>
@@ -161,10 +164,10 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                 {/* Actions */}
                 <div className="flex gap-3 pt-4">
                     <Button type="button" variant="secondary" onClick={onClose} className="flex-1">
-                        Cancel
+                        {t('modals.common.cancel')}
                     </Button>
                     <Button type="submit" variant="primary" className="flex-1">
-                        {client ? 'Update Client' : 'Add Client'}
+                        {client ? t('modals.client.submitUpdate') : t('modals.client.submitAdd')}
                     </Button>
                 </div>
             </form>

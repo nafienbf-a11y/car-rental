@@ -2,9 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Fuel, Users, Gauge, Edit2, Trash2 } from 'lucide-react';
 import { formatCurrency } from '../../utils/helpers';
+import { useLanguage } from '../../context/LanguageContext';
 import Button from '../common/Button';
 
 const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) => {
+    const { t } = useLanguage();
     const getTransmissionIcon = () => {
         return vehicle.transmission === 'Automatic' ? '⚙️' : '🔧';
     };
@@ -32,14 +34,14 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
                         vehicle.status === 'Rented' ? 'bg-brand-blue text-white border-brand-blue' :
                             'bg-brand-red text-white border-brand-red'
                         }`}>
-                        {vehicle.status}
+                        {t(`fleet.${vehicle.status.toLowerCase()}`)}
                     </span>
                 </div>
 
                 {/* Price Tag */}
                 <div className="absolute bottom-4 left-4">
                     <div className="bg-white px-4 py-1.5 rounded-lg shadow-xl cursor-default">
-                        <p className="text-[10px] text-zinc-500 font-black uppercase tracking-tighter leading-none">Daily Rate</p>
+                        <p className="text-[10px] text-zinc-500 font-black uppercase tracking-tighter leading-none">{t('fleet.dailyRate')}</p>
                         <p className="text-xl font-black text-black leading-none mt-0.5">{formatCurrency(vehicle.pricePerDay)}</p>
                     </div>
                 </div>
@@ -58,7 +60,7 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                     <div className="flex items-center gap-2 text-zinc-400">
                         <Users className="w-4 h-4 text-white" />
-                        <span className="text-xs font-bold uppercase tracking-wide">{vehicle.seats} Seats</span>
+                        <span className="text-xs font-bold uppercase tracking-wide">{vehicle.seats} {t('modals.addVehicle.seats')}</span>
                     </div>
                     <div className="flex items-center gap-2 text-zinc-400">
                         <Fuel className="w-4 h-4 text-white" />
@@ -77,7 +79,7 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
                 {/* Health Bar */}
                 <div className="mb-6 bg-zinc-900/50 p-3 rounded-xl border border-zinc-800/50">
                     <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Maintenance Score</span>
+                        <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('fleet.maintenanceScore')}</span>
                         <span className={`text-[10px] font-black tracking-tighter ${vehicle.health >= 90 ? 'text-white' :
                             vehicle.health >= 70 ? 'text-white' :
                                 'text-brand-red'
@@ -105,7 +107,7 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
                             className="flex-1 text-[10px] uppercase tracking-widest py-2 bg-brand-red hover:bg-red-700 border-brand-red"
                             onClick={() => onMaintenance(vehicle.id)}
                         >
-                            Out of Service
+                            {t('fleet.outOfService')}
                         </Button>
                     )}
                     {vehicle.status === 'Maintenance' && (
@@ -115,7 +117,7 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
                             className="flex-1 text-[10px] uppercase tracking-widest py-2 bg-emerald-600 hover:bg-emerald-700 border-emerald-600"
                             onClick={() => onAvailable(vehicle.id)}
                         >
-                            Make Available
+                            {t('fleet.makeAvailable')}
                         </Button>
                     )}
                     {vehicle.status === 'Rented' && (
@@ -125,7 +127,7 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
                             className="flex-1 text-[10px] uppercase tracking-widest py-2 opacity-50 cursor-not-allowed"
                             disabled
                         >
-                            Rented
+                            {t('fleet.rented')}
                         </Button>
                     )}
                     <Button
@@ -135,12 +137,12 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
                         className="text-[10px] uppercase tracking-widest py-2"
                         onClick={() => onEdit(vehicle)}
                     >
-                        Edit
+                        {t('fleet.edit')}
                     </Button>
                     <button
                         onClick={() => onDelete(vehicle.id)}
                         className="p-2 hover:bg-red-500/10 rounded-lg text-zinc-400 hover:text-red-500 transition-colors border border-zinc-800 hover:border-red-500"
-                        title="Delete vehicle"
+                        title={t('fleet.deleteTooltip')}
                     >
                         <Trash2 className="w-4 h-4" />
                     </button>

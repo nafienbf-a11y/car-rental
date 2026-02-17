@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Menu, Bell, User } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import LanguageSelector from '../common/LanguageSelector';
 
 const Topbar = ({ onMenuClick }) => {
     const { stats } = useApp();
@@ -29,6 +30,7 @@ const Topbar = ({ onMenuClick }) => {
 
                 {/* Right section */}
                 <div className="flex items-center gap-4">
+                    <LanguageSelector />
 
                     {/* Notifications */}
                     <div className="relative">

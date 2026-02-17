@@ -1,6 +1,7 @@
 import React from 'react';
 import { Car, Calendar, DollarSign, Wrench, Plus } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useLanguage } from '../context/LanguageContext';
 import StatCard from '../components/dashboard/StatCard';
 import MonthlyBookingsChart from '../components/dashboard/MonthlyBookingsChart';
 import FleetStatusChart from '../components/dashboard/FleetStatusChart';
@@ -10,6 +11,7 @@ import { formatCurrency } from '../utils/helpers';
 
 const Dashboard = () => {
     const { stats, setIsAddVehicleModalOpen, setIsNewBookingModalOpen, bookings, vehicles, expenses } = useApp();
+    const { t, language } = useLanguage();
 
     // Calculate monthly maintenance costs
     const getMonthlyMaintenance = () => {
@@ -39,14 +41,14 @@ const Dashboard = () => {
 
             if (booking.status === 'Active') {
                 activities.push({
-                    action: 'New booking',
+                    action: t('dashboard.newBookingActivity'),
                     detail: `${vehicleName} - ${booking.customer}`,
                     time: timeAgo,
                     color: 'brand-blue'
                 });
             } else if (booking.status === 'Completed') {
                 activities.push({
-                    action: 'Booking completed',
+                    action: t('dashboard.bookingCompleted'),
                     detail: `${vehicleName} - ${booking.customer}`,
                     time: timeAgo,
                     color: 'zinc-500'
@@ -64,10 +66,16 @@ const Dashboard = () => {
         const hours = Math.floor(minutes / 60);
         const days = Math.floor(hours / 24);
 
-        if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
-        if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-        if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-        return 'Just now';
+        if (language === 'ar') {
+            if (days > 0) return `${t('dashboard.ago')} ${days} ${t(days === 1 ? 'dashboard.day' : 'dashboard.days')}`;
+            if (hours > 0) return `${t('dashboard.ago')} ${hours} ${t(hours === 1 ? 'dashboard.hour' : 'dashboard.hours')}`;
+            if (minutes > 0) return `${t('dashboard.ago')} ${minutes} ${t(minutes === 1 ? 'dashboard.minute' : 'dashboard.minutes')}`;
+        }
+
+        if (days > 0) return `${days} ${t(days === 1 ? 'dashboard.day' : 'dashboard.days')} ${t('dashboard.ago')}`;
+        if (hours > 0) return `${hours} ${t(hours === 1 ? 'dashboard.hour' : 'dashboard.hours')} ${t('dashboard.ago')}`;
+        if (minutes > 0) return `${minutes} ${t(minutes === 1 ? 'dashboard.minute' : 'dashboard.minutes')} ${t('dashboard.ago')}`;
+        return t('dashboard.justNow');
     };
 
     const recentActivities = getRecentActivity();
@@ -77,7 +85,7 @@ const Dashboard = () => {
             {/* Page Header with Actions */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-extrabold text-white tracking-tight mb-1">Welcome back! Here's your fleet overview</h2>
+                    <h2 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('dashboard.welcome')}</h2>
                 </div>
                 <div className="flex gap-3">
                     <Button
@@ -86,7 +94,7 @@ const Dashboard = () => {
                         onClick={() => setIsAddVehicleModalOpen(true)}
                         className="text-[10px] uppercase tracking-widest"
                     >
-                        Add Car
+                        {t('dashboard.addCar')}
                     </Button>
                     <Button
                         variant="primary"
@@ -94,7 +102,7 @@ const Dashboard = () => {
                         onClick={() => setIsNewBookingModalOpen(true)}
                         className="text-[10px] uppercase tracking-widest"
                     >
-                        New Booking
+                        {t('dashboard.newBooking')}
                     </Button>
                 </div>
             </div>
@@ -102,25 +110,25 @@ const Dashboard = () => {
             {/* Stat Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
-                    title="Total Fleet"
+                    title={t('dashboard.totalFleet')}
                     value={stats.totalFleet}
                     icon={Car}
                     color="neutral"
                 />
                 <StatCard
-                    title="Active Rentals"
+                    title={t('dashboard.activeRentals')}
                     value={stats.activeRentals}
                     icon={Calendar}
                     color="blue"
                 />
                 <StatCard
-                    title="Monthly Revenue"
+                    title={t('dashboard.monthlyRevenue')}
                     value={formatCurrency(stats.monthlyRevenue)}
                     icon={DollarSign}
                     color="blue"
                 />
                 <StatCard
-                    title="Monthly Expenses"
+                    title={t('dashboard.monthlyExpenses')}
                     value={formatCurrency(getMonthlyMaintenance())}
                     icon={Wrench}
                     color="red"
@@ -138,7 +146,7 @@ const Dashboard = () => {
 
             {/* Recent Activity */}
             <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
-                <h3 className="text-xl font-bold text-white mb-6">Recent Activity</h3>
+                <h3 className="text-xl font-bold text-white mb-6">{t('dashboard.recentActivity')}</h3>
                 {recentActivities.length > 0 ? (
                     <div className="space-y-3">
                         {recentActivities.map((activity, index) => (
@@ -154,7 +162,7 @@ const Dashboard = () => {
                     </div>
                 ) : (
                     <div className="text-center py-8 text-zinc-500">
-                        <p className="text-sm font-medium">No activity yet. Create your first booking to get started!</p>
+                        <p className="text-sm font-medium">{t('dashboard.noActivity')}</p>
                     </div>
                 )}
             </div>

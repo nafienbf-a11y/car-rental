@@ -1,15 +1,22 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Car, Calendar, Users, DollarSign, History, Menu } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
+
+import { useAuth } from '../../context/AuthContext';
+
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
+    const { t, isRTL } = useLanguage();
+    const { logout } = useAuth();
+
     const navItems = [
-        { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-        { name: 'Cars', path: '/fleet', icon: Car },
-        { name: 'Bookings', path: '/bookings', icon: Calendar },
-        { name: 'Clients', path: '/clients', icon: Users },
-        { name: 'Expenses', path: '/expenses', icon: DollarSign },
-        { name: 'History', path: '/history', icon: History },
+        { name: t('nav.dashboard'), path: '/', icon: LayoutDashboard },
+        { name: t('nav.fleet'), path: '/fleet', icon: Car },
+        { name: t('nav.bookings'), path: '/bookings', icon: Calendar },
+        { name: t('nav.clients'), path: '/clients', icon: Users },
+        { name: t('nav.expenses'), path: '/expenses', icon: DollarSign },
+        { name: t('nav.history'), path: '/history', icon: History },
     ];
 
     return (
@@ -24,8 +31,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
             {/* Sidebar */}
             <aside
-                className={`fixed left-0 top-0 h-screen w-64 bg-[#0a0e27] border-r border-zinc-800 z-30 transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'
-                    }`}
+                className={`fixed top-0 h-screen w-64 bg-[#0a0e27] z-30 transition-transform duration-300
+                    ${isRTL ? 'right-0 border-l border-zinc-800' : 'left-0 border-r border-zinc-800'}
+                    ${isOpen ? 'translate-x-0' : (isRTL ? 'translate-x-full' : '-translate-x-full')}
+                    lg:translate-x-0
+                `}
             >
                 <div className="flex flex-col h-full">
                     {/* Logo */}
@@ -37,13 +47,13 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                 className="w-24 h-24 rounded-xl object-contain"
                             />
                             <p className="text-[9px] text-zinc-400 uppercase tracking-wider font-medium leading-tight text-center">
-                                Embarquez pour l'aventure,<br />laissez-nous vous fournir les clés
+                                {t('sidebar.tagline')}
                             </p>
                         </div>
                     </div>
 
                     {/* Navigation */}
-                    <nav className="flex-1 p-4 space-y-1.5">
+                    <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
                         {navItems.map((item) => (
                             <NavLink
                                 key={item.path}
@@ -72,12 +82,19 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     </nav>
 
                     {/* Footer */}
-                    <div className="p-4 border-t border-zinc-800">
+                    <div className="p-4 border-t border-zinc-800 space-y-4">
+                        <button
+                            onClick={logout}
+                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:bg-red-500/10 hover:text-red-500 transition-all duration-300"
+                        >
+                            <span className="font-medium">{t('auth.logout')}</span>
+                        </button>
+
                         <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                            <p className="text-xs text-zinc-500 mb-1">System Status</p>
+                            <p className="text-xs text-zinc-500 mb-1">{t('sidebar.systemStatus')}</p>
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 bg-brand-blue rounded-full animate-pulse shadow-[0_0_8px_rgba(37,99,235,0.5)]" />
-                                <span className="text-sm text-zinc-300">Operational</span>
+                                <span className="text-sm text-zinc-300">{t('sidebar.operational')}</span>
                             </div>
                         </div>
                     </div>
