@@ -21,7 +21,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     ];
 
     const handleOpenCatalog = () => {
-        window.open('/#/', '_blank');
+        const base = import.meta.env.BASE_URL || '/';
+        window.open(`${base}#/`, '_blank');
     };
 
     return (
