@@ -123,15 +123,7 @@ const Fleet = () => {
                     <p className="text-zinc-500 font-medium tracking-tight">{t('fleet.subtitle')}</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button
-                        variant="ghost"
-                        icon={Upload}
-                        onClick={handleMigrate}
-                        disabled={migrating}
-                        className="text-zinc-400 hover:text-white"
-                    >
-                        {migrating ? t('fleet.importing') : t('fleet.importLegacy')}
-                    </Button>
+
                     <Button
                         variant="primary"
                         icon={Plus}

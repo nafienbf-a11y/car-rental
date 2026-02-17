@@ -50,7 +50,20 @@ export const en = {
         contactUs: 'Contact Us',
         maxPrice: 'Max price (MAD)',
         allRightsReserved: 'All rights reserved.',
-        whatsappMessage: "Hello! I'm interested in renting the {brand} {model} ({year}) at {price} MAD/day. Could you please provide more details?"
+        whatsappMessage: "Hello! I'm interested in renting the {brand} {model} ({year}) at {price} MAD/day. Could you please provide more details?",
+        locationTitle: 'Find Us',
+        locationSubtitle: 'Visit our agency for the best car rental experience',
+        locationDescription: 'Your trusted car rental agency. We offer a wide selection of well-maintained vehicles at competitive prices.',
+        address: 'Address',
+        phone: 'Phone',
+        hours: 'Working Hours',
+        hoursValue: 'Mon - Sat: 8:00 AM - 8:00 PM',
+        getDirections: 'Get Directions'
+    },
+    notFound: {
+        title: 'Page Not Found',
+        message: "The page you are looking for doesn't exist or has been moved.",
+        backHome: 'Back to Home'
     },
     // Dashboard
     dashboard: {
@@ -87,6 +100,19 @@ export const en = {
             vehicles: 'vehicles',
             ofFleet: 'of fleet'
         }
+    },
+    activity: {
+        newBooking: 'New Booking',
+        bookingStarting: 'Booking Starts Today',
+        bookingEnding: 'Booking Ends Today',
+        newClient: 'New Client Added',
+        newVehicle: 'New Vehicle Added'
+    },
+    notifications: {
+        title: 'Notifications',
+        empty: 'No new notifications',
+        viewAll: 'View all notifications',
+        markAllRead: 'Mark all as read'
     },
     // Fleet
     fleet: {

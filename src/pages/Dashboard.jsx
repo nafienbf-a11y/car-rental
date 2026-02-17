@@ -9,9 +9,12 @@ import DashboardTimeline from '../components/dashboard/DashboardTimeline';
 import Button from '../components/common/Button';
 import { formatCurrency } from '../utils/helpers';
 
+import { useRecentActivity } from '../hooks/useRecentActivity';
+
 const Dashboard = () => {
-    const { stats, setIsAddVehicleModalOpen, setIsNewBookingModalOpen, bookings, vehicles, expenses } = useApp();
+    const { stats, setIsAddVehicleModalOpen, setIsNewBookingModalOpen, expenses } = useApp();
     const { t, language } = useLanguage();
+    const recentActivities = useRecentActivity();
 
     // Calculate monthly maintenance costs
     const getMonthlyMaintenance = () => {
@@ -23,40 +26,6 @@ const Dashboard = () => {
                 return expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear;
             })
             .reduce((sum, expense) => sum + (expense.amount || 0), 0); // Use .amount not .cost
-    };
-
-    // Generate dynamic recent activity
-    const getRecentActivity = () => {
-        const activities = [];
-
-        // Get recent bookings (last 5)
-        const recentBookings = [...bookings]
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-            .slice(0, 5);
-
-        recentBookings.forEach(booking => {
-            const vehicle = vehicles.find(v => v.id === booking.vehicleId);
-            const vehicleName = vehicle ? `${vehicle.brand} ${vehicle.model}` : 'Unknown Vehicle';
-            const timeAgo = getTimeAgo(new Date(booking.createdAt));
-
-            if (booking.status === 'Active') {
-                activities.push({
-                    action: t('dashboard.newBookingActivity'),
-                    detail: `${vehicleName} - ${booking.customer}`,
-                    time: timeAgo,
-                    color: 'brand-blue'
-                });
-            } else if (booking.status === 'Completed') {
-                activities.push({
-                    action: t('dashboard.bookingCompleted'),
-                    detail: `${vehicleName} - ${booking.customer}`,
-                    time: timeAgo,
-                    color: 'zinc-500'
-                });
-            }
-        });
-
-        return activities.slice(0, 4);
     };
 
     const getTimeAgo = (date) => {
@@ -77,8 +46,6 @@ const Dashboard = () => {
         if (minutes > 0) return `${minutes} ${t(minutes === 1 ? 'dashboard.minute' : 'dashboard.minutes')} ${t('dashboard.ago')}`;
         return t('dashboard.justNow');
     };
-
-    const recentActivities = getRecentActivity();
 
     return (
         <div className="space-y-6">
@@ -149,14 +116,18 @@ const Dashboard = () => {
                 <h3 className="text-xl font-bold text-white mb-6">{t('dashboard.recentActivity')}</h3>
                 {recentActivities.length > 0 ? (
                     <div className="space-y-3">
-                        {recentActivities.map((activity, index) => (
-                            <div key={index} className="flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-xl hover:border-zinc-700 transition-colors">
-                                <div className={`w-2 h-2 rounded-full ${activity.color === 'brand-blue' ? 'bg-brand-blue' : activity.color === 'brand-red' ? 'bg-brand-red' : 'bg-zinc-500'}`} />
+                        {recentActivities.slice(0, 5).map((activity) => (
+                            <div key={activity.id} className="flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-xl hover:border-zinc-700 transition-colors">
+                                <div className={`w-2 h-2 rounded-full ${activity.type === 'booking_new' ? 'bg-brand-blue' :
+                                        activity.type === 'booking_start' ? 'bg-emerald-500' :
+                                            activity.type === 'booking_end' ? 'bg-orange-500' :
+                                                'bg-zinc-500'
+                                    }`} />
                                 <div className="flex-1">
-                                    <p className="text-zinc-200 font-medium">{activity.action}</p>
-                                    <p className="text-zinc-500 text-sm font-medium">{activity.detail}</p>
+                                    <p className="text-zinc-200 font-medium">{activity.title}</p>
+                                    <p className="text-zinc-500 text-sm font-medium">{activity.message}</p>
                                 </div>
-                                <span className="text-xs text-zinc-500 font-semibold">{activity.time}</span>
+                                <span className="text-xs text-zinc-500 font-semibold">{getTimeAgo(activity.date)}</span>
                             </div>
                         ))}
                     </div>

@@ -50,7 +50,20 @@ export const fr = {
         contactUs: 'Nous contacter',
         maxPrice: 'Prix max (MAD)',
         allRightsReserved: 'Tous droits réservés.',
-        whatsappMessage: "Bonjour ! Je suis intéressé(e) par la location du {brand} {model} ({year}) à {price} MAD/jour. Pourriez-vous me donner plus de détails ?"
+        whatsappMessage: "Bonjour ! Je suis intéressé(e) par la location du {brand} {model} ({year}) à {price} MAD/jour. Pourriez-vous me donner plus de détails ?",
+        locationTitle: 'Nous Trouver',
+        locationSubtitle: 'Visitez notre agence pour la meilleure expérience de location de voitures',
+        locationDescription: 'Votre agence de location de voitures de confiance. Nous offrons un large choix de véhicules bien entretenus à des prix compétitifs.',
+        address: 'Adresse',
+        phone: 'Téléphone',
+        hours: 'Horaires',
+        hoursValue: 'Lun - Sam : 08h00 - 20h00',
+        getDirections: 'Itinéraire'
+    },
+    notFound: {
+        title: 'Page Non Trouvée',
+        message: "La page que vous recherchez n'existe pas ou a été déplacée.",
+        backHome: "Retour à l'accueil"
     },
     // Dashboard
     dashboard: {
@@ -87,6 +100,19 @@ export const fr = {
             vehicles: 'véhicules',
             ofFleet: 'de la flotte'
         }
+    },
+    activity: {
+        newBooking: 'Nouvelle réservation',
+        bookingStarting: "La réservation commence aujourd'hui",
+        bookingEnding: "La réservation se termine aujourd'hui",
+        newClient: 'Nouveau client ajouté',
+        newVehicle: 'Nouveau véhicule ajouté'
+    },
+    notifications: {
+        title: 'Notifications',
+        empty: 'Aucune nouvelle notification',
+        viewAll: 'Voir toutes les notifications',
+        markAllRead: 'Tout marquer comme lu'
     },
     // Fleet
     fleet: {

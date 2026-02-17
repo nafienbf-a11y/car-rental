@@ -50,7 +50,20 @@ export const ar = {
         contactUs: 'اتصل بنا',
         maxPrice: 'السعر الأقصى (درهم)',
         allRightsReserved: 'جميع الحقوق محفوظة.',
-        whatsappMessage: 'مرحبا! أنا مهتم باستئجار {brand} {model} ({year}) بسعر {price} درهم/اليوم. هل يمكنكم تقديم المزيد من التفاصيل؟'
+        whatsappMessage: 'مرحبا! أنا مهتم باستئجار {brand} {model} ({year}) بسعر {price} درهم/اليوم. هل يمكنكم تقديم المزيد من التفاصيل؟',
+        locationTitle: 'موقعنا',
+        locationSubtitle: 'قم بزيارة وكالتنا للحصول على أفضل تجربة تأجير سيارات',
+        locationDescription: 'وكالة تأجير السيارات الموثوقة. نقدم مجموعة واسعة من السيارات المصانة جيدًا بأسعار تنافسية.',
+        address: 'العنوان',
+        phone: 'الهاتف',
+        hours: 'ساعات العمل',
+        hoursValue: 'الإثنين - السبت: 08:00 - 20:00',
+        getDirections: 'الاتجاهات'
+    },
+    notFound: {
+        title: 'الصفحة غير موجودة',
+        message: 'الصفحة التي تبحث عنها غير موجودة أو تم نقلها.',
+        backHome: 'العودة للرئيسية'
     },
     // Dashboard
     dashboard: {
@@ -87,6 +100,19 @@ export const ar = {
             vehicles: 'مركبات',
             ofFleet: 'من الأسطول'
         }
+    },
+    activity: {
+        newBooking: 'حجز جديد',
+        bookingStarting: 'يبدأ الحجز اليوم',
+        bookingEnding: 'ينتهي الحجز اليوم',
+        newClient: 'تم إضافة عميل جديد',
+        newVehicle: 'تم إضافة مركبة جديدة'
+    },
+    notifications: {
+        title: 'الإشعارات',
+        empty: 'لا توجد إشعارات جديدة',
+        viewAll: 'عرض جميع الإشعارات',
+        markAllRead: 'تحديد الكل كمقروء'
     },
     // Fleet
     fleet: {

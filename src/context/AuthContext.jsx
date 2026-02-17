@@ -4,7 +4,7 @@ const AuthContext = createContext();
 
 const ADMIN_USERS = [
     { username: 'gatibi', password: 'gatibi123', name: 'Gatibi Admin', role: 'admin' },
-    { username: 'admin', password: 'admin132', name: 'Admin', role: 'admin' },
+    { username: 'admin', password: 'admin123', name: 'Admin', role: 'admin' },
 ];
 
 export const useAuth = () => {

@@ -4,6 +4,7 @@ import { LayoutDashboard, Car, Calendar, Users, DollarSign, History, Menu, Exter
 import { useLanguage } from '../../context/LanguageContext';
 
 import { useAuth } from '../../context/AuthContext';
+import Logo from '../common/Logo';
 
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
@@ -45,11 +46,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     {/* Logo */}
                     <div className="p-6 border-b border-zinc-800">
                         <div className="flex flex-col items-center gap-3">
-                            <img
-                                src="/gatibi_rental_logo_1.png"
-                                alt="Gatibi Rental Logo"
-                                className="w-24 h-24 rounded-xl object-contain"
-                            />
+                            <Logo className="w-24 h-24" />
                             <p className="text-[9px] text-zinc-400 uppercase tracking-wider font-medium leading-tight text-center">
                                 {t('sidebar.tagline')}
                             </p>
@@ -62,6 +59,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                             <NavLink
                                 key={item.path}
                                 to={item.path}
+                                end={item.path === '/admin'}
                                 onClick={() => setIsOpen(false)}
                                 className={({ isActive }) =>
                                     `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${isActive

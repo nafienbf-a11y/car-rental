@@ -4,8 +4,9 @@ import { Fuel, Users, Gauge, MessageCircle, Car, Search, SlidersHorizontal, X } 
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSelector from '../components/common/LanguageSelector';
+import Logo from '../components/common/Logo';
 
-const WHATSAPP_NUMBER = '212648744765';
+const WHATSAPP_NUMBER = '212763296157';
 
 const Catalog = () => {
     const { vehicles, loading } = useApp();
@@ -53,11 +54,7 @@ const Catalog = () => {
             <header className="sticky top-0 z-40 bg-[#0a0e27]/80 backdrop-blur-xl border-b border-zinc-800">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <img
-                            src="/gatibi_rental_logo_1.png"
-                            alt="Gatibi Rental"
-                            className="w-10 h-10 rounded-lg object-contain"
-                        />
+                        <Logo className="w-10 h-10" showText={false} />
                         <h1 className="text-lg font-bold text-white hidden sm:block">Gatibi Rental</h1>
                     </div>
                     <div className="flex items-center gap-3">
@@ -232,6 +229,89 @@ const Catalog = () => {
                         </AnimatePresence>
                     </div>
                 )}
+            </section>
+
+            {/* Location Section */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+                <div className="text-center mb-10">
+                    <h2 className="text-3xl font-extrabold text-white mb-3">{t('catalog.locationTitle')}</h2>
+                    <p className="text-zinc-400 text-lg">{t('catalog.locationSubtitle')}</p>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* Map */}
+                    <div className="rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl h-80 lg:h-auto">
+                        <iframe
+                            title="Gatibi Rental Location"
+                            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3000!2d-5.3748333!3d35.5658889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzXCsDMzJzU3LjIiTiA1wrAyMicyOS40Ilc!5e0!3m2!1sen!2sma!4v1700000000000"
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0, minHeight: '320px' }}
+                            allowFullScreen=""
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                        />
+                    </div>
+
+                    {/* Info Card */}
+                    <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-8 flex flex-col justify-center gap-6">
+                        <div>
+                            <h3 className="text-xl font-bold text-white mb-2">Gatibi Rental</h3>
+                            <p className="text-zinc-400 leading-relaxed">{t('catalog.locationDescription')}</p>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-3">
+                                <div className="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                                    <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-white font-semibold text-sm">{t('catalog.address')}</p>
+                                    <p className="text-zinc-400 text-sm">35°33'57.2"N 5°22'29.4"W</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start gap-3">
+                                <div className="w-10 h-10 bg-green-500/10 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                                    <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-white font-semibold text-sm">{t('catalog.phone')}</p>
+                                    <p className="text-zinc-400 text-sm">+212 763-296157</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start gap-3">
+                                <div className="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                                    <svg className="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-white font-semibold text-sm">{t('catalog.hours')}</p>
+                                    <p className="text-zinc-400 text-sm">{t('catalog.hoursValue')}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a
+                            href="https://www.google.com/maps/search/?api=1&query=35.5658889,-5.3748333"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2 inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-blue hover:bg-blue-600 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            {t('catalog.getDirections')}
+                        </a>
+                    </div>
+                </div>
             </section>
 
             {/* Footer */}
