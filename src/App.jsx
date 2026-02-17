@@ -18,18 +18,6 @@ import Catalog from './pages/Catalog';
 import NotFound from './pages/NotFound';
 
 function App() {
-  // HashRouter doesn't handle pathname (e.g. /sqds), so we check it manually
-  React.useEffect(() => {
-    const path = window.location.pathname;
-    // Get the base path from vite config (e.g., '/car-rental/' on GitHub Pages, '/' locally)
-    const basePath = import.meta.env.BASE_URL || '/';
-    const normalizedPath = path.endsWith('/') ? path : path + '/';
-    const normalizedBase = basePath.endsWith('/') ? basePath : basePath + '/';
-    // Only redirect if the path doesn't match the expected base and isn't requesting a file
-    if (normalizedPath !== normalizedBase && !path.endsWith('/index.html') && !path.includes('.')) {
-      window.location.href = `${window.location.origin}${basePath}#/404`;
-    }
-  }, []);
 
   return (
     <LanguageProvider>
@@ -51,10 +39,10 @@ function App() {
                     <Route path="clients" element={<Clients />} />
                     <Route path="expenses" element={<Expenses />} />
                     <Route path="history" element={<History />} />
+                    <Route path="*" element={<NotFound />} />
                   </Route>
                 </Route>
                 {/* Catch-all: 404 Page */}
-                <Route path="/404" element={<NotFound />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toast />
