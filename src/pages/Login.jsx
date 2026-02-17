@@ -24,7 +24,7 @@ const Login = () => {
         setTimeout(() => {
             const result = login(username, password);
             if (result.success) {
-                navigate('/');
+                navigate('/admin');
             } else {
                 setError(t('auth.invalidCredentials'));
             }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Car, Calendar, Users, DollarSign, History, Menu } from 'lucide-react';
+import { LayoutDashboard, Car, Calendar, Users, DollarSign, History, Menu, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 import { useAuth } from '../../context/AuthContext';
@@ -11,13 +11,17 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     const { logout } = useAuth();
 
     const navItems = [
-        { name: t('nav.dashboard'), path: '/', icon: LayoutDashboard },
-        { name: t('nav.fleet'), path: '/fleet', icon: Car },
-        { name: t('nav.bookings'), path: '/bookings', icon: Calendar },
-        { name: t('nav.clients'), path: '/clients', icon: Users },
-        { name: t('nav.expenses'), path: '/expenses', icon: DollarSign },
-        { name: t('nav.history'), path: '/history', icon: History },
+        { name: t('nav.dashboard'), path: '/admin', icon: LayoutDashboard },
+        { name: t('nav.fleet'), path: '/admin/fleet', icon: Car },
+        { name: t('nav.bookings'), path: '/admin/bookings', icon: Calendar },
+        { name: t('nav.clients'), path: '/admin/clients', icon: Users },
+        { name: t('nav.expenses'), path: '/admin/expenses', icon: DollarSign },
+        { name: t('nav.history'), path: '/admin/history', icon: History },
     ];
+
+    const handleOpenCatalog = () => {
+        window.open('/#/', '_blank');
+    };
 
     return (
         <>
@@ -82,7 +86,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     </nav>
 
                     {/* Footer */}
-                    <div className="p-4 border-t border-zinc-800 space-y-4">
+                    <div className="p-4 border-t border-zinc-800 space-y-2">
+                        <button
+                            onClick={handleOpenCatalog}
+                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:bg-blue-500/10 hover:text-blue-400 transition-all duration-300"
+                        >
+                            <ExternalLink className="w-5 h-5" />
+                            <span className="font-medium">{t('nav.catalog')}</span>
+                        </button>
                         <button
                             onClick={logout}
                             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:bg-red-500/10 hover:text-red-500 transition-all duration-300"

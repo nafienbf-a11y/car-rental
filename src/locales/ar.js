@@ -6,6 +6,7 @@ export const ar = {
         clients: 'العملاء',
         expenses: 'المصاريف',
         history: 'السجل',
+        catalog: 'عرض الكتالوج',
     },
     sidebar: {
         tagline: 'انطلق في المغامرة، دعنا نقدم لك المفاتيح',
@@ -47,6 +48,7 @@ export const ar = {
         day: 'يوم',
         rentNow: 'استأجر الآن',
         contactUs: 'اتصل بنا',
+        maxPrice: 'السعر الأقصى (درهم)',
         allRightsReserved: 'جميع الحقوق محفوظة.',
         whatsappMessage: 'مرحبا! أنا مهتم باستئجار {brand} {model} ({year}) بسعر {price} درهم/اليوم. هل يمكنكم تقديم المزيد من التفاصيل؟'
     },

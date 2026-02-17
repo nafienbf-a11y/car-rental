@@ -6,6 +6,7 @@ export const fr = {
         clients: 'Clients',
         expenses: 'Dépenses',
         history: 'Historique',
+        catalog: 'Voir le catalogue',
     },
     sidebar: {
         tagline: 'Embarquez pour l\'aventure, laissez-nous vous fournir les clés',
@@ -47,6 +48,7 @@ export const fr = {
         day: 'jour',
         rentNow: 'Louer',
         contactUs: 'Nous contacter',
+        maxPrice: 'Prix max (MAD)',
         allRightsReserved: 'Tous droits réservés.',
         whatsappMessage: "Bonjour ! Je suis intéressé(e) par la location du {brand} {model} ({year}) à {price} MAD/jour. Pourriez-vous me donner plus de détails ?"
     },

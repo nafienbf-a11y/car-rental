@@ -13,6 +13,7 @@ const Catalog = () => {
     const [search, setSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [transmissionFilter, setTransmissionFilter] = useState('all');
+    const [maxPrice, setMaxPrice] = useState('');
 
     const allVehicles = vehicles;
 
@@ -21,7 +22,9 @@ const Catalog = () => {
             `${v.brand} ${v.model}`.toLowerCase().includes(search.toLowerCase());
         const matchesCategory = categoryFilter === 'all' || v.category === categoryFilter;
         const matchesTransmission = transmissionFilter === 'all' || v.transmission === transmissionFilter;
-        return matchesSearch && matchesCategory && matchesTransmission;
+        const price = v.pricePerDay || v.price_per_day;
+        const matchesPrice = !maxPrice || Number(price) <= Number(maxPrice);
+        return matchesSearch && matchesCategory && matchesTransmission && matchesPrice;
     });
 
     const categories = [...new Set(allVehicles.map(v => v.category))];
@@ -132,6 +135,17 @@ const Catalog = () => {
                         <option value="Automatic">{t('catalog.automatic')}</option>
                         <option value="Manual">{t('catalog.manual')}</option>
                     </select>
+                    {/* Price Filter */}
+                    <div className="relative">
+                        <input
+                            type="number"
+                            value={maxPrice}
+                            onChange={(e) => setMaxPrice(e.target.value)}
+                            placeholder={t('catalog.maxPrice')}
+                            min="0"
+                            className="w-full sm:w-40 px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 transition-all appearance-none"
+                        />
+                    </div>
                 </div>
             </section>
 

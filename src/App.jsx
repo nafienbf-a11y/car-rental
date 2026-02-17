@@ -24,12 +24,12 @@ function App() {
           <NotificationProvider>
             <Router>
               <Routes>
+                <Route path="/" element={<Catalog />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/catalog" element={<Catalog />} />
 
-                {/* Protected Routes */}
+                {/* Protected Admin Routes */}
                 <Route element={<ProtectedRoute />}>
-                  <Route path="/" element={<MainLayout />}>
+                  <Route path="/admin" element={<MainLayout />}>
                     <Route index element={<Dashboard />} />
                     <Route path="fleet" element={<Fleet />} />
                     <Route path="bookings" element={<Bookings />} />

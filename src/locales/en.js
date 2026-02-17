@@ -6,6 +6,7 @@ export const en = {
         clients: 'Clients',
         expenses: 'Expenses',
         history: 'History',
+        catalog: 'View Catalog',
     },
     sidebar: {
         tagline: 'Embark on the adventure, let us provide the keys',
@@ -47,6 +48,7 @@ export const en = {
         day: 'day',
         rentNow: 'Rent Now',
         contactUs: 'Contact Us',
+        maxPrice: 'Max price (MAD)',
         allRightsReserved: 'All rights reserved.',
         whatsappMessage: "Hello! I'm interested in renting the {brand} {model} ({year}) at {price} MAD/day. Could you please provide more details?"
     },
