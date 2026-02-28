@@ -5,6 +5,7 @@ import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSelector from '../components/common/LanguageSelector';
 import Logo from '../components/common/Logo';
+import CustomerBookingModal from '../components/catalog/CustomerBookingModal';
 
 const WHATSAPP_NUMBER = '212763296157';
 
@@ -15,6 +16,9 @@ const Catalog = () => {
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [transmissionFilter, setTransmissionFilter] = useState('all');
     const [maxPrice, setMaxPrice] = useState('');
+
+    const [bookingModalOpen, setBookingModalOpen] = useState(false);
+    const [selectedVehicle, setSelectedVehicle] = useState(null);
 
     const allVehicles = vehicles;
 
@@ -30,14 +34,9 @@ const Catalog = () => {
 
     const categories = [...new Set(allVehicles.map(v => v.category))];
 
-    const handleWhatsApp = (vehicle) => {
-        const message = t('catalog.whatsappMessage')
-            .replace('{brand}', vehicle.brand)
-            .replace('{model}', vehicle.model)
-            .replace('{year}', vehicle.year)
-            .replace('{price}', vehicle.pricePerDay || vehicle.price_per_day);
-        const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank');
+    const handleBookNow = (vehicle) => {
+        setSelectedVehicle(vehicle);
+        setBookingModalOpen(true);
     };
 
     if (loading) {
@@ -55,7 +54,7 @@ const Catalog = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <Logo className="w-10 h-10" showText={false} />
-                        <h1 className="text-lg font-bold text-white hidden sm:block">Gatibi Rental</h1>
+                        <h1 className="text-lg font-bold text-white hidden sm:block">Golden Key Rental</h1>
                     </div>
                     <div className="flex items-center gap-3">
                         <div className="w-36">
@@ -216,10 +215,10 @@ const Catalog = () => {
                                                 </p>
                                             </div>
                                             <button
-                                                onClick={() => handleWhatsApp(vehicle)}
-                                                className="flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
+                                                onClick={() => handleBookNow(vehicle)}
+                                                className="flex items-center gap-2 px-5 py-2.5 bg-brand-blue hover:bg-blue-600 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
                                             >
-                                                <MessageCircle className="w-4 h-4" />
+                                                <Car className="w-4 h-4" />
                                                 {t('catalog.rentNow')}
                                             </button>
                                         </div>
@@ -241,7 +240,7 @@ const Catalog = () => {
                     {/* Map */}
                     <div className="rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl h-80 lg:h-auto">
                         <iframe
-                            title="Gatibi Rental Location"
+                            title="Golden Key Rental Location"
                             src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3000!2d-5.3748333!3d35.5658889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzXCsDMzJzU3LjIiTiA1wrAyMicyOS40Ilc!5e0!3m2!1sen!2sma!4v1700000000000"
                             width="100%"
                             height="100%"
@@ -255,7 +254,7 @@ const Catalog = () => {
                     {/* Info Card */}
                     <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-8 flex flex-col justify-center gap-6">
                         <div>
-                            <h3 className="text-xl font-bold text-white mb-2">Gatibi Rental</h3>
+                            <h3 className="text-xl font-bold text-white mb-2">Golden Key Rental</h3>
                             <p className="text-zinc-400 leading-relaxed">{t('catalog.locationDescription')}</p>
                         </div>
 
@@ -316,8 +315,17 @@ const Catalog = () => {
 
             {/* Footer */}
             <footer className="border-t border-zinc-800 py-8 text-center">
-                <p className="text-zinc-500 text-sm">&copy; 2026 Gatibi Rental. {t('catalog.allRightsReserved')}</p>
+                <p className="text-zinc-500 text-sm">&copy; 2026 Golden Key Rental. {t('catalog.allRightsReserved')}</p>
             </footer>
+
+            <CustomerBookingModal
+                isOpen={bookingModalOpen}
+                onClose={() => {
+                    setBookingModalOpen(false);
+                    setSelectedVehicle(null);
+                }}
+                vehicle={selectedVehicle}
+            />
         </div>
     );
 };

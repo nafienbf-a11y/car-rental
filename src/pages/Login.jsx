@@ -114,7 +114,7 @@ const Login = () => {
 
                 <div className="mt-8 pt-6 border-t border-zinc-900 text-center">
                     <p className="text-zinc-500 text-xs text-center">
-                        &copy; 2026 Gatibi Rental. All rights reserved.
+                        &copy; 2026 Golden Key Rental. All rights reserved.
                     </p>
                 </div>
             </div>

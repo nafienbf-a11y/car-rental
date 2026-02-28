@@ -8,7 +8,6 @@ const LanguageSelector = () => {
     const dropdownRef = useRef(null);
 
     const languages = [
-        { code: 'fr', name: 'Français', flag: '🇫🇷' },
         { code: 'en', name: 'English', flag: '🇬🇧' },
         { code: 'ar', name: 'العربية', flag: '🇲🇦' },
     ];

@@ -1,13 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { en } from '../locales/en';
-import { fr } from '../locales/fr';
 import { ar } from '../locales/ar';
 
 const LanguageContext = createContext();
 
 const translations = {
     en,
-    fr,
     ar,
 };
 
@@ -22,7 +20,7 @@ export const useLanguage = () => {
 export const LanguageProvider = ({ children }) => {
     const [language, setLanguage] = useState(() => {
         const savedLanguage = localStorage.getItem('app-language');
-        return savedLanguage || 'fr'; // Default to French
+        return savedLanguage || 'en'; // Default to English
     });
 
     useEffect(() => {

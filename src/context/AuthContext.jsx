@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext();
 
 const ADMIN_USERS = [
-    { username: 'gatibi', password: 'gatibi123', name: 'Gatibi Admin', role: 'admin' },
+    { username: 'goldenkey', password: 'goldenkey123', name: 'Golden Key Admin', role: 'admin' },
     { username: 'admin', password: 'admin123', name: 'Admin', role: 'admin' },
 ];
 
