@@ -30,7 +30,9 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (username, password) => {
-        const found = ADMIN_USERS.find(
+        const registeredUsers = JSON.parse(localStorage.getItem('registered-users') || '[]');
+        const allUsers = [...ADMIN_USERS, ...registeredUsers];
+        const found = allUsers.find(
             (u) => u.username === username && u.password === password
         );
 
@@ -45,6 +47,25 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: 'Invalid username or password' };
     };
 
+    const register = (username, password) => {
+        const registeredUsers = JSON.parse(localStorage.getItem('registered-users') || '[]');
+        const allUsers = [...ADMIN_USERS, ...registeredUsers];
+
+        if (allUsers.find(u => u.username === username)) {
+            return { success: false, error: 'User already exists' };
+        }
+
+        const newUser = { username, password, name: username, role: 'admin' };
+        registeredUsers.push(newUser);
+        localStorage.setItem('registered-users', JSON.stringify(registeredUsers));
+
+        const userData = { username: newUser.username, name: newUser.name, role: newUser.role };
+        localStorage.setItem('auth-user', JSON.stringify(userData));
+        setUser(userData);
+        setIsAuthenticated(true);
+        return { success: true };
+    };
+
     const logout = () => {
         localStorage.removeItem('auth-user');
         setUser(null);
@@ -56,6 +77,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         loading,
         login,
+        register,
         logout,
     };
 

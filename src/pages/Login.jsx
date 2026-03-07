@@ -13,8 +13,9 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [isRegisterMode, setIsRegisterMode] = useState(false);
 
-    const { login } = useAuth();
+    const { login, register } = useAuth();
     const { t } = useLanguage();
     const navigate = useNavigate();
 
@@ -24,11 +25,14 @@ const Login = () => {
         setLoading(true);
 
         setTimeout(() => {
-            const result = login(username, password);
+            const result = isRegisterMode
+                ? register(username, password)
+                : login(username, password);
+
             if (result.success) {
                 navigate('/admin');
             } else {
-                setError(t('auth.invalidCredentials'));
+                setError(result.error && isRegisterMode ? t('auth.userExists') : t('auth.invalidCredentials'));
             }
             setLoading(false);
         }, 500);
@@ -40,11 +44,15 @@ const Login = () => {
             <div className="absolute top-4 right-4 w-40 z-50">
                 <LanguageSelector />
             </div>
-            <div className="w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-2xl p-8 shadow-2xl">
+            <div className="w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-2xl p-8 shadow-2xl mt-8">
                 <div className="flex flex-col items-center mb-8">
                     <Logo className="w-24 h-24 mb-4" />
-                    <h1 className="text-2xl font-bold text-white mb-2">{t('auth.pageTitle')}</h1>
-                    <p className="text-zinc-400 text-sm text-center">{t('auth.subtitle')}</p>
+                    <h1 className="text-2xl font-bold text-white mb-2">
+                        {isRegisterMode ? t('auth.registerTitle') : t('auth.pageTitle')}
+                    </h1>
+                    <p className="text-zinc-400 text-sm text-center">
+                        {isRegisterMode ? t('auth.registerSubtitle') : t('auth.subtitle')}
+                    </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -104,13 +112,32 @@ const Login = () => {
                         {loading ? (
                             <>
                                 <Loader className="w-5 h-5 animate-spin" />
-                                {t('auth.loggingIn')}
+                                {isRegisterMode ? t('auth.registering') : t('auth.loggingIn')}
                             </>
                         ) : (
-                            t('auth.loginButton')
+                            isRegisterMode ? t('auth.registerButton') : t('auth.loginButton')
                         )}
                     </Button>
                 </form>
+
+                <div className="mt-6 text-center">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setIsRegisterMode(!isRegisterMode);
+                            setError('');
+                            setUsername('');
+                            setPassword('');
+                        }}
+                        className="text-sm text-zinc-400 hover:text-brand-blue transition-colors"
+                    >
+                        {isRegisterMode ? (
+                            <>{t('auth.hasAccount')} <span className="font-semibold text-white">{t('auth.loginLink')}</span></>
+                        ) : (
+                            <>{t('auth.noAccount')} <span className="font-semibold text-white">{t('auth.registerLink')}</span></>
+                        )}
+                    </button>
+                </div>
 
                 <div className="mt-8 pt-6 border-t border-zinc-900 text-center">
                     <p className="text-zinc-500 text-xs text-center">
