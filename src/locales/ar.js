@@ -7,6 +7,7 @@ export const ar = {
         expenses: 'المصاريف',
         history: 'السجل',
         catalog: 'عرض الكتالوج',
+        users: 'المستخدمون'
     },
     sidebar: {
         tagline: 'انطلق في المغامرة، دعنا نقدم لك المفاتيح',
@@ -50,7 +51,7 @@ export const ar = {
         contactUs: 'اتصل بنا',
         maxPrice: 'السعر الأقصى (درهم)',
         allRightsReserved: 'جميع الحقوق محفوظة.',
-        whatsappMessage: 'مرحبا! أنا مهتم باستئجار {brand} {model} ({year}) بسعر {price} درهم/اليوم. هل يمكنكم تقديم المزيد من التفاصيل؟',
+        whatsappMessage: "مرحبا، ما هو سعر {brand} {model}؟",
         locationTitle: 'موقعنا',
         locationSubtitle: 'قم بزيارة وكالتنا للحصول على أفضل تجربة تأجير سيارات',
         locationDescription: 'وكالة تأجير السيارات الموثوقة. نقدم مجموعة واسعة من السيارات المصانة جيدًا بأسعار تنافسية.',
@@ -183,6 +184,12 @@ export const ar = {
         upcoming: 'قادم',
         completed: 'مكتمل',
         cancelled: 'ملغى',
+        toTerminate: 'للإنهاء',
+        terminateModalTitle: 'إنهاء الحجز',
+        bookingDetails: 'تفاصيل الحجز',
+        confirmTermination: 'تأكيد الإنهاء',
+        terminateBtn: 'إنهاء',
+        pendingTerminations: 'إنهاءات معلقة',
         table: {
             id: 'معرف الحجز',
             customer: 'العميل',

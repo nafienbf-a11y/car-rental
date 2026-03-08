@@ -4,6 +4,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { AppProvider } from './context/AppContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { AuthProvider } from './context/AuthContext';
+import { useVisitorTracking } from './hooks/useVisitorTracking';
 import MainLayout from './components/layout/MainLayout';
 import Toast from './components/common/Toast';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -13,40 +14,49 @@ import Fleet from './pages/Fleet';
 import Bookings from './pages/Bookings';
 import Clients from './pages/Clients';
 import Expenses from './pages/Expenses';
-import History from './pages/History';
 import Catalog from './pages/Catalog';
 import NotFound from './pages/NotFound';
+import Users from './pages/Users';
+import History from './pages/History';
 
 function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}
+
+function AppContent() {
+  useVisitorTracking(); // Track visitor once per session across the whole app
 
   return (
     <LanguageProvider>
       <AuthProvider>
         <AppProvider>
           <NotificationProvider>
-            <Router>
-              <Routes>
-                <Route path="/" element={<Catalog />} />
-                <Route path="/catalog" element={<Catalog />} />
-                <Route path="/login" element={<Login />} />
+            <Routes>
+              <Route path="/" element={<Catalog />} />
+              <Route path="/catalog" element={<Catalog />} />
+              <Route path="/login" element={<Login />} />
 
-                {/* Protected Admin Routes */}
-                <Route element={<ProtectedRoute />}>
-                  <Route path="/admin" element={<MainLayout />}>
-                    <Route index element={<Dashboard />} />
-                    <Route path="fleet" element={<Fleet />} />
-                    <Route path="bookings" element={<Bookings />} />
-                    <Route path="clients" element={<Clients />} />
-                    <Route path="expenses" element={<Expenses />} />
-                    <Route path="history" element={<History />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Route>
+              {/* Protected Admin Routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/admin" element={<MainLayout />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="fleet" element={<Fleet />} />
+                  <Route path="bookings" element={<Bookings />} />
+                  <Route path="clients" element={<Clients />} />
+                  <Route path="expenses" element={<Expenses />} />
+                  <Route path="users" element={<Users />} />
+                  <Route path="history" element={<History />} />
+                  <Route path="*" element={<NotFound />} />
                 </Route>
-                {/* Catch-all: 404 Page */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Toast />
-            </Router>
+              </Route>
+              {/* Catch-all: 404 Page */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Toast />
           </NotificationProvider>
         </AppProvider>
       </AuthProvider>

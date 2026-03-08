@@ -35,8 +35,16 @@ const Catalog = () => {
     const categories = [...new Set(allVehicles.map(v => v.category))];
 
     const handleBookNow = (vehicle) => {
-        setSelectedVehicle(vehicle);
-        setBookingModalOpen(true);
+        let msgTemplate = t('catalog.whatsappMessage');
+        if (msgTemplate === 'catalog.whatsappMessage') {
+            msgTemplate = "Hello, what is the price for the {brand} {model}?";
+        }
+        const text = msgTemplate
+            .replace('{brand}', vehicle.brand)
+            .replace('{model}', vehicle.model);
+
+        const message = encodeURIComponent(text);
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
     };
 
     if (loading) {
@@ -131,17 +139,7 @@ const Catalog = () => {
                         <option value="Automatic">{t('catalog.automatic')}</option>
                         <option value="Manual">{t('catalog.manual')}</option>
                     </select>
-                    {/* Price Filter */}
-                    <div className="relative">
-                        <input
-                            type="number"
-                            value={maxPrice}
-                            onChange={(e) => setMaxPrice(e.target.value)}
-                            placeholder={t('catalog.maxPrice')}
-                            min="0"
-                            className="w-full sm:w-40 px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 transition-all appearance-none"
-                        />
-                    </div>
+                    {/* Price Filter removed as prices are hidden */}
                 </div>
             </section>
 
@@ -207,12 +205,9 @@ const Catalog = () => {
                                             </div>
                                         </div>
 
-                                        {/* Price & CTA */}
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-2xl font-bold text-white">
-                                                    {vehicle.pricePerDay || vehicle.price_per_day} <span className="text-sm font-normal text-zinc-500">MAD/{t('catalog.day')}</span>
-                                                </p>
+                                                {/* Price removed as per user request */}
                                             </div>
                                             <button
                                                 onClick={() => handleBookNow(vehicle)}
@@ -227,11 +222,12 @@ const Catalog = () => {
                             ))}
                         </AnimatePresence>
                     </div>
-                )}
-            </section>
+                )
+                }
+            </section >
 
             {/* Location Section */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+            < section className="max-w-7xl mx-auto px-4 sm:px-6 py-16" >
                 <div className="text-center mb-10">
                     <h2 className="text-3xl font-extrabold text-white mb-3">{t('catalog.locationTitle')}</h2>
                     <p className="text-zinc-400 text-lg">{t('catalog.locationSubtitle')}</p>
@@ -311,22 +307,15 @@ const Catalog = () => {
                         </a>
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Footer */}
-            <footer className="border-t border-zinc-800 py-8 text-center">
+            < footer className="border-t border-zinc-800 py-8 text-center" >
                 <p className="text-zinc-500 text-sm">&copy; 2026 Golden Key Rental. {t('catalog.allRightsReserved')}</p>
-            </footer>
+            </footer >
 
-            <CustomerBookingModal
-                isOpen={bookingModalOpen}
-                onClose={() => {
-                    setBookingModalOpen(false);
-                    setSelectedVehicle(null);
-                }}
-                vehicle={selectedVehicle}
-            />
-        </div>
+            {/* Modal removed to redirect directly to WhatsApp */}
+        </div >
     );
 };
 

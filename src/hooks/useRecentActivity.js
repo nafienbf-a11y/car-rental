@@ -80,7 +80,7 @@ export const useRecentActivity = () => {
                         type: 'client_new',
                         date: createdDate,
                         title: t('activity.newClient'),
-                        message: `${c.first_name} ${c.last_name}`,
+                        message: c.name || t('clients.unknown'),
                         link: '/admin/clients'
                     });
                 }

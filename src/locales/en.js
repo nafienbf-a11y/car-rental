@@ -7,6 +7,7 @@ export const en = {
         expenses: 'Expenses',
         history: 'History',
         catalog: 'View Catalog',
+        users: 'Users'
     },
     sidebar: {
         tagline: 'Embark on the adventure, let us provide the keys',
@@ -50,7 +51,7 @@ export const en = {
         contactUs: 'Contact Us',
         maxPrice: 'Max price (MAD)',
         allRightsReserved: 'All rights reserved.',
-        whatsappMessage: "Hello! I'm interested in renting the {brand} {model} ({year}) at {price} MAD/day. Could you please provide more details?",
+        whatsappMessage: "Hello, what is the price for the {brand} {model}?",
         locationTitle: 'Find Us',
         locationSubtitle: 'Visit our agency for the best car rental experience',
         locationDescription: 'Your trusted car rental agency. We offer a wide selection of well-maintained vehicles at competitive prices.',
@@ -183,6 +184,13 @@ export const en = {
         upcoming: 'Upcoming',
         completed: 'Completed',
         cancelled: 'Cancelled',
+        toTerminate: 'To Terminate',
+        tobeterminated: 'To be terminated',
+        terminateModalTitle: 'Terminate Booking',
+        bookingDetails: 'Booking Details',
+        confirmTermination: 'Confirm Termination',
+        terminateBtn: 'Terminate',
+        pendingTerminations: 'Pending Terminations',
         table: {
             id: 'Booking ID',
             customer: 'Customer',

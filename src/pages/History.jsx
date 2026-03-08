@@ -76,7 +76,7 @@ const History = () => {
                     <table className="w-full">
                         <thead>
                             <tr className="border-b border-zinc-800 bg-zinc-900/50">
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.id')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('modals.bookNow.startingKm') || 'Starting KM'}</th>
                                 <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.date')}</th>
                                 <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.customer')}</th>
                                 <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.vehicle')}</th>
@@ -93,7 +93,7 @@ const History = () => {
                                     className="hover:bg-zinc-900/50 transition-colors"
                                 >
                                     <td className="p-5">
-                                        <span className="text-brand-blue font-mono text-xs font-bold">{booking.id}</span>
+                                        <span className="text-zinc-300 font-bold text-sm">{booking.startingKm || '-'} {t('common.km') || 'km'}</span>
                                     </td>
                                     <td className="p-5">
                                         <span className="text-zinc-400 text-xs font-bold">{formatDate(booking.createdAt)}</span>

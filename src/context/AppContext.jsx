@@ -80,8 +80,8 @@ export const AppProvider = ({ children }) => {
     const mapBookingFromDB = (b) => {
         let status = b.status;
 
-        // Calculate dynamic status if not Cancelled
-        if (status !== 'Cancelled') {
+        // Calculate dynamic status if not Cancelled or Completed explicitly
+        if (status !== 'Cancelled' && status !== 'Completed') {
             const today = new Date(); // Local date reference
             // Format today as YYYY-MM-DD in LOCAL time
             const year = today.getFullYear();
@@ -89,24 +89,15 @@ export const AppProvider = ({ children }) => {
             const day = String(today.getDate()).padStart(2, '0');
             const todayStr = `${year}-${month}-${day}`;
 
-            // Compare strings: "2026-02-15" (DB) vs "2026-02-15" (Local Today)
-            // Compare strings: "2026-02-15" (DB) vs "2026-02-15" (Local Today)
-            // Ensure we use only the date part (first 10 chars) to handle potential ISO strings
             const startDateStr = b.start_date ? b.start_date.substring(0, 10) : '';
             const endDateStr = b.end_date ? b.end_date.substring(0, 10) : '';
-
-            // DEBUG LOGGING
-            console.log(`Booking ${b.id.substring(0, 6)}: Today=${todayStr}, Start=${startDateStr}. Comparison:`, {
-                upcoming: todayStr < startDateStr,
-                active: todayStr >= startDateStr && todayStr <= endDateStr
-            });
 
             if (todayStr < startDateStr) {
                 status = 'Upcoming';
             } else if (todayStr >= startDateStr && todayStr <= endDateStr) {
                 status = 'Active';
             } else if (todayStr > endDateStr) {
-                status = 'Completed';
+                status = 'toBeTerminated';
             }
         }
 
@@ -119,8 +110,10 @@ export const AppProvider = ({ children }) => {
             createdAt: b.created_at, // Map DB column to frontend prop
             status: status, // Use calculated status
             totalCost: Number(b.total_price), // Note: Frontend uses totalCost, DB total_price
-            startKm: b.start_km,
-            endKm: b.end_km,
+            startingKm: b.start_km,
+            endingKm: b.end_km,
+            securityDeposit: Number(b.security_deposit || 0),
+            contractPhoto: b.contract_photo,
         };
     };
 
@@ -131,14 +124,19 @@ export const AppProvider = ({ children }) => {
         end_date: b.endDate,
         status: b.status,
         total_price: b.totalCost,
-        start_km: b.startKm,
-        end_km: b.endKm,
+        start_km: b.startingKm,
+        end_km: b.endingKm,
+        security_deposit: b.securityDeposit,
+        contract_photo: b.contractPhoto,
     });
 
     // Client Mappers
     const mapClientFromDB = (c) => ({
         ...c,
         licenseNumber: c.license_number,
+        cinPassport: c.cin_passport,
+        permitPhoto: c.permit_photo,
+        identityPhoto: c.identity_photo,
     });
 
     const mapClientToDB = (c) => ({
@@ -147,6 +145,9 @@ export const AppProvider = ({ children }) => {
         phone: c.phone,
         address: c.address,
         license_number: c.licenseNumber,
+        cin_passport: c.cinPassport,
+        permit_photo: c.permitPhoto,
+        identity_photo: c.identityPhoto,
         notes: c.notes,
     });
 
@@ -226,6 +227,8 @@ export const AppProvider = ({ children }) => {
         const dbUpdates = {};
         if (updates.status) dbUpdates.status = updates.status;
         if (updates.endKm) dbUpdates.end_km = updates.endKm;
+        if (updates.securityDeposit !== undefined) dbUpdates.security_deposit = updates.securityDeposit;
+        if (updates.contractPhoto) dbUpdates.contract_photo = updates.contractPhoto;
 
         const { data, error } = await supabase.from('bookings').update(dbUpdates).eq('id', id).select().single();
         if (data) setBookings(prev => prev.map(b => b.id === id ? mapBookingFromDB(data) : b));
@@ -255,6 +258,9 @@ export const AppProvider = ({ children }) => {
         if (updates.phone) dbUpdates.phone = updates.phone;
         if (updates.address) dbUpdates.address = updates.address;
         if (updates.licenseNumber) dbUpdates.license_number = updates.licenseNumber;
+        if (updates.cinPassport) dbUpdates.cin_passport = updates.cinPassport;
+        if (updates.permitPhoto) dbUpdates.permit_photo = updates.permitPhoto;
+        if (updates.identityPhoto) dbUpdates.identity_photo = updates.identityPhoto;
         if (updates.notes) dbUpdates.notes = updates.notes;
 
         const { data, error } = await supabase.from('clients').update(dbUpdates).eq('id', id).select().single();

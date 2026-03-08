@@ -28,6 +28,9 @@ create table public.clients (
   phone text not null,
   address text,
   license_number text,
+  cin_passport text,
+  permit_photo text,
+  identity_photo text,
   notes text,
   constraint clients_pkey primary key (id)
 );
@@ -44,6 +47,8 @@ create table public.bookings (
   total_price numeric not null,
   start_km integer,
   end_km integer,
+  security_deposit numeric default 0,
+  contract_photo text,
   constraint bookings_pkey primary key (id),
   constraint bookings_vehicle_id_fkey foreign key (vehicle_id) references vehicles (id),
   constraint bookings_client_id_fkey foreign key (client_id) references clients (id)
@@ -71,5 +76,32 @@ create table public.users (
   primary key (id)
 );
 
+-- Create App Users Table
+create table public.app_users (
+  id uuid not null default gen_random_uuid(),
+  username text not null unique,
+  password text not null,
+  name text,
+  role text not null default 'staff',
+  is_active boolean not null default false,
+  created_at timestamp with time zone not null default now(),
+  constraint app_users_pkey primary key (id)
+);
+
+-- Insert default admin user
+insert into public.app_users (username, password, name, role)
+values ('gatibi', 'gatibi', 'Gatibi Admin', 'admin')
+on conflict (username) do nothing;
+
+-- Create Visitor Stats Table
+create table public.visitor_stats (
+  id uuid not null default gen_random_uuid(),
+  visited_at timestamp with time zone not null default now(),
+  user_agent text,
+  ip_address text,
+  page text,
+  constraint visitor_stats_pkey primary key (id)
+);
+
 -- Enable Realtime (optional but good)
-alter publication supabase_realtime add table vehicles, bookings, clients, expenses;
+alter publication supabase_realtime add table vehicles, bookings, clients, expenses, app_users, visitor_stats;

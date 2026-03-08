@@ -1,12 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { en } from '../locales/en';
 import { ar } from '../locales/ar';
+import { fr } from '../locales/fr';
+import { es } from '../locales/es';
 
 const LanguageContext = createContext();
 
 const translations = {
     en,
     ar,
+    fr,
+    es,
 };
 
 export const useLanguage = () => {

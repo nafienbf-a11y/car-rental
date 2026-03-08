@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/common/Button';
@@ -14,24 +14,26 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
-    const { login } = useAuth();
+    const { login, isAuthenticated } = useAuth();
     const { t } = useLanguage();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    if (isAuthenticated) {
+        return <Navigate to="/admin" replace />;
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
 
-        setTimeout(() => {
-            const result = login(username, password);
-            if (result.success) {
-                navigate('/admin');
-            } else {
-                setError(t('auth.invalidCredentials'));
-            }
-            setLoading(false);
-        }, 500);
+        const result = await login(username, password);
+        if (result.success) {
+            navigate('/admin');
+        } else {
+            setError(result.error || t('auth.invalidCredentials'));
+        }
+        setLoading(false);
     };
 
     return (

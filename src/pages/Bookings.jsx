@@ -4,16 +4,48 @@ import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/common/Button';
 import BookNowModal from '../components/bookings/BookNowModal';
+import TerminateBookingModal from '../components/bookings/TerminateBookingModal';
+import ClientModal from '../components/clients/ClientModal';
+import AddVehicleModal from '../components/fleet/AddVehicleModal';
 import { formatDate, formatCurrency, getStatusBadgeClass } from '../utils/helpers';
 
 import { useNotification } from '../context/NotificationContext';
 
 const Bookings = () => {
-    const { bookings, vehicles, addBooking, updateBooking, setIsNewBookingModalOpen, isNewBookingModalOpen } = useApp();
+    const { bookings, vehicles, clients, addBooking, updateBooking, setIsNewBookingModalOpen, isNewBookingModalOpen } = useApp();
     const { showNotification } = useNotification();
     const { t } = useLanguage();
     const [statusFilter, setStatusFilter] = useState('All');
     const [editingBooking, setEditingBooking] = useState(null);
+    const [terminatingBooking, setTerminatingBooking] = useState(null);
+    const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
+
+    const [selectedClient, setSelectedClient] = useState(null);
+    const [isClientModalOpen, setIsClientModalOpen] = useState(false);
+    const [selectedVehicle, setSelectedVehicle] = useState(null);
+    const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
+
+    const handleCarClick = (vehicleId) => {
+        const vehicle = vehicles.find(v => v.id === vehicleId);
+        if (vehicle) {
+            setSelectedVehicle(vehicle);
+            setIsVehicleModalOpen(true);
+        }
+    };
+
+    const handleClientClick = (clientId) => {
+        if (!clientId) return;
+        const client = clients.find(c => c.id === clientId);
+        if (client) {
+            setSelectedClient(client);
+            setIsClientModalOpen(true);
+        }
+    };
+
+    const handleTerminateClick = (booking) => {
+        setTerminatingBooking(booking);
+        setIsTerminateModalOpen(true);
+    };
 
     const handleEditBooking = (booking) => {
         setEditingBooking(booking);
@@ -32,16 +64,26 @@ const Bookings = () => {
         setEditingBooking(null);
     };
 
+    const isReadyToTerminate = (booking) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const endDateObj = new Date(booking.endDate);
+        endDateObj.setHours(0, 0, 0, 0);
+        return booking.status === 'Active' && today > endDateObj;
+    };
+
     const filteredBookings = statusFilter === 'All'
         ? bookings
-        : bookings.filter(b => b.status === statusFilter);
+        : statusFilter === 'toTerminate'
+            ? bookings.filter(b => isReadyToTerminate(b))
+            : bookings.filter(b => b.status === statusFilter);
 
     const getVehicleName = (vehicleId) => {
         const vehicle = vehicles.find(v => v.id === vehicleId);
         return vehicle ? `${vehicle.brand} ${vehicle.model}` : 'Unknown';
     };
 
-    const statusFilters = ['All', 'Active', 'Completed', 'Cancelled'];
+    const statusFilters = ['All', 'Active', 'Completed', 'Cancelled', 'toTerminate'];
 
     return (
         <div className="space-y-6">
@@ -71,7 +113,7 @@ const Bookings = () => {
                             : 'text-zinc-500 hover:bg-zinc-900 hover:text-white'
                             }`}
                     >
-                        {t(`bookings.${status.toLowerCase()}`)}
+                        {status === 'toTerminate' ? t('bookings.toTerminate') || 'To Terminate' : t(`bookings.${status.toLowerCase()}`)}
                     </button>
                 ))}
             </div>
@@ -82,12 +124,12 @@ const Bookings = () => {
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="border-b border-zinc-800">
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.id')}</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.customer')}</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.vehicle')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Car</th>
+                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Client</th>
                                 <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.dates')}</th>
                                 <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.status')}</th>
                                 <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.total')}</th>
+                                <th className="text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('clients.table.actions') || 'Actions'}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-900">
@@ -97,21 +139,20 @@ const Bookings = () => {
                                     className="hover:bg-zinc-900/50 transition-colors group"
                                 >
                                     <td className="p-5">
-                                        <span className="text-zinc-400 font-mono text-xs font-bold">{booking.id}</span>
+                                        <button onClick={() => handleCarClick(booking.vehicleId)} className="text-brand-blue hover:underline font-bold text-sm text-left transition-colors">
+                                            {getVehicleName(booking.vehicleId)}
+                                        </button>
                                     </td>
                                     <td className="p-5">
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center justify-center group-hover:bg-zinc-800 group-hover:border-zinc-700 transition-all duration-300">
                                                 <User className="w-5 h-5 text-white" />
                                             </div>
-                                            <div>
-                                                <p className="text-white font-extrabold text-sm">{booking.customer}</p>
+                                            <button onClick={() => handleClientClick(booking.clientId)} className="text-left focus:outline-none flex flex-col items-start group">
+                                                <p className="text-white group-hover:text-brand-blue group-hover:underline transition-colors font-extrabold text-sm">{booking.customer}</p>
                                                 <p className="text-zinc-500 text-xs font-medium tracking-tight">{booking.email}</p>
-                                            </div>
+                                            </button>
                                         </div>
-                                    </td>
-                                    <td className="p-5">
-                                        <span className="text-zinc-300 font-bold text-sm">{getVehicleName(booking.vehicleId)}</span>
                                     </td>
                                     <td className="p-5">
                                         <div className="flex items-center gap-2 text-zinc-400 text-xs font-bold uppercase tracking-tight">
@@ -132,6 +173,18 @@ const Bookings = () => {
                                             {formatCurrency(booking.totalCost)}
                                         </div>
                                     </td>
+                                    <td className="p-5 text-right">
+                                        {isReadyToTerminate(booking) && (
+                                            <Button
+                                                variant="secondary"
+                                                onClick={() => handleTerminateClick(booking)}
+                                                className="text-[10px] uppercase font-bold tracking-widest px-3 py-1.5"
+                                                title={t('bookings.terminateBtn') || "Terminate"}
+                                            >
+                                                {t('bookings.terminateBtn') || "Terminate"}
+                                            </Button>
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -150,6 +203,30 @@ const Bookings = () => {
                 onUpdate={handleUpdateBooking}
                 vehicles={vehicles}
                 booking={editingBooking}
+            />
+
+            <TerminateBookingModal
+                isOpen={isTerminateModalOpen}
+                onClose={() => {
+                    setIsTerminateModalOpen(false);
+                    setTerminatingBooking(null);
+                }}
+                booking={terminatingBooking}
+                onTerminate={handleUpdateBooking}
+            />
+
+            <ClientModal
+                isOpen={isClientModalOpen}
+                onClose={() => setIsClientModalOpen(false)}
+                onSubmit={() => setIsClientModalOpen(false)}
+                client={selectedClient}
+            />
+
+            <AddVehicleModal
+                isOpen={isVehicleModalOpen}
+                onClose={() => setIsVehicleModalOpen(false)}
+                onAdd={() => setIsVehicleModalOpen(false)}
+                vehicle={selectedVehicle}
             />
         </div>
     );

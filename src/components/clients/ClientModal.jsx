@@ -17,6 +17,9 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
         phone: '',
         address: '',
         licenseNumber: '',
+        cinPassport: '',
+        permitPhoto: '',
+        identityPhoto: '',
         notes: '',
     });
 
@@ -28,6 +31,9 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                 phone: client.phone || '',
                 address: client.address || '',
                 licenseNumber: client.licenseNumber || '',
+                cinPassport: client.cinPassport || '',
+                permitPhoto: client.permitPhoto || '',
+                identityPhoto: client.identityPhoto || '',
                 notes: client.notes || '',
             });
         } else {
@@ -37,6 +43,9 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                 phone: '',
                 address: '',
                 licenseNumber: '',
+                cinPassport: '',
+                permitPhoto: '',
+                identityPhoto: '',
                 notes: '',
             });
         }
@@ -45,6 +54,17 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleFileChange = (e, field) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({ ...prev, [field]: reader.result }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleSubmit = (e) => {
@@ -143,6 +163,69 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
                             placeholder={t('modals.client.placeholderLicense')}
                         />
+                    </div>
+
+                    {/* CIN / Passport */}
+                    <div>
+                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                            {t('modals.client.cinPassport') || 'CIN / Passport'}
+                        </label>
+                        <input
+                            type="text"
+                            name="cinPassport"
+                            value={formData.cinPassport}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                            placeholder="AB123456"
+                        />
+                    </div>
+
+                    {/* Photo Uploads */}
+                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                                {t('modals.client.permitPhoto') || 'Permit Photo'}
+                            </label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleFileChange(e, 'permitPhoto')}
+                                className="hidden"
+                                id="permitPhoto"
+                            />
+                            <label htmlFor="permitPhoto" className="cursor-pointer block w-full px-4 py-3 bg-zinc-900 border border-zinc-800 border-dashed rounded-xl text-sm text-zinc-500 text-center hover:border-zinc-700 transition-colors font-medium">
+                                {formData.permitPhoto ? (
+                                    <span className="text-green-500 font-bold flex items-center justify-center gap-2">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                        Photo Selected
+                                    </span>
+                                ) : (
+                                    'Click to upload Permit'
+                                )}
+                            </label>
+                        </div>
+                        <div>
+                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                                {t('modals.client.identityPhoto') || 'CIN / Passport Photo'}
+                            </label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleFileChange(e, 'identityPhoto')}
+                                className="hidden"
+                                id="identityPhoto"
+                            />
+                            <label htmlFor="identityPhoto" className="cursor-pointer block w-full px-4 py-3 bg-zinc-900 border border-zinc-800 border-dashed rounded-xl text-sm text-zinc-500 text-center hover:border-zinc-700 transition-colors font-medium">
+                                {formData.identityPhoto ? (
+                                    <span className="text-green-500 font-bold flex items-center justify-center gap-2">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                        Photo Selected
+                                    </span>
+                                ) : (
+                                    'Click to upload ID'
+                                )}
+                            </label>
+                        </div>
                     </div>
 
                     {/* Notes */}

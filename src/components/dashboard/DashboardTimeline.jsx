@@ -76,11 +76,11 @@ const DashboardTimeline = () => {
     };
 
     return (
-        <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl overflow-visible">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl relative">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 relative z-30">
                 <div className="flex items-center gap-4">
                     <h3 className="text-xl font-extrabold text-white tracking-tight">{t('dashboard.timeline')}</h3>
-                    <div className="flex items-center gap-2 relative">
+                    <div className="flex items-center gap-2">
                         <button
                             onClick={handlePrevMonth}
                             className="p-1.5 hover:bg-zinc-900 rounded-lg text-zinc-400 hover:text-white transition-colors"
@@ -99,25 +99,23 @@ const DashboardTimeline = () => {
                             </button>
 
                             {showMonthPicker && (
-                                <div className="absolute top-full left-0 mt-2 bg-zinc-950 border border-zinc-800 rounded-xl p-4 shadow-2xl z-50 min-w-[280px]">
+                                <div className="absolute top-full left-0 mt-2 bg-zinc-950 border border-zinc-800 rounded-xl p-4 shadow-2xl z-[100] min-w-[280px]">
                                     <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-3">{t('dashboard.selectMonthYear')}</p>
-                                    <div className="grid grid-cols-3 gap-2 mb-4">
-                                        <div className="grid grid-cols-3 gap-2 mb-4">
-                                            {Array.from({ length: 12 }, (_, i) => new Date(2000, i, 1)).map((date, index) => (
-                                                <button
-                                                    key={index}
-                                                    onClick={() => handleMonthYearSelect(index, currentDate.getFullYear())}
-                                                    className={`px-3 py-2 rounded-lg text-xs font-bold transition-colors ${index === currentDate.getMonth()
-                                                        ? 'bg-brand-blue text-white'
-                                                        : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
-                                                        }`}
-                                                >
-                                                    {getMonthName(date).slice(0, 3)}
-                                                </button>
-                                            ))}
-                                        </div>
+                                    <div className="grid grid-cols-3 gap-2 mb-4 relative z-[101]">
+                                        {Array.from({ length: 12 }, (_, i) => new Date(2000, i, 1)).map((date, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => handleMonthYearSelect(index, currentDate.getFullYear())}
+                                                className={`px-3 py-2 rounded-lg text-xs font-bold transition-colors ${index === currentDate.getMonth()
+                                                    ? 'bg-brand-blue text-white'
+                                                    : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                                                    }`}
+                                            >
+                                                {getMonthName(date).slice(0, 3)}
+                                            </button>
+                                        ))}
                                     </div>
-                                    <div className="grid grid-cols-5 gap-2">
+                                    <div className="grid grid-cols-5 gap-2 relative z-[101]">
                                         {generateYearOptions().map(year => (
                                             <button
                                                 key={year}

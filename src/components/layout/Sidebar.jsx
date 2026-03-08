@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Car, Calendar, Users, DollarSign, History, Menu, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, Car, Calendar, Users, DollarSign, History, Menu, ExternalLink, Shield } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 import { useAuth } from '../../context/AuthContext';
@@ -9,7 +9,7 @@ import Logo from '../common/Logo';
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
     const { t, isRTL } = useLanguage();
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
 
     const navItems = [
         { name: t('nav.dashboard'), path: '/admin', icon: LayoutDashboard },
@@ -19,6 +19,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         { name: t('nav.expenses'), path: '/admin/expenses', icon: DollarSign },
         { name: t('nav.history'), path: '/admin/history', icon: History },
     ];
+
+    if (user?.role === 'admin') {
+        navItems.push({ name: t('nav.users', 'Users'), path: '/admin/users', icon: Shield });
+    }
 
     const handleOpenCatalog = () => {
         const base = import.meta.env.BASE_URL || '/';

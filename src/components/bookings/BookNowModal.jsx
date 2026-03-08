@@ -24,6 +24,8 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
         endDate: '',
         startingKm: '',
         endingKm: '',
+        securityDeposit: 0,
+        contractPhoto: '',
     });
 
     // Calendar State
@@ -59,6 +61,8 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                 endDate: booking.endDate,
                 startingKm: booking.startingKm || '',
                 endingKm: booking.endingKm || '',
+                securityDeposit: booking.securityDeposit || 0,
+                contractPhoto: booking.contractPhoto || '',
             });
             setSelectionStep('end'); // Assume dates are selected
         } else {
@@ -73,6 +77,8 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                 endDate: '',
                 startingKm: '',
                 endingKm: '',
+                securityDeposit: 0,
+                contractPhoto: '',
             }));
             setSelectionStep('start');
         }
@@ -116,6 +122,17 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
             setFormData(prev => ({ ...prev, startDate: '', endDate: '' }));
             setSelectionStep('start');
             setError('');
+        }
+    };
+
+    const handleFileChange = (e, field) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({ ...prev, [field]: reader.result }));
+            };
+            reader.readAsDataURL(file);
         }
     };
 
@@ -238,6 +255,8 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
             endDate: '',
             startingKm: '',
             endingKm: '',
+            securityDeposit: 0,
+            contractPhoto: '',
         });
         setSelectionStep('start');
         setError('');
@@ -333,6 +352,45 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                         />
                                     </div>
                                 )}
+                            </div>
+
+                            {/* Security Deposit & Contract Photo */}
+                            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-zinc-800">
+                                <div>
+                                    <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                                        {t('modals.bookNow.securityDeposit') || 'Security Deposit'}
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="securityDeposit"
+                                        value={formData.securityDeposit}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                                        placeholder="0"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                                        {t('modals.bookNow.contractPhoto') || 'Contract Photo'}
+                                    </label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => handleFileChange(e, 'contractPhoto')}
+                                        className="hidden"
+                                        id="contractPhoto"
+                                    />
+                                    <label htmlFor="contractPhoto" className="cursor-pointer block w-full px-4 py-3 bg-zinc-900 border border-zinc-800 border-dashed rounded-xl text-xs text-zinc-500 text-center hover:border-zinc-700 transition-colors font-medium h-[46px] flex items-center justify-center">
+                                        {formData.contractPhoto ? (
+                                            <span className="text-green-500 font-bold flex items-center gap-2">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                                Uploaded
+                                            </span>
+                                        ) : (
+                                            'Upload Contract'
+                                        )}
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
