@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Users, Plus, Mail, Phone, Edit2, Trash2, MapPin } from 'lucide-react';
+import { Users, Plus, Mail, Phone, Edit2, Trash2, MapPin, Eye } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/common/Button';
 import SearchBar from '../components/common/SearchBar';
 import ClientModal from '../components/clients/ClientModal';
+import ClientDetailModal from '../components/clients/ClientDetailModal';
 
 const Clients = () => {
     const { clients = [], addClient, updateClient, deleteClient, bookings = [] } = useApp();
@@ -12,6 +13,8 @@ const Clients = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState(null);
+    const [detailClient, setDetailClient] = useState(null);
+    const [isDetailOpen, setIsDetailOpen] = useState(false);
 
     const handleAddClient = () => {
         setSelectedClient(null);
@@ -202,6 +205,13 @@ const Clients = () => {
                                             <td className="py-4 px-4">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button
+                                                        onClick={() => { setDetailClient(client); setIsDetailOpen(true); }}
+                                                        className="p-2 hover:bg-brand-blue/10 rounded-lg text-zinc-400 hover:text-brand-blue transition-colors"
+                                                        title="View details"
+                                                    >
+                                                        <Eye className="w-4 h-4" />
+                                                    </button>
+                                                    <button
                                                         onClick={() => handleEditClient(client)}
                                                         className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white transition-colors"
                                                         title="Edit client"
@@ -232,6 +242,13 @@ const Clients = () => {
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleSubmit}
                 client={selectedClient}
+            />
+
+            {/* Client Detail Modal */}
+            <ClientDetailModal
+                isOpen={isDetailOpen}
+                onClose={() => { setIsDetailOpen(false); setDetailClient(null); }}
+                client={detailClient}
             />
         </div>
     );

@@ -77,7 +77,7 @@ const DashboardTimeline = () => {
 
     return (
         <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl relative">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 relative z-30">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 relative z-10">
                 <div className="flex items-center gap-4">
                     <h3 className="text-xl font-extrabold text-white tracking-tight">{t('dashboard.timeline')}</h3>
                     <div className="flex items-center gap-2">
@@ -99,9 +99,9 @@ const DashboardTimeline = () => {
                             </button>
 
                             {showMonthPicker && (
-                                <div className="absolute top-full left-0 mt-2 bg-zinc-950 border border-zinc-800 rounded-xl p-4 shadow-2xl z-[100] min-w-[280px]">
+                                <div className="absolute top-full left-0 mt-2 bg-zinc-950 border border-zinc-800 rounded-xl p-4 shadow-2xl z-20 min-w-[280px]">
                                     <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-3">{t('dashboard.selectMonthYear')}</p>
-                                    <div className="grid grid-cols-3 gap-2 mb-4 relative z-[101]">
+                                    <div className="grid grid-cols-3 gap-2 mb-4">
                                         {Array.from({ length: 12 }, (_, i) => new Date(2000, i, 1)).map((date, index) => (
                                             <button
                                                 key={index}
@@ -115,7 +115,7 @@ const DashboardTimeline = () => {
                                             </button>
                                         ))}
                                     </div>
-                                    <div className="grid grid-cols-5 gap-2 relative z-[101]">
+                                    <div className="grid grid-cols-5 gap-2">
                                         {generateYearOptions().map(year => (
                                             <button
                                                 key={year}
@@ -219,7 +219,7 @@ const DashboardTimeline = () => {
 
                                         {/* Booking Bars */}
                                         {bookings
-                                            .filter(b => b.vehicleId === vehicle.id && b.status !== 'Completed' && b.status !== 'Cancelled')
+                                            .filter(b => b.vehicleId === vehicle.id && b.status !== 'Cancelled')
                                             .map(booking => {
                                                 const style = getBookingStyle(booking);
                                                 if (!style) return null;

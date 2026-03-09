@@ -172,7 +172,15 @@ export const en = {
         outOfService: 'Out of Service',
         rented: 'Rented',
         deleteTooltip: 'Delete vehicle',
-        edit: 'Edit'
+        edit: 'Edit',
+        table: {
+            brand: 'Brand',
+            model: 'Model',
+            year: 'Year',
+            price: 'Price/Day',
+            mileage: 'Mileage',
+            lastMaintenance: 'Last Maintenance',
+        }
     },
     // Bookings
     bookings: {
@@ -190,6 +198,9 @@ export const en = {
         bookingDetails: 'Booking Details',
         confirmTermination: 'Confirm Termination',
         terminateBtn: 'Terminate',
+        cancelBtn: 'Cancel',
+        cancelConfirm: 'Are you sure you want to cancel this booking?',
+        viewDocuments: 'Documents',
         pendingTerminations: 'Pending Terminations',
         table: {
             id: 'Booking ID',
@@ -202,6 +213,7 @@ export const en = {
         notifications: {
             created: 'Booking created successfully!',
             updated: 'Booking updated successfully!',
+            cancelled: 'Booking cancelled successfully!',
         },
     },
     // Clients
@@ -328,6 +340,9 @@ export const en = {
             clientHint: 'Client not in the list? Add them in the Clients page first.',
             startingKm: 'Starting KM',
             endingKm: 'Ending KM',
+            pricePerDay: 'Price/Day (MAD)',
+            securityDeposit: 'Security Deposit',
+            contractPhoto: 'Contract Photo',
             selectDates: 'Select Dates',
             available: '(Green: Available)',
             selectFirst: '(Select Vehicle First)',
@@ -353,6 +368,9 @@ export const en = {
             phone: 'Phone',
             address: 'Address',
             license: 'License Number',
+            documents: 'Documents',
+            addDocument: 'Add Document',
+            documentName: 'Document Name',
             notes: 'Notes',
             placeholderName: 'e.g., John Doe',
             placeholderEmail: 'john@example.com',

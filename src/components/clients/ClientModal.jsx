@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Plus, Trash2, FileText } from 'lucide-react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
 
@@ -7,6 +7,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { generateId } from '../../utils/helpers';
 
 import { useNotification } from '../../context/NotificationContext';
+import { compressImage } from '../../utils/imageCompressor';
 
 const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
     const { t } = useLanguage();
@@ -17,9 +18,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
         phone: '',
         address: '',
         licenseNumber: '',
-        cinPassport: '',
-        permitPhoto: '',
-        identityPhoto: '',
+        documents: [],
         notes: '',
     });
 
@@ -31,9 +30,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                 phone: client.phone || '',
                 address: client.address || '',
                 licenseNumber: client.licenseNumber || '',
-                cinPassport: client.cinPassport || '',
-                permitPhoto: client.permitPhoto || '',
-                identityPhoto: client.identityPhoto || '',
+                documents: client.documents || [],
                 notes: client.notes || '',
             });
         } else {
@@ -43,9 +40,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                 phone: '',
                 address: '',
                 licenseNumber: '',
-                cinPassport: '',
-                permitPhoto: '',
-                identityPhoto: '',
+                documents: [],
                 notes: '',
             });
         }
@@ -56,15 +51,57 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleFileChange = (e, field) => {
+    const handleAddDocument = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFormData(prev => ({ ...prev, [field]: reader.result }));
-            };
-            reader.readAsDataURL(file);
+            try {
+                const compressed = await compressImage(file, { maxWidth: 1200, maxHeight: 1200, quality: 0.7 });
+                const newDoc = {
+                    id: Date.now().toString(),
+                    name: file.name.replace(/\.[^/.]+$/, ''), // filename without extension
+                    data: compressed,
+                    addedAt: new Date().toISOString(),
+                };
+                setFormData(prev => ({
+                    ...prev,
+                    documents: [...prev.documents, newDoc]
+                }));
+            } catch (err) {
+                console.error('Image compression failed:', err);
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const newDoc = {
+                        id: Date.now().toString(),
+                        name: file.name.replace(/\.[^/.]+$/, ''),
+                        data: reader.result,
+                        addedAt: new Date().toISOString(),
+                    };
+                    setFormData(prev => ({
+                        ...prev,
+                        documents: [...prev.documents, newDoc]
+                    }));
+                };
+                reader.readAsDataURL(file);
+            }
         }
+        // Reset file input
+        e.target.value = '';
+    };
+
+    const handleRemoveDocument = (docId) => {
+        setFormData(prev => ({
+            ...prev,
+            documents: prev.documents.filter(d => d.id !== docId)
+        }));
+    };
+
+    const handleDocNameChange = (docId, newName) => {
+        setFormData(prev => ({
+            ...prev,
+            documents: prev.documents.map(d =>
+                d.id === docId ? { ...d, name: newName } : d
+            )
+        }));
     };
 
     const handleSubmit = (e) => {
@@ -151,7 +188,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                     </div>
 
                     {/* License Number */}
-                    <div>
+                    <div className="md:col-span-2">
                         <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
                             {t('modals.client.license')}
                         </label>
@@ -165,67 +202,66 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                         />
                     </div>
 
-                    {/* CIN / Passport */}
-                    <div>
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                            {t('modals.client.cinPassport') || 'CIN / Passport'}
-                        </label>
-                        <input
-                            type="text"
-                            name="cinPassport"
-                            value={formData.cinPassport}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                            placeholder="AB123456"
-                        />
-                    </div>
+                    {/* Documents Section */}
+                    <div className="md:col-span-2">
+                        <div className="flex items-center justify-between mb-3">
+                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                {t('modals.client.documents') || 'Documents'}
+                            </label>
+                            <label className="cursor-pointer flex items-center gap-2 px-3 py-1.5 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue rounded-lg text-xs font-bold transition-colors">
+                                <Plus className="w-3.5 h-3.5" />
+                                {t('modals.client.addDocument') || 'Add Document'}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleAddDocument}
+                                    className="hidden"
+                                />
+                            </label>
+                        </div>
 
-                    {/* Photo Uploads */}
-                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                                {t('modals.client.permitPhoto') || 'Permit Photo'}
-                            </label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => handleFileChange(e, 'permitPhoto')}
-                                className="hidden"
-                                id="permitPhoto"
-                            />
-                            <label htmlFor="permitPhoto" className="cursor-pointer block w-full px-4 py-3 bg-zinc-900 border border-zinc-800 border-dashed rounded-xl text-sm text-zinc-500 text-center hover:border-zinc-700 transition-colors font-medium">
-                                {formData.permitPhoto ? (
-                                    <span className="text-green-500 font-bold flex items-center justify-center gap-2">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                                        Photo Selected
-                                    </span>
-                                ) : (
-                                    'Click to upload Permit'
-                                )}
-                            </label>
-                        </div>
-                        <div>
-                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                                {t('modals.client.identityPhoto') || 'CIN / Passport Photo'}
-                            </label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => handleFileChange(e, 'identityPhoto')}
-                                className="hidden"
-                                id="identityPhoto"
-                            />
-                            <label htmlFor="identityPhoto" className="cursor-pointer block w-full px-4 py-3 bg-zinc-900 border border-zinc-800 border-dashed rounded-xl text-sm text-zinc-500 text-center hover:border-zinc-700 transition-colors font-medium">
-                                {formData.identityPhoto ? (
-                                    <span className="text-green-500 font-bold flex items-center justify-center gap-2">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                                        Photo Selected
-                                    </span>
-                                ) : (
-                                    'Click to upload ID'
-                                )}
-                            </label>
-                        </div>
+                        {formData.documents.length > 0 ? (
+                            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                                {formData.documents.map((doc) => (
+                                    <div key={doc.id} className="flex items-center gap-3 p-3 bg-zinc-900/50 border border-zinc-800 rounded-xl group">
+                                        {/* Thumbnail */}
+                                        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border border-zinc-700">
+                                            <img
+                                                src={doc.data}
+                                                alt={doc.name}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                        {/* Name input */}
+                                        <div className="flex-1 min-w-0">
+                                            <input
+                                                type="text"
+                                                value={doc.name}
+                                                onChange={(e) => handleDocNameChange(doc.id, e.target.value)}
+                                                className="w-full px-3 py-1.5 bg-transparent border border-transparent hover:border-zinc-700 focus:border-zinc-600 rounded-lg text-white text-sm font-medium focus:outline-none transition-colors"
+                                                placeholder={t('modals.client.documentName') || 'Document name'}
+                                            />
+                                            <p className="text-[10px] text-zinc-600 mt-0.5 px-3">
+                                                {new Date(doc.addedAt).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                        {/* Remove */}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveDocument(doc.id)}
+                                            className="p-2 hover:bg-red-500/10 rounded-lg text-zinc-500 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="border border-zinc-800 border-dashed rounded-xl p-6 text-center">
+                                <FileText className="w-8 h-8 text-zinc-700 mx-auto mb-2" />
+                                <p className="text-zinc-600 text-sm">No documents uploaded yet</p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Notes */}

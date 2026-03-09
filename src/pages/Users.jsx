@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Plus, Edit2, Trash2 } from 'lucide-react';
+import { Shield, Plus, Edit2, Trash2, Power } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import Button from '../components/common/Button';
 import SearchBar from '../components/common/SearchBar';
 import UserModal from '../components/users/UserModal';
+import ConfirmModal from '../components/common/ConfirmModal';
 import { useNotification } from '../context/NotificationContext';
 import { Navigate } from 'react-router-dom';
 
@@ -18,6 +19,8 @@ const Users = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [userToLogout, setUserToLogout] = useState(null);
+    const [userToDelete, setUserToDelete] = useState(null);
 
     const fetchUsers = async () => {
         setLoading(true);
@@ -51,21 +54,42 @@ const Users = () => {
         setIsModalOpen(true);
     };
 
-    const handleDeleteUser = async (id) => {
+    const handleDeleteUser = (id) => {
         if (id === currentUser.id) {
             showNotification('You cannot delete your own account.', 'error');
             return;
         }
-        if (window.confirm('Are you sure you want to delete this user?')) {
-            const { error } = await supabase.from('app_users').delete().eq('id', id);
-            if (error) {
-                console.error("Error deleting user", error);
-                showNotification('Failed to delete user', 'error');
-            } else {
-                showNotification('User deleted successfully', 'success');
-                fetchUsers();
-            }
+        setUserToDelete(id);
+    };
+
+    const confirmDeleteUser = async () => {
+        if (!userToDelete) return;
+        const { error } = await supabase.from('app_users').delete().eq('id', userToDelete);
+        if (error) {
+            console.error("Error deleting user", error);
+            showNotification('Failed to delete user', 'error');
+        } else {
+            showNotification('User deleted successfully', 'success');
+            fetchUsers();
         }
+        setUserToDelete(null);
+    };
+
+    const handleForceLogout = (id) => {
+        setUserToLogout(id);
+    };
+
+    const confirmForceLogout = async () => {
+        if (!userToLogout) return;
+        const { error } = await supabase.from('app_users').update({ is_active: false }).eq('id', userToLogout);
+        if (error) {
+            console.error("Error forcing logout", error);
+            showNotification('Failed to log out user', 'error');
+        } else {
+            showNotification('User logged out successfully', 'success');
+            fetchUsers();
+        }
+        setUserToLogout(null);
     };
 
     const handleModalSubmit = async () => {
@@ -142,6 +166,11 @@ const Users = () => {
                                         </td>
                                         <td className="py-4 px-4">
                                             <div className="flex items-center justify-end gap-2">
+                                                {currentUser?.username === 'gatibi' && u.is_active && u.id !== currentUser.id && (
+                                                    <button onClick={() => handleForceLogout(u.id)} className="p-2 hover:bg-orange-500/10 rounded-lg text-zinc-400 hover:text-orange-500 transition-colors" title="Force Logout">
+                                                        <Power className="w-4 h-4" />
+                                                    </button>
+                                                )}
                                                 <button onClick={() => handleEditUser(u)} className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white transition-colors" title="Edit">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
@@ -168,6 +197,22 @@ const Users = () => {
                     user={selectedUser}
                 />
             )}
+
+            <ConfirmModal
+                isOpen={!!userToLogout}
+                onClose={() => setUserToLogout(null)}
+                onConfirm={confirmForceLogout}
+                title="Force Logout"
+                message="Are you sure you want to forcibly log out this user?"
+            />
+
+            <ConfirmModal
+                isOpen={!!userToDelete}
+                onClose={() => setUserToDelete(null)}
+                onConfirm={confirmDeleteUser}
+                title="Delete User"
+                message="Are you sure you want to delete this user?"
+            />
         </div>
     );
 };

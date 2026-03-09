@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
 import CalendarGrid from './CalendarGrid';
-import { Plus, Calendar as CalendarIcon, AlertTriangle } from 'lucide-react';
+import { Plus, Calendar as CalendarIcon, AlertTriangle, Trash2, FileText } from 'lucide-react';
 import { generateId, calculateDays, formatCurrency } from '../../utils/helpers';
 import { getBlockedDates, validateBookingRange } from '../../utils/availability';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { compressImage } from '../../utils/imageCompressor';
 
 import { useNotification } from '../../context/NotificationContext';
 
@@ -16,7 +17,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
     const { showNotification } = useNotification();
     const [formData, setFormData] = useState({
         vehicleId: '',
-        clientId: '', // For linking to existing client
+        clientId: '',
         customer: '',
         email: '',
         phone: '',
@@ -24,8 +25,9 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
         endDate: '',
         startingKm: '',
         endingKm: '',
+        pricePerDay: '',
         securityDeposit: 0,
-        contractPhoto: '',
+        documents: [],
     });
 
     // Calendar State
@@ -54,6 +56,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
         if (booking) {
             setFormData({
                 vehicleId: booking.vehicleId,
+                clientId: booking.clientId || '',
                 customer: booking.customer,
                 email: booking.email || '',
                 phone: booking.phone || '',
@@ -61,12 +64,12 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                 endDate: booking.endDate,
                 startingKm: booking.startingKm || '',
                 endingKm: booking.endingKm || '',
+                pricePerDay: booking.pricePerDay || '',
                 securityDeposit: booking.securityDeposit || 0,
-                contractPhoto: booking.contractPhoto || '',
+                documents: booking.documents || [],
             });
-            setSelectionStep('end'); // Assume dates are selected
+            setSelectionStep('end');
         } else {
-            // Reset for new booking
             setFormData(prev => ({
                 ...prev,
                 vehicleId: '',
@@ -77,19 +80,24 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                 endDate: '',
                 startingKm: '',
                 endingKm: '',
+                pricePerDay: '',
                 securityDeposit: 0,
-                contractPhoto: '',
+                documents: [],
             }));
             setSelectionStep('start');
         }
     }, [booking, isOpen]);
 
-    // Auto-fill Starting KM when vehicle is selected (New Booking only)
+    // Auto-fill Starting KM and Price when vehicle is selected (New Booking only)
     useEffect(() => {
         if (!booking && formData.vehicleId) {
             const vehicle = vehicles.find(v => v.id === formData.vehicleId);
             if (vehicle) {
-                setFormData(prev => ({ ...prev, startingKm: vehicle.mileage }));
+                setFormData(prev => ({
+                    ...prev,
+                    startingKm: vehicle.mileage,
+                    pricePerDay: vehicle.pricePerDay || '',
+                }));
             }
         }
     }, [formData.vehicleId, booking, vehicles]);
@@ -125,15 +133,47 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
         }
     };
 
-    const handleFileChange = (e, field) => {
+    const handleAddDocument = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFormData(prev => ({ ...prev, [field]: reader.result }));
-            };
-            reader.readAsDataURL(file);
+            try {
+                const compressed = await compressImage(file, { maxWidth: 1200, maxHeight: 1200, quality: 0.7 });
+                const newDoc = {
+                    id: Date.now().toString(),
+                    name: file.name.replace(/\.[^/.]+$/, ''),
+                    data: compressed,
+                    addedAt: new Date().toISOString(),
+                };
+                setFormData(prev => ({
+                    ...prev,
+                    documents: [...prev.documents, newDoc]
+                }));
+            } catch (err) {
+                console.error('Image compression failed:', err);
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const newDoc = {
+                        id: Date.now().toString(),
+                        name: file.name.replace(/\.[^/.]+$/, ''),
+                        data: reader.result,
+                        addedAt: new Date().toISOString(),
+                    };
+                    setFormData(prev => ({
+                        ...prev,
+                        documents: [...prev.documents, newDoc]
+                    }));
+                };
+                reader.readAsDataURL(file);
+            }
         }
+        e.target.value = '';
+    };
+
+    const handleRemoveDocument = (docId) => {
+        setFormData(prev => ({
+            ...prev,
+            documents: prev.documents.filter(d => d.id !== docId)
+        }));
     };
 
     const handleDateClick = (date) => {
@@ -185,7 +225,8 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
     const selectedVehicle = vehicles.find(v => v.id === formData.vehicleId);
 
     const totalDays = calculateDays(formData.startDate, formData.endDate);
-    const totalCost = selectedVehicle ? totalDays * selectedVehicle.pricePerDay : 0;
+    const pricePerDay = Number(formData.pricePerDay) || (selectedVehicle ? selectedVehicle.pricePerDay : 0);
+    const totalCost = totalDays * pricePerDay;
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -256,7 +297,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
             startingKm: '',
             endingKm: '',
             securityDeposit: 0,
-            contractPhoto: '',
+            documents: [],
         });
         setSelectionStep('start');
         setError('');
@@ -319,8 +360,23 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                 </p>
                             </div>
 
+                            {/* Price Per Day */}
+                            <div className="pt-2 border-t border-zinc-800">
+                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 mt-4">
+                                    {t('modals.bookNow.pricePerDay')}
+                                </label>
+                                <input
+                                    type="number"
+                                    name="pricePerDay"
+                                    value={formData.pricePerDay}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                                    placeholder="0"
+                                />
+                            </div>
+
                             {/* Mileage Tracking */}
-                            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-zinc-800">
+                            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-zinc-800">
                                 <div>
                                     <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
                                         {t('modals.bookNow.startingKm')} *
@@ -354,43 +410,63 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                 )}
                             </div>
 
-                            {/* Security Deposit & Contract Photo */}
-                            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-zinc-800">
-                                <div>
-                                    <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                                        {t('modals.bookNow.securityDeposit') || 'Security Deposit'}
+                            {/* Security Deposit */}
+                            <div className="pt-4 border-t border-zinc-800">
+                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                                    {t('modals.bookNow.securityDeposit')}
+                                </label>
+                                <input
+                                    type="number"
+                                    name="securityDeposit"
+                                    value={formData.securityDeposit}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                                    placeholder="0"
+                                />
+                            </div>
+
+                            {/* Documents */}
+                            <div>
+                                <div className="flex items-center justify-between mb-2">
+                                    <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                        {t('modals.client.documents') || 'Documents'}
                                     </label>
-                                    <input
-                                        type="number"
-                                        name="securityDeposit"
-                                        value={formData.securityDeposit}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
-                                        placeholder="0"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
-                                        {t('modals.bookNow.contractPhoto') || 'Contract Photo'}
-                                    </label>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => handleFileChange(e, 'contractPhoto')}
-                                        className="hidden"
-                                        id="contractPhoto"
-                                    />
-                                    <label htmlFor="contractPhoto" className="cursor-pointer block w-full px-4 py-3 bg-zinc-900 border border-zinc-800 border-dashed rounded-xl text-xs text-zinc-500 text-center hover:border-zinc-700 transition-colors font-medium h-[46px] flex items-center justify-center">
-                                        {formData.contractPhoto ? (
-                                            <span className="text-green-500 font-bold flex items-center gap-2">
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                                                Uploaded
-                                            </span>
-                                        ) : (
-                                            'Upload Contract'
-                                        )}
+                                    <label className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue rounded-lg text-[10px] font-bold transition-colors">
+                                        <Plus className="w-3 h-3" />
+                                        Add
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleAddDocument}
+                                            className="hidden"
+                                        />
                                     </label>
                                 </div>
+
+                                {formData.documents.length > 0 ? (
+                                    <div className="space-y-2 max-h-[150px] overflow-y-auto pr-1">
+                                        {formData.documents.map((doc) => (
+                                            <div key={doc.id} className="flex items-center gap-2 p-2 bg-zinc-900/50 border border-zinc-800 rounded-lg group">
+                                                <div className="w-10 h-10 rounded-md overflow-hidden flex-shrink-0 border border-zinc-700">
+                                                    <img src={doc.data} alt={doc.name} className="w-full h-full object-cover" />
+                                                </div>
+                                                <span className="text-white text-xs font-medium flex-1 truncate">{doc.name}</span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveDocument(doc.id)}
+                                                    className="p-1 hover:bg-red-500/10 rounded text-zinc-500 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                                >
+                                                    <Trash2 className="w-3.5 h-3.5" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="border border-zinc-800 border-dashed rounded-xl p-4 text-center">
+                                        <FileText className="w-5 h-5 text-zinc-700 mx-auto mb-1" />
+                                        <p className="text-zinc-600 text-[10px]">No documents yet</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -462,7 +538,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                     </div>
                 </div>
             </form>
-        </Modal>
+        </Modal >
     );
 };
 

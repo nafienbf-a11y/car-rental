@@ -68,7 +68,14 @@ const Dashboard = () => {
         return t('dashboard.justNow');
     };
 
-    const pendingTerminations = bookings.filter(b => b.status === 'toBeTerminated');
+    const pendingTerminations = bookings.filter(b => {
+        if (b.status !== 'Active') return false;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const endDateObj = new Date(b.endDate);
+        endDateObj.setHours(0, 0, 0, 0);
+        return today > endDateObj;
+    });
 
     const handleTerminate = (booking) => {
         setTerminatingBooking(booking);

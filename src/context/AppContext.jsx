@@ -97,7 +97,7 @@ export const AppProvider = ({ children }) => {
             } else if (todayStr >= startDateStr && todayStr <= endDateStr) {
                 status = 'Active';
             } else if (todayStr > endDateStr) {
-                status = 'toBeTerminated';
+                status = 'Active';
             }
         }
 
@@ -113,43 +113,57 @@ export const AppProvider = ({ children }) => {
             startingKm: b.start_km,
             endingKm: b.end_km,
             securityDeposit: Number(b.security_deposit || 0),
-            contractPhoto: b.contract_photo,
+            documents: b.documents || [],
         };
     };
 
-    const mapBookingToDB = (b) => ({
-        vehicle_id: b.vehicleId,
-        client_id: b.clientId,
-        start_date: b.startDate,
-        end_date: b.endDate,
-        status: b.status,
-        total_price: b.totalCost,
-        start_km: b.startingKm,
-        end_km: b.endingKm,
-        security_deposit: b.securityDeposit,
-        contract_photo: b.contractPhoto,
-    });
+    const mapBookingToDB = (b) => {
+        const payload = {
+            vehicle_id: b.vehicleId,
+            client_id: b.clientId,
+            start_date: b.startDate,
+            end_date: b.endDate,
+            status: b.status,
+            total_price: b.totalCost,
+            start_km: b.startingKm,
+            end_km: b.endingKm,
+            security_deposit: b.securityDeposit,
+            documents: b.documents || [],
+        };
+        // Remove undefined/null/empty keys to avoid DB column errors
+        Object.keys(payload).forEach(key => {
+            if (payload[key] === undefined || payload[key] === null || payload[key] === '') {
+                delete payload[key];
+            }
+        });
+        return payload;
+    };
 
     // Client Mappers
     const mapClientFromDB = (c) => ({
         ...c,
         licenseNumber: c.license_number,
-        cinPassport: c.cin_passport,
-        permitPhoto: c.permit_photo,
-        identityPhoto: c.identity_photo,
+        documents: c.documents || [],
     });
 
-    const mapClientToDB = (c) => ({
-        name: c.name,
-        email: c.email,
-        phone: c.phone,
-        address: c.address,
-        license_number: c.licenseNumber,
-        cin_passport: c.cinPassport,
-        permit_photo: c.permitPhoto,
-        identity_photo: c.identityPhoto,
-        notes: c.notes,
-    });
+    const mapClientToDB = (c) => {
+        const payload = {
+            name: c.name,
+            email: c.email,
+            phone: c.phone,
+            address: c.address,
+            license_number: c.licenseNumber,
+            documents: c.documents || [],
+            notes: c.notes,
+        };
+        // Remove undefined/null keys
+        Object.keys(payload).forEach(key => {
+            if (payload[key] === undefined || payload[key] === null || payload[key] === '') {
+                delete payload[key];
+            }
+        });
+        return payload;
+    };
 
     // Expense Mappers
     const mapExpenseFromDB = e => ({ ...e, vehicleId: e.vehicle_id });
@@ -213,10 +227,25 @@ export const AppProvider = ({ children }) => {
     // Booking Operations
     const addBooking = async (booking) => {
         const payload = mapBookingToDB(booking);
-        const { data, error } = await supabase.from('bookings').insert([payload]).select().single();
+        let { data, error } = await supabase.from('bookings').insert([payload]).select().single();
+
+        // If a column doesn't exist, strip it and retry
+        if (error && error.code === 'PGRST204') {
+            const match = error.message.match(/Could not find the '(\w+)' column/);
+            if (match) {
+                console.warn(`Column '${match[1]}' not found, retrying without it...`);
+                delete payload[match[1]];
+                ({ data, error } = await supabase.from('bookings').insert([payload]).select().single());
+            }
+        }
 
         if (data) {
-            setBookings(prev => [...prev, mapBookingFromDB(data)]);
+            // Merge documents back into the returned data for frontend state
+            const bookingData = mapBookingFromDB(data);
+            if (booking.documents && booking.documents.length > 0 && !bookingData.documents?.length) {
+                bookingData.documents = booking.documents;
+            }
+            setBookings(prev => [...prev, bookingData]);
             // Auto-update vehicle to Rented
             updateVehicle(booking.vehicleId, { status: 'Rented' });
         }
@@ -226,11 +255,18 @@ export const AppProvider = ({ children }) => {
     const updateBooking = async (id, updates) => {
         const dbUpdates = {};
         if (updates.status) dbUpdates.status = updates.status;
-        if (updates.endKm) dbUpdates.end_km = updates.endKm;
+        if (updates.endingKm) dbUpdates.end_km = updates.endingKm;
         if (updates.securityDeposit !== undefined) dbUpdates.security_deposit = updates.securityDeposit;
-        if (updates.contractPhoto) dbUpdates.contract_photo = updates.contractPhoto;
+        if (updates.documents) dbUpdates.documents = updates.documents;
+        if (updates.startingKm) dbUpdates.start_km = updates.startingKm;
+        if (updates.startDate) dbUpdates.start_date = updates.startDate;
+        if (updates.endDate) dbUpdates.end_date = updates.endDate;
+        if (updates.vehicleId) dbUpdates.vehicle_id = updates.vehicleId;
+        if (updates.clientId) dbUpdates.client_id = updates.clientId;
+        if (updates.totalCost !== undefined) dbUpdates.total_price = updates.totalCost;
 
         const { data, error } = await supabase.from('bookings').update(dbUpdates).eq('id', id).select().single();
+        if (error) console.error("Error updating booking:", error);
         if (data) setBookings(prev => prev.map(b => b.id === id ? mapBookingFromDB(data) : b));
     };
 
@@ -245,25 +281,21 @@ export const AppProvider = ({ children }) => {
     // Client Operations
     const addClient = async (client) => {
         const payload = mapClientToDB(client);
+        // Remove undefined/null keys to avoid DB column errors
+        Object.keys(payload).forEach(key => {
+            if (payload[key] === undefined || payload[key] === null || payload[key] === '') {
+                delete payload[key];
+            }
+        });
         const { data, error } = await supabase.from('clients').insert([payload]).select().single();
+        if (error) console.error("Error adding client:", error);
         if (data) setClients(prev => [...prev, mapClientFromDB(data)]);
     };
 
     const updateClient = async (id, updates) => {
-        const payload = mapClientToDB({ ...updates }); // Warning: this might miss existing fields if we don't merge first
-        // Better: just map specific fields
-        const dbUpdates = {};
-        if (updates.name) dbUpdates.name = updates.name;
-        if (updates.email) dbUpdates.email = updates.email;
-        if (updates.phone) dbUpdates.phone = updates.phone;
-        if (updates.address) dbUpdates.address = updates.address;
-        if (updates.licenseNumber) dbUpdates.license_number = updates.licenseNumber;
-        if (updates.cinPassport) dbUpdates.cin_passport = updates.cinPassport;
-        if (updates.permitPhoto) dbUpdates.permit_photo = updates.permitPhoto;
-        if (updates.identityPhoto) dbUpdates.identity_photo = updates.identityPhoto;
-        if (updates.notes) dbUpdates.notes = updates.notes;
-
+        const dbUpdates = mapClientToDB(updates);
         const { data, error } = await supabase.from('clients').update(dbUpdates).eq('id', id).select().single();
+        if (error) console.error("Error updating client:", error);
         if (data) setClients(prev => prev.map(c => c.id === id ? mapClientFromDB(data) : c));
     };
 

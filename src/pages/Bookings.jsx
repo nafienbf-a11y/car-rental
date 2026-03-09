@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { Calendar, User, DollarSign, Plus } from 'lucide-react';
+import { Calendar, User, DollarSign, Plus, FileText } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/common/Button';
 import BookNowModal from '../components/bookings/BookNowModal';
 import TerminateBookingModal from '../components/bookings/TerminateBookingModal';
-import ClientModal from '../components/clients/ClientModal';
-import AddVehicleModal from '../components/fleet/AddVehicleModal';
+import ClientDetailModal from '../components/clients/ClientDetailModal';
+import VehicleDetailModal from '../components/fleet/VehicleDetailModal';
+import ConfirmModal from '../components/common/ConfirmModal';
+import BookingDocumentsModal from '../components/bookings/BookingDocumentsModal';
 import { formatDate, formatCurrency, getStatusBadgeClass } from '../utils/helpers';
 
 import { useNotification } from '../context/NotificationContext';
 
 const Bookings = () => {
-    const { bookings, vehicles, clients, addBooking, updateBooking, setIsNewBookingModalOpen, isNewBookingModalOpen } = useApp();
+    const { bookings, vehicles, clients, addBooking, updateBooking, cancelBooking, setIsNewBookingModalOpen, isNewBookingModalOpen } = useApp();
     const { showNotification } = useNotification();
     const { t } = useLanguage();
     const [statusFilter, setStatusFilter] = useState('All');
@@ -24,6 +26,10 @@ const Bookings = () => {
     const [isClientModalOpen, setIsClientModalOpen] = useState(false);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
     const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
+    const [cancellingBooking, setCancellingBooking] = useState(null);
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+    const [docsBooking, setDocsBooking] = useState(null);
+    const [isDocsModalOpen, setIsDocsModalOpen] = useState(false);
 
     const handleCarClick = (vehicleId) => {
         const vehicle = vehicles.find(v => v.id === vehicleId);
@@ -81,6 +87,11 @@ const Bookings = () => {
     const getVehicleName = (vehicleId) => {
         const vehicle = vehicles.find(v => v.id === vehicleId);
         return vehicle ? `${vehicle.brand} ${vehicle.model}` : 'Unknown';
+    };
+
+    const getClientName = (clientId) => {
+        const client = clients.find(c => c.id === clientId);
+        return client ? client.name : 'Unknown';
     };
 
     const statusFilters = ['All', 'Active', 'Completed', 'Cancelled', 'toTerminate'];
@@ -144,15 +155,9 @@ const Bookings = () => {
                                         </button>
                                     </td>
                                     <td className="p-5">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center justify-center group-hover:bg-zinc-800 group-hover:border-zinc-700 transition-all duration-300">
-                                                <User className="w-5 h-5 text-white" />
-                                            </div>
-                                            <button onClick={() => handleClientClick(booking.clientId)} className="text-left focus:outline-none flex flex-col items-start group">
-                                                <p className="text-white group-hover:text-brand-blue group-hover:underline transition-colors font-extrabold text-sm">{booking.customer}</p>
-                                                <p className="text-zinc-500 text-xs font-medium tracking-tight">{booking.email}</p>
-                                            </button>
-                                        </div>
+                                        <button onClick={() => handleClientClick(booking.clientId)} className="text-brand-blue hover:underline font-bold text-sm text-left transition-colors">
+                                            {getClientName(booking.clientId)}
+                                        </button>
                                     </td>
                                     <td className="p-5">
                                         <div className="flex items-center gap-2 text-zinc-400 text-xs font-bold uppercase tracking-tight">
@@ -161,12 +166,23 @@ const Bookings = () => {
                                         </div>
                                     </td>
                                     <td className="p-5">
-                                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${booking.status === 'Active' ? 'bg-white text-black border-white' :
-                                            booking.status === 'Completed' ? 'bg-zinc-900 text-zinc-400 border-zinc-800' :
-                                                'bg-brand-red text-white border-brand-red font-semibold'
-                                            }`}>
-                                            {t(`bookings.${booking.status.toLowerCase()}`)}
-                                        </span>
+                                        {(() => {
+                                            const isPastDue = isReadyToTerminate(booking);
+                                            const badgeClass = isPastDue
+                                                ? 'bg-orange-500/10 text-orange-400 border-orange-500/30'
+                                                : booking.status === 'Active' ? 'bg-white text-black border-white'
+                                                    : booking.status === 'Completed' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                                                        : booking.status === 'Upcoming' ? 'bg-brand-blue/10 text-brand-blue border-brand-blue/30'
+                                                            : 'bg-brand-red/10 text-brand-red border-brand-red/30';
+                                            const label = isPastDue
+                                                ? (t('bookings.tobeterminated') || 'To be terminated')
+                                                : t(`bookings.${booking.status.toLowerCase()}`);
+                                            return (
+                                                <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${badgeClass}`}>
+                                                    {label}
+                                                </span>
+                                            );
+                                        })()}
                                     </td>
                                     <td className="p-5">
                                         <div className="flex items-center gap-1 text-white font-black text-sm">
@@ -174,16 +190,38 @@ const Bookings = () => {
                                         </div>
                                     </td>
                                     <td className="p-5 text-right">
-                                        {isReadyToTerminate(booking) && (
-                                            <Button
-                                                variant="secondary"
-                                                onClick={() => handleTerminateClick(booking)}
-                                                className="text-[10px] uppercase font-bold tracking-widest px-3 py-1.5"
-                                                title={t('bookings.terminateBtn') || "Terminate"}
-                                            >
-                                                {t('bookings.terminateBtn') || "Terminate"}
-                                            </Button>
-                                        )}
+                                        <div className="flex items-center justify-end gap-2">
+                                            {booking.documents && booking.documents.length > 0 && (
+                                                <button
+                                                    onClick={() => { setDocsBooking(booking); setIsDocsModalOpen(true); }}
+                                                    className="p-2 hover:bg-brand-blue/10 rounded-lg text-zinc-400 hover:text-brand-blue transition-colors"
+                                                    title={t('bookings.viewDocuments')}
+                                                >
+                                                    <FileText className="w-4 h-4" />
+                                                </button>
+                                            )}
+                                            {isReadyToTerminate(booking) && (
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={() => handleTerminateClick(booking)}
+                                                    className="text-[10px] uppercase font-bold tracking-widest px-3 py-1.5"
+                                                >
+                                                    {t('bookings.terminateBtn')}
+                                                </Button>
+                                            )}
+                                            {(booking.status === 'Active' || booking.status === 'Upcoming') && (
+                                                <Button
+                                                    variant="secondary"
+                                                    onClick={() => {
+                                                        setCancellingBooking(booking);
+                                                        setIsCancelModalOpen(true);
+                                                    }}
+                                                    className="text-[10px] uppercase font-bold tracking-widest px-3 py-1.5 bg-red-500/10 text-red-400 border-red-500/30 hover:bg-red-500 hover:text-white"
+                                                >
+                                                    {t('bookings.cancelBtn')}
+                                                </Button>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -215,18 +253,35 @@ const Bookings = () => {
                 onTerminate={handleUpdateBooking}
             />
 
-            <ClientModal
+            <ClientDetailModal
                 isOpen={isClientModalOpen}
-                onClose={() => setIsClientModalOpen(false)}
-                onSubmit={() => setIsClientModalOpen(false)}
+                onClose={() => { setIsClientModalOpen(false); setSelectedClient(null); }}
                 client={selectedClient}
             />
 
-            <AddVehicleModal
+            <VehicleDetailModal
                 isOpen={isVehicleModalOpen}
-                onClose={() => setIsVehicleModalOpen(false)}
-                onAdd={() => setIsVehicleModalOpen(false)}
+                onClose={() => { setIsVehicleModalOpen(false); setSelectedVehicle(null); }}
                 vehicle={selectedVehicle}
+            />
+
+            <ConfirmModal
+                isOpen={isCancelModalOpen}
+                onClose={() => { setIsCancelModalOpen(false); setCancellingBooking(null); }}
+                onConfirm={() => {
+                    if (cancellingBooking) {
+                        cancelBooking(cancellingBooking.id);
+                        showNotification(t('bookings.notifications.cancelled'), 'success');
+                    }
+                }}
+                title={t('bookings.cancelBtn')}
+                message={t('bookings.cancelConfirm')}
+            />
+
+            <BookingDocumentsModal
+                isOpen={isDocsModalOpen}
+                onClose={() => { setIsDocsModalOpen(false); setDocsBooking(null); }}
+                booking={docsBooking}
             />
         </div>
     );
