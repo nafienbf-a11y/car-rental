@@ -62,7 +62,6 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
             seats: parseInt(formData.seats),
             status: vehicle?.status || 'Available',
             mileage: vehicle?.mileage || 0,
-            health: vehicle?.health || 100,
             lastMaintenance: vehicle?.lastMaintenance || new Date().toISOString().split('T')[0],
         };
 

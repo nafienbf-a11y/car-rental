@@ -103,7 +103,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
     }, [formData.vehicleId, booking, vehicles]);
 
 
-    const availableVehicles = vehicles.filter(v => v.status !== 'Maintenance');
+    const availableVehicles = vehicles.filter(v => v.status !== 'Maintenance' && v.status !== 'Deleted');
 
     const handleClientSelect = (e) => {
         const clientId = e.target.value;

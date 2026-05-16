@@ -18,6 +18,7 @@ import Catalog from './pages/Catalog';
 import NotFound from './pages/NotFound';
 import Users from './pages/Users';
 import History from './pages/History';
+import Reports from './pages/Reports';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function AppContent() {
                   <Route path="expenses" element={<Expenses />} />
                   <Route path="users" element={<Users />} />
                   <Route path="history" element={<History />} />
+                  <Route path="reports" element={<Reports />} />
                   <Route path="*" element={<NotFound />} />
                 </Route>
               </Route>

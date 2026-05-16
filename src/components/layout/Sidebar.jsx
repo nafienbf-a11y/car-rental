@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Car, Calendar, Users, DollarSign, History, Menu, ExternalLink, Shield } from 'lucide-react';
+import { LayoutDashboard, Car, Calendar, Users, DollarSign, History, Menu, ExternalLink, Shield, TrendingUp } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 import { useAuth } from '../../context/AuthContext';
@@ -18,6 +18,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         { name: t('nav.clients'), path: '/admin/clients', icon: Users },
         { name: t('nav.expenses'), path: '/admin/expenses', icon: DollarSign },
         { name: t('nav.history'), path: '/admin/history', icon: History },
+        { name: 'Reports', path: '/admin/reports', icon: TrendingUp },
     ];
 
     if (user?.role === 'admin') {

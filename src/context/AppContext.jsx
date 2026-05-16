@@ -16,43 +16,96 @@ export const AppProvider = ({ children }) => {
     const [bookings, setBookings] = useState([]);
     const [expenses, setExpenses] = useState([]);
     const [clients, setClients] = useState([]);
+    const [auditLogs, setAuditLogs] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddVehicleModalOpen, setIsAddVehicleModalOpen] = useState(false);
     const [isNewBookingModalOpen, setIsNewBookingModalOpen] = useState(false);
     const [isClientModalOpen, setIsClientModalOpen] = useState(false);
+    const [visitorCount, setVisitorCount] = useState(0);
 
     // Initial Data Fetch
     useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const [vParams, bParams, cParams, eParams, aParams] = await Promise.all([
+                    supabase.from('vehicles').select('*').order('created_at'),
+                    supabase.from('bookings').select('*').order('created_at'),
+                    supabase.from('clients').select('*').order('created_at'),
+                    supabase.from('expenses').select('*').order('created_at'),
+                    supabase.from('audit_logs').select('*').order('created_at', { ascending: false })
+                ]);
+
+                if (vParams.data) setVehicles(vParams.data.map(mapVehicleFromDB));
+                if (bParams.data) setBookings(bParams.data.map(mapBookingFromDB));
+                if (cParams.data) setClients(cParams.data.map(mapClientFromDB));
+                if (eParams.data) setExpenses(eParams.data.map(mapExpenseFromDB));
+                if (aParams.data) setAuditLogs(aParams.data);
+
+                // Fetch today's visitors
+                const today = new Date().toISOString().split('T')[0];
+                const { data: vData } = await supabase
+                    .from('visitor_stats')
+                    .select('count')
+                    .eq('visit_date', today)
+                    .single();
+                if (vData) setVisitorCount(vData.count);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchData();
     }, []);
 
-    const fetchData = async () => {
-        setLoading(true);
-        try {
-            const [vParams, bParams, cParams, eParams] = await Promise.all([
-                supabase.from('vehicles').select('*').order('created_at'),
-                supabase.from('bookings').select('*').order('created_at'),
-                supabase.from('clients').select('*').order('created_at'),
-                supabase.from('expenses').select('*').order('created_at')
-            ]);
+    const incrementVisitors = async () => {
+        const today = new Date().toISOString().split('T')[0];
+        const { data: existing } = await supabase
+            .from('visitor_stats')
+            .select('id, count')
+            .eq('visit_date', today)
+            .single();
 
-            if (vParams.data) setVehicles(vParams.data.map(mapVehicleFromDB));
-            if (bParams.data) setBookings(bParams.data.map(mapBookingFromDB));
-            if (cParams.data) setClients(cParams.data.map(mapClientFromDB));
-            if (eParams.data) setExpenses(eParams.data.map(mapExpenseFromDB));
-
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-            setLoading(false);
+        if (existing) {
+            const { data } = await supabase
+                .from('visitor_stats')
+                .update({ count: existing.count + 1 })
+                .eq('id', existing.id)
+                .select()
+                .single();
+            if (data) setVisitorCount(data.count);
+        } else {
+            const { data } = await supabase
+                .from('visitor_stats')
+                .insert([{ visit_date: today, count: 1 }])
+                .select()
+                .single();
+            if (data) setVisitorCount(data.count);
         }
     };
 
-    // --- MAPPERS (Snake_case <-> CamelCase) ---
+    const logAction = async (actionType, entityType, entityId, details) => {
+        const { data, error } = await supabase
+            .from('audit_logs')
+            .insert([{
+                action_type: actionType,
+                entity_type: entityType,
+                entity_id: entityId?.toString(),
+                details: details,
+                performed_by: 'Admin'
+            }])
+            .select()
+            .single();
+        
+        if (data) setAuditLogs(prev => [data, ...prev]);
+        if (error) console.error("Audit log error:", error);
+    };
 
-    // Vehicle Mappers
+    // --- MAPPERS ---
     const mapVehicleFromDB = (v) => ({
         ...v,
         pricePerDay: Number(v.price_per_day),
@@ -72,48 +125,32 @@ export const AppProvider = ({ children }) => {
         image: v.image,
         status: v.status,
         mileage: v.mileage,
-        health: v.health,
         last_maintenance: v.lastMaintenance,
     });
 
-    // Booking Mappers
     const mapBookingFromDB = (b) => {
         let status = b.status;
-
-        // Calculate dynamic status if not Cancelled or Completed explicitly
         if (status !== 'Cancelled' && status !== 'Completed') {
-            const today = new Date(); // Local date reference
-            // Format today as YYYY-MM-DD in LOCAL time
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            const todayStr = `${year}-${month}-${day}`;
+            const todayStr = new Date().toISOString().split('T')[0];
+            const startDateStr = b.start_date?.substring(0, 10);
+            const endDateStr = b.end_date?.substring(0, 10);
 
-            const startDateStr = b.start_date ? b.start_date.substring(0, 10) : '';
-            const endDateStr = b.end_date ? b.end_date.substring(0, 10) : '';
-
-            if (todayStr < startDateStr) {
-                status = 'Upcoming';
-            } else if (todayStr >= startDateStr && todayStr <= endDateStr) {
-                status = 'Active';
-            } else if (todayStr > endDateStr) {
-                status = 'Active';
-            }
+            if (todayStr < startDateStr) status = 'Upcoming';
+            else if (todayStr >= startDateStr && todayStr <= endDateStr) status = 'Active';
+            else if (todayStr > endDateStr) status = 'Active';
         }
-
         return {
             ...b,
             vehicleId: b.vehicle_id,
             clientId: b.client_id,
             startDate: b.start_date,
             endDate: b.end_date,
-            createdAt: b.created_at, // Map DB column to frontend prop
-            status: status, // Use calculated status
-            totalCost: Number(b.total_price), // Note: Frontend uses totalCost, DB total_price
+            createdAt: b.created_at,
+            status: status,
+            totalCost: Number(b.total_price),
             startingKm: b.start_km,
             endingKm: b.end_km,
             securityDeposit: Number(b.security_deposit || 0),
-            documents: b.documents || [],
         };
     };
 
@@ -128,251 +165,239 @@ export const AppProvider = ({ children }) => {
             start_km: b.startingKm,
             end_km: b.endingKm,
             security_deposit: b.securityDeposit,
-            documents: b.documents || [],
         };
-        // Remove undefined/null/empty keys to avoid DB column errors
         Object.keys(payload).forEach(key => {
-            if (payload[key] === undefined || payload[key] === null || payload[key] === '') {
-                delete payload[key];
-            }
+            if (payload[key] === undefined || payload[key] === null || payload[key] === '') delete payload[key];
         });
         return payload;
     };
 
-    // Client Mappers
-    const mapClientFromDB = (c) => ({
-        ...c,
-        licenseNumber: c.license_number,
-        documents: c.documents || [],
+    const mapClientFromDB = (c) => ({ ...c, licenseNumber: c.license_number });
+    const mapClientToDB = (c) => ({
+        name: c.name, email: c.email, phone: c.phone, address: c.address, license_number: c.licenseNumber, notes: c.notes
     });
 
-    const mapClientToDB = (c) => {
-        const payload = {
-            name: c.name,
-            email: c.email,
-            phone: c.phone,
-            address: c.address,
-            license_number: c.licenseNumber,
-            documents: c.documents || [],
-            notes: c.notes,
-        };
-        // Remove undefined/null keys
-        Object.keys(payload).forEach(key => {
-            if (payload[key] === undefined || payload[key] === null || payload[key] === '') {
-                delete payload[key];
-            }
-        });
-        return payload;
-    };
-
-    // Expense Mappers
     const mapExpenseFromDB = e => ({ ...e, vehicleId: e.vehicle_id });
     const mapExpenseToDB = e => ({
         date: e.date, category: e.category, amount: e.amount, description: e.description, vehicle_id: e.vehicleId
     });
 
-
     // --- OPERATIONS ---
-
-    // Vehicle Operations
     const addVehicle = async (vehicle) => {
-        const payload = mapVehicleToDB(vehicle);
-        const { data, error } = await supabase.from('vehicles').insert([payload]).select().single();
-        if (data) setVehicles(prev => [...prev, mapVehicleFromDB(data)]);
-        if (error) console.error("Error adding vehicle:", error);
+        const { data, error } = await supabase.from('vehicles').insert([mapVehicleToDB(vehicle)]).select().single();
+        if (data) {
+            const v = mapVehicleFromDB(data);
+            setVehicles(prev => [...prev, v]);
+            logAction('CREATE', 'VEHICLE', v.id, `Added vehicle ${v.brand} ${v.model} (${v.plate})`);
+        }
     };
 
     const updateVehicle = async (id, updates) => {
-        // We need to map updates carefully. 
-        // Simple hack: Map a dummy full object to get keys, or just manually map common fields if needed.
-        // Better: create specific partial mapper or strict check.
-        // For now, let's just handle specific known update fields manualy if simple, or use mapVehicleToDB logic loosely.
-
         const dbUpdates = {};
-        if (updates.status) dbUpdates.status = updates.status;
+        if (updates.status !== undefined) dbUpdates.status = updates.status;
         if (updates.mileage !== undefined) dbUpdates.mileage = updates.mileage;
-        if (updates.lastMaintenance) dbUpdates.last_maintenance = updates.lastMaintenance;
-        if (updates.pricePerDay) dbUpdates.price_per_day = updates.pricePerDay;
-        if (updates.brand) dbUpdates.brand = updates.brand; // etc for edits
-        // Add other fields as needed for edit form
+        if (updates.lastMaintenance !== undefined) dbUpdates.last_maintenance = updates.lastMaintenance;
+        if (updates.pricePerDay !== undefined) dbUpdates.price_per_day = updates.pricePerDay;
+        if (updates.brand) dbUpdates.brand = updates.brand;
         if (updates.model) dbUpdates.model = updates.model;
         if (updates.plate) dbUpdates.plate = updates.plate;
+        if (updates.image !== undefined) dbUpdates.image = updates.image;
+        if (updates.category) dbUpdates.category = updates.category;
+        if (updates.seats !== undefined) dbUpdates.seats = updates.seats;
+        if (updates.transmission) dbUpdates.transmission = updates.transmission;
+        if (updates.fuel) dbUpdates.fuel = updates.fuel;
+        if (updates.year !== undefined) dbUpdates.year = updates.year;
 
-        const { data, error } = await supabase.from('vehicles').update(dbUpdates).eq('id', id).select().single();
-
+        const { data } = await supabase.from('vehicles').update(dbUpdates).eq('id', id).select().single();
         if (data) {
-            setVehicles(prev => prev.map(v => v.id === id ? mapVehicleFromDB(data) : v));
+            const v = mapVehicleFromDB(data);
+            setVehicles(prev => prev.map(item => item.id === id ? v : item));
+            logAction('UPDATE', 'VEHICLE', id, `Updated vehicle ${v.brand} ${v.model}`);
         }
-        if (error) console.error("Error updating vehicle:", error);
     };
 
     const deleteVehicle = async (id) => {
-        const { error } = await supabase.from('vehicles').delete().eq('id', id);
-        if (!error) setVehicles(prev => prev.filter(v => v.id !== id));
+        const hasActive = bookings.some(b => b.vehicleId === id && (b.status === 'Active' || b.status === 'Upcoming'));
+        if (hasActive) throw new Error("Vehicle has an active booking. Cancel or complete it first.");
+
+        const v = vehicles.find(item => item.id === id);
+        
+        // Soft Delete: change status to 'Deleted' to preserve historical data
+        const { error } = await supabase.from('vehicles').update({ status: 'Deleted' }).eq('id', id);
+        
+        if (error) {
+            console.error("Error soft-deleting vehicle:", error);
+            throw new Error("Failed to delete vehicle from the database.");
+        }
+
+        setVehicles(prev => prev.map(item => item.id === id ? { ...item, status: 'Deleted' } : item));
+        
+        logAction('DELETE', 'VEHICLE', id, `Soft deleted vehicle ${v?.brand} ${v?.model} (${v?.plate})`);
     };
 
-    // Helper shortcuts
-    const setVehicleMaintenance = (id) => updateVehicle(id, { status: 'Maintenance', lastMaintenance: new Date().toISOString().split('T')[0] });
+    const setVehicleMaintenance = async (id) => {
+        const hasActive = bookings.some(b => b.vehicleId === id && (b.status === 'Active' || b.status === 'Upcoming'));
+        if (hasActive) throw new Error("Vehicle has an active booking. Cancel it first.");
+        await updateVehicle(id, { status: 'Maintenance', lastMaintenance: new Date().toISOString().split('T')[0] });
+    };
+
     const setVehicleAvailable = (id) => updateVehicle(id, { status: 'Available' });
-    const toggleVehicleStatus = (id) => {
-        const v = vehicles.find(v => v.id === id);
-        if (v) {
-            const newStatus = v.status === 'Available' ? 'Rented' :
-                v.status === 'Rented' ? 'Maintenance' : 'Available';
-            updateVehicle(id, { status: newStatus });
-        }
-    };
 
-
-    // Booking Operations
     const addBooking = async (booking) => {
-        const payload = mapBookingToDB(booking);
-        let { data, error } = await supabase.from('bookings').insert([payload]).select().single();
-
-        // If a column doesn't exist, strip it and retry
-        if (error && error.code === 'PGRST204') {
-            const match = error.message.match(/Could not find the '(\w+)' column/);
-            if (match) {
-                console.warn(`Column '${match[1]}' not found, retrying without it...`);
-                delete payload[match[1]];
-                ({ data, error } = await supabase.from('bookings').insert([payload]).select().single());
-            }
-        }
-
+        const { data, error } = await supabase.from('bookings').insert([mapBookingToDB(booking)]).select().single();
         if (data) {
-            // Merge documents back into the returned data for frontend state
-            const bookingData = mapBookingFromDB(data);
-            if (booking.documents && booking.documents.length > 0 && !bookingData.documents?.length) {
-                bookingData.documents = booking.documents;
-            }
-            setBookings(prev => [...prev, bookingData]);
-            // Auto-update vehicle to Rented
+            const b = mapBookingFromDB(data);
+            setBookings(prev => [...prev, b]);
             updateVehicle(booking.vehicleId, { status: 'Rented' });
+            const c = clients.find(client => client.id === b.clientId);
+            const clientName = c ? c.name : 'Unknown Client';
+            logAction('CREATE', 'BOOKING', b.id, `Created booking for ${clientName} - ${b.totalCost} MAD`);
         }
         if (error) console.error("Error adding booking:", error);
     };
 
     const updateBooking = async (id, updates) => {
-        const dbUpdates = {};
-        if (updates.status) dbUpdates.status = updates.status;
-        if (updates.endingKm) dbUpdates.end_km = updates.endingKm;
-        if (updates.securityDeposit !== undefined) dbUpdates.security_deposit = updates.securityDeposit;
-        if (updates.documents) dbUpdates.documents = updates.documents;
-        if (updates.startingKm) dbUpdates.start_km = updates.startingKm;
-        if (updates.startDate) dbUpdates.start_date = updates.startDate;
-        if (updates.endDate) dbUpdates.end_date = updates.endDate;
-        if (updates.vehicleId) dbUpdates.vehicle_id = updates.vehicleId;
-        if (updates.clientId) dbUpdates.client_id = updates.clientId;
-        if (updates.totalCost !== undefined) dbUpdates.total_price = updates.totalCost;
-
-        const { data, error } = await supabase.from('bookings').update(dbUpdates).eq('id', id).select().single();
-        if (error) console.error("Error updating booking:", error);
-        if (data) setBookings(prev => prev.map(b => b.id === id ? mapBookingFromDB(data) : b));
+        const { data } = await supabase.from('bookings').update(mapBookingToDB(updates)).eq('id', id).select().single();
+        if (data) {
+            const b = mapBookingFromDB(data);
+            setBookings(prev => prev.map(item => item.id === id ? b : item));
+            logAction('UPDATE', 'BOOKING', id, `Updated booking for ${b.customer}`);
+        }
     };
 
     const cancelBooking = async (id) => {
-        const booking = bookings.find(b => b.id === id);
-        if (booking) {
-            await updateBooking(id, { status: 'Cancelled' });
-            await updateVehicle(booking.vehicleId, { status: 'Available' });
+        const b = bookings.find(item => item.id === id);
+        const { data } = await supabase.from('bookings').update({ status: 'Cancelled' }).eq('id', id).select().single();
+        if (data) {
+            const updated = mapBookingFromDB(data);
+            setBookings(prev => prev.map(item => item.id === id ? updated : item));
+            updateVehicle(updated.vehicleId, { status: 'Available' });
+            logAction('CANCEL', 'BOOKING', id, `Cancelled booking for ${updated.customer}`);
         }
     };
 
-    // Client Operations
+    const deleteBooking = async (id) => {
+        const b = bookings.find(item => item.id === id);
+        const { error } = await supabase.from('bookings').delete().eq('id', id);
+        if (error) {
+            console.error("Error deleting booking:", error);
+            throw new Error("Failed to delete booking.");
+        }
+        
+        setBookings(prev => prev.filter(item => item.id !== id));
+        const c = clients.find(client => client.id === b?.clientId);
+        const clientName = c ? c.name : 'Unknown Client';
+        logAction('DELETE', 'BOOKING', id, `Deleted booking for ${clientName}`);
+    };
+
     const addClient = async (client) => {
-        const payload = mapClientToDB(client);
-        // Remove undefined/null keys to avoid DB column errors
-        Object.keys(payload).forEach(key => {
-            if (payload[key] === undefined || payload[key] === null || payload[key] === '') {
-                delete payload[key];
-            }
-        });
-        const { data, error } = await supabase.from('clients').insert([payload]).select().single();
-        if (error) console.error("Error adding client:", error);
-        if (data) setClients(prev => [...prev, mapClientFromDB(data)]);
+        const { data } = await supabase.from('clients').insert([mapClientToDB(client)]).select().single();
+        if (data) {
+            const c = mapClientFromDB(data);
+            setClients(prev => [...prev, c]);
+            logAction('CREATE', 'CLIENT', c.id, `Added client ${c.name}`);
+        }
     };
 
     const updateClient = async (id, updates) => {
-        const dbUpdates = mapClientToDB(updates);
-        const { data, error } = await supabase.from('clients').update(dbUpdates).eq('id', id).select().single();
-        if (error) console.error("Error updating client:", error);
-        if (data) setClients(prev => prev.map(c => c.id === id ? mapClientFromDB(data) : c));
-    };
-
-    const deleteClient = async (id) => {
-        const { error } = await supabase.from('clients').delete().eq('id', id);
-        if (!error) setClients(prev => prev.filter(c => c.id !== id));
-    };
-
-
-    // Expense Operations
-    const addExpense = async (expense) => {
-        const payload = mapExpenseToDB(expense);
-        const { data, error } = await supabase.from('expenses').insert([payload]).select().single();
-        if (data) setExpenses(prev => [...prev, mapExpenseFromDB(data)]);
-    };
-
-    const updateExpense = async (id, updates) => {
-        // Simplified
-        const { data } = await supabase.from('expenses').update(updates).eq('id', id).select().single();
-        if (data) setExpenses(prev => prev.map(e => e.id === id ? mapExpenseFromDB(data) : e));
-    };
-
-    const deleteExpense = async (id) => {
-        const { error } = await supabase.from('expenses').delete().eq('id', id);
-        if (!error) setExpenses(prev => prev.filter(e => e.id !== id));
-    };
-
-    // Migration Helper
-    const migrateVehicles = async () => {
-        // Force rebuild comment
-        try {
-            const local = localStorage.getItem('car-rental-vehicles');
-            if (!local) return { success: false, message: 'No local data found' };
-
-            const vehicles = JSON.parse(local);
-            let count = 0;
-
-            for (const v of vehicles) {
-                // Check if already exists (by plate) to prevent duplicates
-                const { data } = await supabase.from('vehicles').select('id').eq('plate', v.plate).single();
-                if (!data) {
-                    await addVehicle(v); // This handles mapping
-                    count++;
-                }
-            }
-            return { success: true, message: `Migrated ${count} vehicles successfully!` };
-        } catch (error) {
-            console.error('Migration failed:', error);
-            return { success: false, message: error.message };
+        const { data } = await supabase.from('clients').update(mapClientToDB(updates)).eq('id', id).select().single();
+        if (data) {
+            const c = mapClientFromDB(data);
+            setClients(prev => prev.map(item => item.id === id ? c : item));
+            logAction('UPDATE', 'CLIENT', id, `Updated client ${c.name}`);
         }
     };
 
-    // Stats
+    const deleteClient = async (id) => {
+        const hasBookings = bookings.some(b => b.clientId === id);
+        if (hasBookings) throw new Error("Client has existing bookings. Delete them first.");
+
+        const c = clients.find(item => item.id === id);
+        const { error } = await supabase.from('clients').delete().eq('id', id);
+        
+        if (error) {
+            console.error("Error deleting client:", error);
+            if (error.code === '23503') {
+                throw new Error("Cannot delete client because they have associated records in the database.");
+            }
+            throw new Error("Failed to delete client.");
+        }
+        
+        setClients(prev => prev.filter(item => item.id !== id));
+        logAction('DELETE', 'CLIENT', id, `Deleted client ${c?.name}`);
+    };
+
+    const addExpense = async (expense) => {
+        const { data } = await supabase.from('expenses').insert([mapExpenseToDB(expense)]).select().single();
+        if (data) {
+            const e = mapExpenseFromDB(data);
+            setExpenses(prev => [...prev, e]);
+            logAction('CREATE', 'EXPENSE', e.id, `Added expense: ${e.category} - ${e.amount} MAD`);
+        }
+    };
+
+    const updateExpense = async (id, updates) => {
+        const { data, error } = await supabase.from('expenses').update(mapExpenseToDB(updates)).eq('id', id).select().single();
+        if (error) console.error("Error updating expense:", error);
+        if (data) {
+            const e = mapExpenseFromDB(data);
+            setExpenses(prev => prev.map(item => item.id === id ? e : item));
+            logAction('UPDATE', 'EXPENSE', id, `Updated expense: ${e.category}`);
+        }
+    };
+
+    const deleteExpense = async (id) => {
+        const e = expenses.find(item => item.id === id);
+        const { error } = await supabase.from('expenses').delete().eq('id', id);
+        
+        if (error) {
+            console.error("Error deleting expense:", error);
+            throw new Error("Failed to delete expense.");
+        }
+        
+        setExpenses(prev => prev.filter(item => item.id !== id));
+        logAction('DELETE', 'EXPENSE', id, `Deleted expense: ${e?.category}`);
+    };
+
+    const migrateVehicles = async () => {
+        try {
+            const local = localStorage.getItem('car-rental-vehicles');
+            if (!local) return { success: false, message: 'No local data found' };
+            const vehicles = JSON.parse(local);
+            for (const v of vehicles) {
+                const { data } = await supabase.from('vehicles').select('id').eq('plate', v.plate).single();
+                if (!data) await addVehicle(v);
+            }
+            return { success: true, message: 'Migration complete' };
+        } catch (error) { return { success: false, message: error.message }; }
+    };
+
     const stats = {
-        totalFleet: vehicles.length,
+        totalFleet: vehicles.filter(v => v.status !== 'Deleted').length,
         availableVehicles: vehicles.filter(v => v.status === 'Available').length,
         activeRentals: bookings.filter(b => b.status === 'Active').length,
-        maintenanceVehicles: vehicles.filter(v => v.status === 'Maintenance').length,
-        totalRevenue: bookings.reduce((sum, b) => sum + (b.totalCost || 0), 0),
+        totalRevenue: bookings.filter(b => b.status !== 'Cancelled').reduce((sum, b) => sum + (b.totalCost || 0), 0),
         monthlyRevenue: bookings
-            .filter(b => b.createdAt && new Date(b.createdAt).getMonth() === new Date().getMonth())
+            .filter(b => {
+                if (b.status === 'Cancelled' || !b.createdAt) return false;
+                const date = new Date(b.createdAt);
+                const now = new Date();
+                return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+            })
             .reduce((sum, b) => sum + (b.totalCost || 0), 0),
     };
 
     const value = {
-        vehicles, bookings, expenses, clients, loading,
-        searchTerm, setSearchTerm,
+        vehicles, bookings, expenses, clients, auditLogs, loading,
+        searchTerm, setSearchTerm, visitorCount, incrementVisitors,
         isAddVehicleModalOpen, setIsAddVehicleModalOpen,
         isNewBookingModalOpen, setIsNewBookingModalOpen,
         isClientModalOpen, setIsClientModalOpen,
-        addVehicle, updateVehicle, deleteVehicle,
-        toggleVehicleStatus, setVehicleMaintenance, setVehicleAvailable,
-        addBooking, updateBooking, cancelBooking,
-        addExpense, updateExpense, deleteExpense,
+        addVehicle, updateVehicle, deleteVehicle, setVehicleMaintenance, setVehicleAvailable,
+        addBooking, updateBooking, deleteBooking, cancelBooking,
         addClient, updateClient, deleteClient,
-        migrateVehicles, // Exposed for UI
-        stats,
+        addExpense, updateExpense, deleteExpense,
+        migrateVehicles, stats
     };
 
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

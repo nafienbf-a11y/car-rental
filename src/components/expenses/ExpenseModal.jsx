@@ -12,10 +12,32 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
     const { t } = useLanguage();
     const { showNotification } = useNotification();
     const [formData, setFormData] = useState({
-        // ... existing state
+        type: 'Maintenance',
+        vehicleId: '',
+        cost: '',
+        date: new Date().toISOString().split('T')[0],
+        description: ''
     });
 
-    // ... existing useEffect
+    useEffect(() => {
+        if (expense) {
+            setFormData({
+                type: expense.category || 'Maintenance',
+                vehicleId: expense.vehicleId || '',
+                cost: expense.amount || '',
+                date: expense.date || new Date().toISOString().split('T')[0],
+                description: expense.description || ''
+            });
+        } else {
+            setFormData({
+                type: 'Maintenance',
+                vehicleId: '',
+                cost: '',
+                date: new Date().toISOString().split('T')[0],
+                description: ''
+            });
+        }
+    }, [expense, isOpen]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -30,6 +52,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
         };
 
         if (expense) {
+            if (!window.confirm(t('confirm.update') || "Are you sure you want to modify this expense?")) return;
             updateExpense(expense.id, expenseData);
             showNotification(t('modals.expense.notifications.updated'), 'success');
         } else {

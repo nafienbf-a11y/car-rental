@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Users, Plus, Mail, Phone, Edit2, Trash2, MapPin, Eye } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useNotification } from '../context/NotificationContext';
 import Button from '../components/common/Button';
 import SearchBar from '../components/common/SearchBar';
 import ClientModal from '../components/clients/ClientModal';
@@ -10,6 +11,7 @@ import ClientDetailModal from '../components/clients/ClientDetailModal';
 const Clients = () => {
     const { clients = [], addClient, updateClient, deleteClient, bookings = [] } = useApp();
     const { t } = useLanguage();
+    const { showNotification } = useNotification();
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState(null);
@@ -28,15 +30,21 @@ const Clients = () => {
 
     const handleSubmit = (clientData) => {
         if (selectedClient) {
+            if (!window.confirm("Are you sure you want to modify this client?")) return;
             updateClient(clientData.id, clientData);
         } else {
             addClient(clientData);
         }
     };
 
-    const handleDeleteClient = (id) => {
+    const handleDeleteClient = async (id) => {
         if (window.confirm(t('clients.deleteConfirm'))) {
-            deleteClient(id);
+            try {
+                await deleteClient(id);
+                showNotification("Client deleted successfully", 'success');
+            } catch (error) {
+                showNotification(error.message, 'error');
+            }
         }
     };
 

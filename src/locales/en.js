@@ -293,6 +293,10 @@ export const en = {
             total: 'Total',
         },
     },
+    confirm: {
+        update: 'Are you sure you want to modify this item?',
+        delete: 'Are you sure you want to delete this item?'
+    },
     // Modals
     modals: {
         common: {

@@ -5,10 +5,12 @@ import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/common/Button';
 import ExpenseModal from '../components/expenses/ExpenseModal';
 import { formatDate, formatCurrency } from '../utils/helpers';
+import { useNotification } from '../context/NotificationContext';
 
 const Expenses = () => {
     const { expenses, vehicles, deleteExpense } = useApp();
     const { t } = useLanguage();
+    const { showNotification } = useNotification();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingExpense, setEditingExpense] = useState(null);
 
@@ -36,10 +38,14 @@ const Expenses = () => {
         setIsModalOpen(true);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (window.confirm(t('expenses.deleteConfirm'))) {
-            deleteExpense(id);
-            // Assuming showNotification is available or will be added, if not, just delete
+            try {
+                await deleteExpense(id);
+                showNotification("Expense deleted successfully", 'success');
+            } catch (error) {
+                showNotification(error.message, 'error');
+            }
         }
     };
 

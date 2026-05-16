@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Fuel, Users, Gauge, MessageCircle, Car, Search, SlidersHorizontal, X } from 'lucide-react';
+import { Fuel, Users, Gauge, MessageCircle, Car, Search, SlidersHorizontal, X, Star } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSelector from '../components/common/LanguageSelector';
@@ -20,7 +20,7 @@ const Catalog = () => {
     const [bookingModalOpen, setBookingModalOpen] = useState(false);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
 
-    const allVehicles = vehicles;
+    const allVehicles = vehicles.filter(v => v.status !== 'Deleted');
 
     const filteredVehicles = allVehicles.filter(v => {
         const matchesSearch =
@@ -62,12 +62,21 @@ const Catalog = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <Logo className="w-10 h-10" showText={false} />
-                        <h1 className="text-lg font-bold text-white hidden sm:block">Golden Key Rental</h1>
+                        <h1 className="text-lg font-bold text-white hidden sm:block">Gatibi Rental</h1>
                     </div>
                     <div className="flex items-center gap-3">
                         <div className="w-36">
                             <LanguageSelector />
                         </div>
+                        <a
+                            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hello Gatibi Rental, I would like to leave a review: ")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-xl text-sm font-medium transition-colors"
+                        >
+                            <Star className="w-4 h-4" />
+                            <span className="hidden sm:inline">Leave Review</span>
+                        </a>
                         <a
                             href={`https://wa.me/${WHATSAPP_NUMBER}`}
                             target="_blank"
@@ -171,21 +180,30 @@ const Catalog = () => {
                                     className="bg-zinc-950 rounded-2xl overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-all duration-300 group"
                                 >
                                     {/* Image */}
-                                    <div className="relative h-52 overflow-hidden bg-zinc-900">
-                                        <img
-                                            src={vehicle.image}
-                                            alt={`${vehicle.brand} ${vehicle.model}`}
-                                            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                                        <div className="absolute top-3 right-3 px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full text-green-400 text-xs font-medium backdrop-blur-sm">
-                                            {t('catalog.available')}
+                                    {vehicle.image && (
+                                        <div className="relative h-52 overflow-hidden bg-zinc-900">
+                                            <img
+                                                src={vehicle.image}
+                                                alt={`${vehicle.brand} ${vehicle.model}`}
+                                                className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                                            <div className="absolute top-3 right-3 px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full text-green-400 text-xs font-medium backdrop-blur-sm">
+                                                {t('catalog.available')}
+                                            </div>
+                                            <div className="absolute bottom-3 left-3">
+                                                <p className="text-white font-bold text-lg">{vehicle.brand} {vehicle.model}</p>
+                                                <p className="text-zinc-400 text-sm">{vehicle.year}</p>
+                                            </div>
                                         </div>
-                                        <div className="absolute bottom-3 left-3">
+                                    )}
+
+                                    {!vehicle.image && (
+                                        <div className="p-5 border-b border-zinc-800 bg-zinc-900/30">
                                             <p className="text-white font-bold text-lg">{vehicle.brand} {vehicle.model}</p>
                                             <p className="text-zinc-400 text-sm">{vehicle.year}</p>
                                         </div>
-                                    </div>
+                                    )}
 
                                     {/* Details */}
                                     <div className="p-5">
@@ -236,7 +254,7 @@ const Catalog = () => {
                     {/* Map */}
                     <div className="rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl h-80 lg:h-auto">
                         <iframe
-                            title="Golden Key Rental Location"
+                            title="Gatibi Rental Location"
                             src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3000!2d-5.3748333!3d35.5658889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzXCsDMzJzU3LjIiTiA1wrAyMicyOS40Ilc!5e0!3m2!1sen!2sma!4v1700000000000"
                             width="100%"
                             height="100%"
@@ -250,7 +268,7 @@ const Catalog = () => {
                     {/* Info Card */}
                     <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-8 flex flex-col justify-center gap-6">
                         <div>
-                            <h3 className="text-xl font-bold text-white mb-2">Golden Key Rental</h3>
+                            <h3 className="text-xl font-bold text-white mb-2">Gatibi Rental</h3>
                             <p className="text-zinc-400 leading-relaxed">{t('catalog.locationDescription')}</p>
                         </div>
 
@@ -311,7 +329,7 @@ const Catalog = () => {
 
             {/* Footer */}
             < footer className="border-t border-zinc-800 py-8 text-center" >
-                <p className="text-zinc-500 text-sm">&copy; 2026 Golden Key Rental. {t('catalog.allRightsReserved')}</p>
+                <p className="text-zinc-500 text-sm">&copy; 2026 Gatibi Rental. {t('catalog.allRightsReserved')}</p>
             </footer >
 
             {/* Modal removed to redirect directly to WhatsApp */}

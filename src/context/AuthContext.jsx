@@ -76,6 +76,9 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
+            // Fake 1 sec loading time
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
             // Find user in database
             const { data: foundUser, error } = await supabase
                 .from('app_users')
@@ -89,14 +92,6 @@ export const AuthProvider = ({ children }) => {
                     console.error("Login error:", error);
                 }
                 return { success: false, error: 'Invalid username or password' };
-            }
-
-            // Check if user is already logged in elsewhere (bypass for super user gatibi)
-            if (foundUser.is_active && foundUser.username !== 'gatibi') {
-                return {
-                    success: false,
-                    error: 'Cannot log into this account.'
-                };
             }
 
             // Set user to active

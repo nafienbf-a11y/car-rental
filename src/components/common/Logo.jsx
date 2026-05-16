@@ -10,7 +10,7 @@ const Logo = ({ className = "w-24 h-24", showText = true }) => {
                 <Car className="w-1/3 h-1/3 text-brand-blue mb-1" />
                 {showText && (
                     <span className="text-[10px] font-bold text-white tracking-widest text-center leading-tight">
-                        GOLDEN KEY<br />RENTAL
+                        GATIBI<br />RENTAL
                     </span>
                 )}
             </div>
@@ -20,7 +20,7 @@ const Logo = ({ className = "w-24 h-24", showText = true }) => {
     return (
         <img
             src="/gatibi_rental_logo_1.png"
-            alt="Golden Key Rental"
+            alt="Gatibi Rental"
             className={`${className} rounded-xl object-contain`}
             onError={() => setError(true)}
         />

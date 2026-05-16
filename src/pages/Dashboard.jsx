@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Car, Calendar, DollarSign, Wrench, Plus, Users, Globe, CheckCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Car, Calendar, DollarSign, Wrench, Globe, CheckCircle } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import StatCard from '../components/dashboard/StatCard';
@@ -9,33 +9,14 @@ import DashboardTimeline from '../components/dashboard/DashboardTimeline';
 import TerminateBookingModal from '../components/bookings/TerminateBookingModal';
 import Button from '../components/common/Button';
 import { formatCurrency, formatDate } from '../utils/helpers';
-import { useNavigate } from 'react-router-dom';
-
 import { useRecentActivity } from '../hooks/useRecentActivity';
-import { supabase } from '../lib/supabase';
 
 const Dashboard = () => {
-    const { stats, setIsAddVehicleModalOpen, setIsNewBookingModalOpen, expenses, bookings, vehicles, updateBooking } = useApp();
+    const { stats, setIsAddVehicleModalOpen, setIsNewBookingModalOpen, expenses, bookings, vehicles, updateBooking, visitorCount } = useApp();
     const { t, language } = useLanguage();
     const recentActivities = useRecentActivity();
-    const navigate = useNavigate();
-    const [visitorCount, setVisitorCount] = useState(0);
     const [terminatingBooking, setTerminatingBooking] = useState(null);
     const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
-
-    useEffect(() => {
-        const fetchVisitorStats = async () => {
-            const { count, error } = await supabase
-                .from('visitor_stats')
-                .select('*', { count: 'exact', head: true });
-
-            if (!error && count !== null) {
-                setVisitorCount(count);
-            }
-        };
-
-        fetchVisitorStats();
-    }, []);
 
     // Calculate monthly maintenance costs
     const getMonthlyMaintenance = () => {
@@ -46,7 +27,7 @@ const Dashboard = () => {
                 const expenseDate = new Date(expense.date);
                 return expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear;
             })
-            .reduce((sum, expense) => sum + (expense.amount || 0), 0); // Use .amount not .cost
+            .reduce((sum, expense) => sum + (expense.amount || 0), 0);
     };
 
     const getTimeAgo = (date) => {
@@ -130,16 +111,10 @@ const Dashboard = () => {
                     color="blue"
                 />
                 <StatCard
-                    title="Total Visitors"
+                    title="Today's Visitors"
                     value={visitorCount}
                     icon={Globe}
                     color="neutral"
-                />
-                <StatCard
-                    title={t('dashboard.activeRentals')}
-                    value={stats.activeRentals}
-                    icon={Calendar}
-                    color="blue"
                 />
                 <StatCard
                     title={t('dashboard.monthlyRevenue')}

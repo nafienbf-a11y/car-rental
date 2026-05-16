@@ -20,32 +20,38 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
             className="bg-zinc-950 rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl hover:border-zinc-700 transition-all duration-300 group"
         >
             {/* Vehicle Image */}
-            <div className="relative h-48 overflow-hidden bg-zinc-900 font-bold">
-                <img
-                    src={vehicle.image}
-                    alt={`${vehicle.brand} ${vehicle.model}`}
-                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 opacity-90 group-hover:opacity-100"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            {vehicle.image && (
+                <div className="relative h-48 overflow-hidden bg-zinc-900 font-bold">
+                    <img
+                        src={vehicle.image}
+                        alt={`${vehicle.brand} ${vehicle.model}`}
+                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-                {/* Status Badge */}
-                <div className="absolute top-4 right-4">
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${vehicle.status === 'Available' ? 'bg-white text-black border-white' :
-                        vehicle.status === 'Rented' ? 'bg-brand-blue text-white border-brand-blue' :
-                            'bg-brand-red text-white border-brand-red'
-                        }`}>
-                        {t(`fleet.${vehicle.status.toLowerCase()}`)}
-                    </span>
-                </div>
+                    {/* Status Badge */}
+                    <div className="absolute top-4 right-4">
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${vehicle.status === 'Available' ? 'bg-white text-black border-white' :
+                            vehicle.status === 'Rented' ? 'bg-brand-blue text-white border-brand-blue' :
+                                'bg-brand-red text-white border-brand-red'
+                            }`}>
+                            {t(`fleet.${vehicle.status.toLowerCase()}`)}
+                        </span>
+                    </div>
 
-                {/* Price Tag */}
-                <div className="absolute bottom-4 left-4">
-                    <div className="bg-white px-4 py-1.5 rounded-lg shadow-xl cursor-default">
-                        <p className="text-[10px] text-zinc-500 font-black uppercase tracking-tighter leading-none">{t('fleet.dailyRate')}</p>
-                        <p className="text-xl font-black text-black leading-none mt-0.5">{formatCurrency(vehicle.pricePerDay)}</p>
+                    {/* Price Tag */}
+                    <div className="absolute bottom-4 left-4">
+                        <div className="bg-white px-4 py-1.5 rounded-lg shadow-xl cursor-default">
+                            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-tighter leading-none">{t('fleet.dailyRate')}</p>
+                            <p className="text-xl font-black text-black leading-none mt-0.5">{formatCurrency(vehicle.pricePerDay)}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
+
+            {!vehicle.image && (
+                 <div className="h-4 bg-zinc-900" /> /* Small spacing if no image */
+            )}
 
             {/* Vehicle Details */}
             <div className="p-5">
@@ -76,27 +82,6 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
                     </div>
                 </div>
 
-                {/* Health Bar */}
-                <div className="mb-6 bg-zinc-900/50 p-3 rounded-xl border border-zinc-800/50">
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('fleet.maintenanceScore')}</span>
-                        <span className={`text-[10px] font-black tracking-tighter ${vehicle.health >= 90 ? 'text-white' :
-                            vehicle.health >= 70 ? 'text-white' :
-                                'text-brand-red'
-                            }`}>{vehicle.health}%</span>
-                    </div>
-                    <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                        <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${vehicle.health}%` }}
-                            transition={{ duration: 1, delay: 0.2 }}
-                            className={`h-full rounded-full ${vehicle.health >= 90 ? 'bg-white' :
-                                vehicle.health >= 70 ? 'bg-brand-blue' :
-                                    'bg-brand-red'
-                                }`}
-                        />
-                    </div>
-                </div>
 
                 {/* Action Buttons */}
                 <div className="flex gap-2">

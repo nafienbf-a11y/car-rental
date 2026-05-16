@@ -23,6 +23,8 @@ const Fleet = () => {
     // Calculate dynamic status for all vehicles
     const vehiclesWithStatus = useMemo(() => {
         return vehicles.map(vehicle => {
+            // Deleted overrides everything
+            if (vehicle.status === 'Deleted') return vehicle;
             // Maintenance overrides everything
             if (vehicle.status === 'Maintenance') return vehicle;
 
@@ -44,7 +46,7 @@ const Fleet = () => {
 
     // Filter vehicles based on dynamic status
     const filteredVehicles = useMemo(() => {
-        let result = vehiclesWithStatus;
+        let result = vehiclesWithStatus.filter(v => v.status !== 'Deleted');
 
         // Filter by status
         if (statusFilter !== 'All') {
@@ -75,22 +77,31 @@ const Fleet = () => {
     };
 
     const handleUpdateVehicle = (updatedVehicle) => {
+        if (!window.confirm("Are you sure you want to modify this vehicle?")) return;
         updateVehicle(updatedVehicle.id, updatedVehicle);
         setIsEditModalOpen(false);
         setEditingVehicle(null);
         showNotification(t('fleet.updatedSuccess'), 'success');
     };
 
-    const handleDeleteVehicle = (id) => {
+    const handleDeleteVehicle = async (id) => {
         if (window.confirm(t('fleet.deleteConfirm'))) {
-            deleteVehicle(id);
-            showNotification(t('fleet.deletedSuccess'), 'success');
+            try {
+                await deleteVehicle(id);
+                showNotification(t('fleet.deletedSuccess'), 'success');
+            } catch (error) {
+                showNotification(error.message, 'error');
+            }
         }
     };
 
-    const handleSetMaintenance = (id) => {
-        setVehicleMaintenance(id);
-        showNotification(t('fleet.maintenanceSuccess'), 'warning');
+    const handleSetMaintenance = async (id) => {
+        try {
+            await setVehicleMaintenance(id);
+            showNotification(t('fleet.maintenanceSuccess'), 'warning');
+        } catch (error) {
+            showNotification(error.message, 'error');
+        }
     };
 
     const handleSetAvailable = (id) => {

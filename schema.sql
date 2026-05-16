@@ -14,7 +14,6 @@ create table public.vehicles (
   image text not null,
   status text not null default 'Available',
   mileage integer not null default 0,
-  health integer not null default 100,
   last_maintenance date not null default current_date,
   constraint vehicles_pkey primary key (id)
 );
@@ -50,8 +49,8 @@ create table public.bookings (
   security_deposit numeric default 0,
   contract_photo text,
   constraint bookings_pkey primary key (id),
-  constraint bookings_vehicle_id_fkey foreign key (vehicle_id) references vehicles (id),
-  constraint bookings_client_id_fkey foreign key (client_id) references clients (id)
+  constraint bookings_vehicle_id_fkey foreign key (vehicle_id) references vehicles (id) on delete cascade,
+  constraint bookings_client_id_fkey foreign key (client_id) references clients (id) on delete cascade
 );
 
 -- Create Expenses Table
@@ -64,7 +63,7 @@ create table public.expenses (
   description text,
   vehicle_id uuid,
   constraint expenses_pkey primary key (id),
-  constraint expenses_vehicle_id_fkey foreign key (vehicle_id) references vehicles (id)
+  constraint expenses_vehicle_id_fkey foreign key (vehicle_id) references vehicles (id) on delete cascade
 );
 
 -- Create Users Table (extends Supabase Auth)
@@ -93,15 +92,23 @@ insert into public.app_users (username, password, name, role)
 values ('gatibi', 'gatibi', 'Gatibi Admin', 'admin')
 on conflict (username) do nothing;
 
--- Create Visitor Stats Table
-create table public.visitor_stats (
-  id uuid not null default gen_random_uuid(),
-  visited_at timestamp with time zone not null default now(),
-  user_agent text,
-  ip_address text,
-  page text,
-  constraint visitor_stats_pkey primary key (id)
+-- Create Visitor Stats Table (By Date)
+create table if not exists public.visitor_stats (
+  id uuid default gen_random_uuid() primary key,
+  visit_date date default current_date unique,
+  count integer default 0
 );
 
--- Enable Realtime (optional but good)
-alter publication supabase_realtime add table vehicles, bookings, clients, expenses, app_users, visitor_stats;
+-- Create Audit Logs Table
+create table if not exists public.audit_logs (
+  id uuid default gen_random_uuid() primary key,
+  action_type text not null, -- 'CREATE', 'UPDATE', 'DELETE', 'CANCEL'
+  entity_type text not null, -- 'BOOKING', 'VEHICLE', 'CLIENT', 'EXPENSE'
+  entity_id text,
+  details text,
+  performed_by text,
+  created_at timestamp with time zone default now()
+);
+
+-- Enable Realtime
+alter publication supabase_realtime add table vehicles, bookings, clients, expenses, app_users, visitor_stats, audit_logs;

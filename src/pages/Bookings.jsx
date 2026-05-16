@@ -59,6 +59,7 @@ const Bookings = () => {
     };
 
     const handleUpdateBooking = (id, data) => {
+        if (!window.confirm("Are you sure you want to modify this booking?")) return;
         updateBooking(id, data);
         showNotification(t('bookings.notifications.updated'), 'success');
         setIsNewBookingModalOpen(false);

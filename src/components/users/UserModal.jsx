@@ -48,6 +48,10 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
         try {
             if (user) {
                 // Update
+                if (!window.confirm("Are you sure you want to modify this user?")) {
+                    setLoading(false);
+                    return;
+                }
                 const { error } = await supabase
                     .from('app_users')
                     .update(formData)
