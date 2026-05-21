@@ -10,19 +10,32 @@ import { useNotification } from '../../context/NotificationContext';
 const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
     const { vehicles, addExpense, updateExpense } = useApp();
     const { t } = useLanguage();
-    const { showNotification } = useNotification();
+    const { showNotification, confirmAction } = useNotification();
     const [formData, setFormData] = useState({
-        type: 'Maintenance',
+        type: 'maintenance',
         vehicleId: '',
         cost: '',
         date: new Date().toISOString().split('T')[0],
         description: ''
     });
 
+    const expenseTypes = [
+        { id: 'maintenance', needsVehicle: true },
+        { id: 'car_wash', needsVehicle: true },
+        { id: 'fuel', needsVehicle: true },
+        { id: 'vignette', needsVehicle: true },
+        { id: 'accountant', needsVehicle: false },
+        { id: 'agency_rent', needsVehicle: false },
+        { id: 'salary', needsVehicle: false },
+        { id: 'cnss', needsVehicle: false },
+    ];
+
+    const isVehicleRequired = expenseTypes.find(t => t.id === formData.type)?.needsVehicle ?? true;
+
     useEffect(() => {
         if (expense) {
             setFormData({
-                type: expense.category || 'Maintenance',
+                type: expense.category || 'maintenance',
                 vehicleId: expense.vehicleId || '',
                 cost: expense.amount || '',
                 date: expense.date || new Date().toISOString().split('T')[0],
@@ -30,7 +43,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
             });
         } else {
             setFormData({
-                type: 'Maintenance',
+                type: 'maintenance',
                 vehicleId: '',
                 cost: '',
                 date: new Date().toISOString().split('T')[0],
@@ -39,7 +52,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
         }
     }, [expense, isOpen]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const expenseData = {
@@ -52,7 +65,11 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
         };
 
         if (expense) {
-            if (!window.confirm(t('confirm.update') || "Are you sure you want to modify this expense?")) return;
+            const confirmed = await confirmAction({
+                title: t('common.confirm') || 'Confirm',
+                message: t('confirm.update') || "Are you sure you want to modify this expense?"
+            });
+            if (!confirmed) return;
             updateExpense(expense.id, expenseData);
             showNotification(t('modals.expense.notifications.updated'), 'success');
         } else {
@@ -104,31 +121,35 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                             className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
                             required
                         >
-                            <option value="Maintenance">Maintenance</option>
-                            <option value="Car Wash">Car Wash</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-
-                    {/* Vehicle */}
-                    <div>
-                        <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
-                            {t('modals.expense.vehicle')} *
-                        </label>
-                        <select
-                            value={formData.vehicleId}
-                            onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
-                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
-                            required
-                        >
-                            <option value="">{t('modals.expense.selectVehicle')}</option>
-                            {vehicles.map(vehicle => (
-                                <option key={vehicle.id} value={vehicle.id}>
-                                    {vehicle.brand} {vehicle.model} ({vehicle.plate})
+                            {expenseTypes.map(type => (
+                                <option key={type.id} value={type.id}>
+                                    {t(`expenses.types.${type.id}`) || type.id}
                                 </option>
                             ))}
                         </select>
                     </div>
+
+                    {/* Vehicle - only show if type needs it */}
+                    {isVehicleRequired && (
+                        <div>
+                            <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
+                                {t('modals.expense.vehicle')} *
+                            </label>
+                            <select
+                                value={formData.vehicleId}
+                                onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
+                                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                                required={isVehicleRequired}
+                            >
+                                <option value="">{t('modals.expense.selectVehicle')}</option>
+                                {vehicles.filter(v => v.status !== 'Deleted').map(vehicle => (
+                                    <option key={vehicle.id} value={vehicle.id}>
+                                        {vehicle.brand} {vehicle.model} ({vehicle.plate})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
 
                     {/* Cost */}
                     <div>

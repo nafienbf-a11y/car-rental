@@ -13,16 +13,27 @@ const History = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 15;
 
+    const allowedActions = [
+        { action: 'CREATE', entity: 'VEHICLE' },
+        { action: 'CREATE', entity: 'CLIENT' },
+        { action: 'CREATE', entity: 'BOOKING' },
+        { action: 'CANCEL', entity: 'BOOKING' },
+        { action: 'TERMINATE', entity: 'BOOKING' },
+        { action: 'CREATE', entity: 'EXPENSE' }
+    ];
+
     // Filter audit logs by search
     const filteredLogs = useMemo(() => {
-        if (!localSearch) return auditLogs;
+        let logs = auditLogs;
+
+        if (!localSearch) return logs;
 
         const search = localSearch.toLowerCase();
-        return auditLogs.filter(log =>
-            log.action_type.toLowerCase().includes(search) ||
-            log.entity_type.toLowerCase().includes(search) ||
-            log.details.toLowerCase().includes(search) ||
-            log.performed_by.toLowerCase().includes(search)
+        return logs.filter(log =>
+            (log.action_type || '').toLowerCase().includes(search) ||
+            (log.entity_type || '').toLowerCase().includes(search) ||
+            (log.details || '').toLowerCase().includes(search) ||
+            (log.performed_by || '').toLowerCase().includes(search)
         );
     }, [auditLogs, localSearch]);
 
@@ -36,8 +47,9 @@ const History = () => {
             case 'CREATE': return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
             case 'UPDATE': return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
             case 'DELETE': return 'bg-red-500/10 text-red-500 border-red-500/20';
-            case 'CANCEL': return 'bg-orange-500/10 text-orange-500 border-orange-500/20';
-            default: return 'bg-zinc-500/10 text-zinc-500 border-zinc-500/20';
+            case 'CANCEL': return 'bg-red-500/10 text-red-500 border-red-500/20';
+            case 'TERMINATE': return 'bg-orange-500/10 text-orange-500 border-orange-500/20';
+            default: return 'bg-zinc-500/10 text-theme-secondary border-zinc-500/20';
         }
     };
 
@@ -55,8 +67,8 @@ const History = () => {
         <div className="space-y-6">
             {/* Page Header */}
             <div>
-                <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('history.title')}</h1>
-                <p className="text-zinc-500 font-medium tracking-tight">System Audit Log & Activity History</p>
+                <h1 className="text-3xl font-extrabold text-theme-primary tracking-tight mb-1">{t('history.title')}</h1>
+                <p className="text-theme-secondary font-medium tracking-tight">{t('history.subtitle')}</p>
             </div>
 
             {/* Search and Export */}
@@ -64,7 +76,7 @@ const History = () => {
                 <SearchBar
                     value={localSearch}
                     onChange={setLocalSearch}
-                    placeholder="Search logs..."
+                    placeholder={t('history.searchPlaceholder')}
                     className="w-full sm:w-96"
                 />
                 <Button variant="secondary" icon={Download} className="text-[10px] uppercase tracking-widest">
@@ -77,17 +89,17 @@ const History = () => {
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="border-b border-zinc-800 bg-zinc-900/50">
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Timestamp</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Action</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Entity</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Details</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">Performed By</th>
+                            <tr className="border-b border-zinc-800 bg-zinc-950">
+                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.timestamp')}</th>
+                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.action')}</th>
+                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.entity')}</th>
+                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.details')}</th>
+                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.performedBy')}</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-zinc-900">
+                        <tbody className="divide-y divide-zinc-800">
                             {paginatedLogs.map((log) => (
-                                <tr key={log.id} className="hover:bg-zinc-900/50 transition-colors">
+                                <tr key={log.id} className="hover:bg-zinc-900/30 transition-colors">
                                     <td className="p-5">
                                         <span className="text-zinc-400 text-xs font-bold">{formatDate(log.created_at)}</span>
                                     </td>
@@ -96,18 +108,18 @@ const History = () => {
                                             {log.action_type}
                                         </span>
                                     </td>
-                                    <td className="p-5">
-                                        <div className="flex items-center gap-2 text-zinc-300 font-bold text-sm">
+                                    <td className="p-5 text-left rtl:text-right">
+                                        <div className="flex items-center gap-2 text-white font-bold text-sm">
                                             {getEntityIcon(log.entity_type)}
                                             {log.entity_type}
                                         </div>
                                     </td>
-                                    <td className="p-5">
-                                        <p className="text-zinc-300 text-sm max-w-md line-clamp-2">{log.details}</p>
+                                    <td className="p-5 text-left rtl:text-right">
+                                        <p className="text-zinc-400 text-sm max-w-md line-clamp-2">{log.details}</p>
                                     </td>
                                     <td className="p-5">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-400">
+                                            <div className="w-6 h-6 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-400">
                                                 {log.performed_by?.charAt(0)}
                                             </div>
                                             <span className="text-zinc-400 text-xs font-bold">{log.performed_by}</span>
@@ -127,7 +139,7 @@ const History = () => {
                             size="sm"
                             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                             disabled={currentPage === 1}
-                            className="text-[10px] uppercase tracking-widest"
+                            className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-white"
                         >
                             Previous
                         </Button>
@@ -152,7 +164,7 @@ const History = () => {
                             size="sm"
                             onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                             disabled={currentPage === totalPages}
-                            className="text-[10px] uppercase tracking-widest"
+                            className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-white"
                         >
                             Next
                         </Button>

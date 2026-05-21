@@ -10,13 +10,14 @@ import { useNotification } from '../context/NotificationContext';
 const Expenses = () => {
     const { expenses, vehicles, deleteExpense } = useApp();
     const { t } = useLanguage();
-    const { showNotification } = useNotification();
+    const { showNotification, confirmAction } = useNotification();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingExpense, setEditingExpense] = useState(null);
 
     const getVehicleName = (vehicleId) => {
+        if (!vehicleId) return '-';
         const vehicle = vehicles.find(v => v.id === vehicleId);
-        return vehicle ? `${vehicle.brand} ${vehicle.model} (${vehicle.plate})` : 'Unknown';
+        return vehicle ? `${vehicle.brand} ${vehicle.model} (${vehicle.plate})` : '-';
     };
 
     const getVehicle = (vehicleId) => {
@@ -39,7 +40,11 @@ const Expenses = () => {
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm(t('expenses.deleteConfirm'))) {
+        const confirmed = await confirmAction({
+            title: t('common.confirm') || 'Confirm',
+            message: t('expenses.deleteConfirm') || "Are you sure you want to delete this expense?"
+        });
+        if (confirmed) {
             try {
                 await deleteExpense(id);
                 showNotification("Expense deleted successfully", 'success');
@@ -92,44 +97,11 @@ const Expenses = () => {
                 <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-3 mb-2">
                         <DollarSign className="w-5 h-5 text-brand-blue" />
-                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">Avg Cost</p>
+                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('expenses.avgCost', 'Avg Cost')}</p>
                     </div>
                     <p className="text-3xl font-extrabold text-white tracking-tight">
                         {formatCurrency(totalExpenses / expenses.length || 0)}
                     </p>
-                </div>
-            </div>
-
-            {/* Vehicle Health Overview */}
-            <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
-                <h3 className="text-xl font-extrabold text-white mb-6 tracking-tight">{t('expenses.vehicleHealthStatus')}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {vehicles.slice(0, 6).map((vehicle) => (
-                        <div key={vehicle.id} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
-                            <div className="flex items-center justify-between mb-3">
-                                <div>
-                                    <p className="text-white font-bold text-sm">{vehicle.brand} {vehicle.model}</p>
-                                    <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">{vehicle.plate}</p>
-                                </div>
-                                <span className={`text-lg font-black ${vehicle.health >= 90 ? 'text-white' :
-                                    vehicle.health >= 70 ? 'text-white' :
-                                        'text-brand-red'
-                                    }`}>{vehicle.health}%</span>
-                            </div>
-                            <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                                <div
-                                    className={`h-full rounded-full transition-all duration-500 ${vehicle.health >= 90 ? 'bg-white' :
-                                        vehicle.health >= 70 ? 'bg-brand-blue' :
-                                            'bg-brand-red'
-                                        }`}
-                                    style={{ width: `${vehicle.health}%` }}
-                                />
-                            </div>
-                            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wide mt-3">
-                                Last service: {formatDate(vehicle.lastMaintenance)}
-                            </p>
-                        </div>
-                    ))}
                 </div>
             </div>
 

@@ -6,7 +6,7 @@ import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
 
 const DashboardTimeline = () => {
-    const { vehicles, bookings } = useApp();
+    const { vehicles, bookings, clients } = useApp();
     const { t, language } = useLanguage();
     const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -184,12 +184,12 @@ const DashboardTimeline = () => {
 
                     {/* Vehicle Rows */}
                     <div className="space-y-3">
-                        {vehicles.length === 0 ? (
+                        {vehicles.filter(v => v.status !== 'Deleted').length === 0 ? (
                             <div className="text-center py-8 text-zinc-500">
                                 <p className="text-sm font-medium">{t('dashboard.noVehiclesTimeline')}</p>
                             </div>
                         ) : (
-                            vehicles.map(vehicle => (
+                            vehicles.filter(v => v.status !== 'Deleted').map(vehicle => (
                                 <div key={vehicle.id} className="flex items-center group">
                                     {/* Car Info */}
                                     <div className="w-32 flex-shrink-0 pr-4">
@@ -229,7 +229,7 @@ const DashboardTimeline = () => {
                                                         key={booking.id}
                                                         className="absolute top-1 bottom-1 rounded-md shadow-sm border border-opacity-20 bg-brand-blue/80 border-brand-blue"
                                                         style={style}
-                                                        title={`${booking.id}: ${new Date(booking.startDate).toLocaleDateString()} - ${new Date(booking.endDate).toLocaleDateString()}`}
+                                                        title={`${clients?.find(c => c.id === booking.clientId)?.name || 'Client'}: ${new Date(booking.startDate).toLocaleDateString()} - ${new Date(booking.endDate).toLocaleDateString()}`}
                                                     >
                                                     </div>
                                                 );

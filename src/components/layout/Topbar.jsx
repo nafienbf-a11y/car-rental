@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Menu, Bell, User } from 'lucide-react';
-import { useNotification } from '../../context/NotificationContext';
-import { useRecentActivity } from '../../hooks/useRecentActivity';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import LanguageSelector from '../common/LanguageSelector';
+import { useApp } from '../../context/AppContext';
+import { useNotification } from '../../context/NotificationContext';
 
 const Topbar = ({ onMenuClick }) => {
 
@@ -13,11 +13,34 @@ const Topbar = ({ onMenuClick }) => {
     const [showNotifications, setShowNotifications] = useState(false);
 
     // Notifications Logic
-    const activities = useRecentActivity();
+    const { auditLogs } = useApp();
     const { readNotificationIds, markAsRead, markAllAsRead } = useNotification();
 
-    // Filter unread notifications
-    const notifications = activities.filter(activity => !readNotificationIds.includes(activity.id));
+    // Filter unread notifications mapped from audit logs
+    const notifications = (auditLogs || []).map(log => {
+        let title = '';
+        if (log.action_type === 'CREATE') {
+            title = t('activity.newVehicle') || `New ${log.entity_type.toLowerCase()}`;
+            if (log.entity_type === 'CLIENT') title = t('activity.newClient') || 'New Client';
+            if (log.entity_type === 'BOOKING') title = t('activity.newBooking') || 'New Booking';
+            if (log.entity_type === 'EXPENSE') title = 'New Expense';
+        } else if (log.action_type === 'CANCEL') {
+            title = 'Cancelled Booking';
+        } else if (log.action_type === 'TERMINATE') {
+            title = 'Completed Booking';
+        } else {
+            title = `Updated ${log.entity_type.toLowerCase()}`;
+        }
+        
+        return {
+            id: `audit-${log.id}`,
+            type: `${log.action_type.toLowerCase()}_${log.entity_type.toLowerCase()}`,
+            date: new Date(log.created_at),
+            title: title.charAt(0).toUpperCase() + title.slice(1),
+            message: `${log.details} - by ${log.performed_by || 'System'}`
+        };
+    }).filter(notif => !readNotificationIds.includes(notif.id)).slice(0, 10);
+
     const unreadCount = notifications.length;
 
     const handleMarkAllRead = () => {

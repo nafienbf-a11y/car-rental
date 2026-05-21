@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 
 const StatCard = ({ title, value, icon: Icon, trend, trendValue, color = 'neutral' }) => {
     const colorClasses = {
-        neutral: 'bg-zinc-900 border-zinc-800 text-white',
-        blue: 'bg-zinc-900 border-zinc-800 text-brand-blue',
-        red: 'bg-zinc-900 border-zinc-800 text-brand-red',
+        neutral: 'bg-zinc-900 border-zinc-800 text-zinc-400',
+        blue: 'bg-brand-blue/10 border-brand-blue/20 text-brand-blue',
+        red: 'bg-brand-red/10 border-brand-red/20 text-brand-red',
     };
 
     return (
@@ -14,7 +14,7 @@ const StatCard = ({ title, value, icon: Icon, trend, trendValue, color = 'neutra
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.02, y: -5 }}
             transition={{ duration: 0.3 }}
-            className="bg-zinc-950 rounded-2xl p-6 border border-zinc-800 shadow-2xl hover:border-zinc-700 transition-all duration-300"
+            className="bg-zinc-950 rounded-2xl p-6 border border-zinc-800 shadow-2xl transition-all duration-300 hover:border-zinc-700"
         >
             <div className="flex items-start justify-between">
                 <div className="flex-1">

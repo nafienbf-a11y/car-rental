@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Fuel, Users, Gauge, MessageCircle, Car, Search, SlidersHorizontal, X, Star } from 'lucide-react';
+import { Fuel, Users, Gauge, MessageCircle, Car, Search, SlidersHorizontal, X, Star, MapPin } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSelector from '../components/common/LanguageSelector';
 import Logo from '../components/common/Logo';
 import CustomerBookingModal from '../components/catalog/CustomerBookingModal';
+import { useVisitorTracking } from '../hooks/useVisitorTracking';
 
 const WHATSAPP_NUMBER = '212763296157';
 
 const Catalog = () => {
+    useVisitorTracking();
     const { vehicles, loading } = useApp();
     const { t, isRTL } = useLanguage();
     const [search, setSearch] = useState('');
@@ -69,13 +71,22 @@ const Catalog = () => {
                             <LanguageSelector />
                         </div>
                         <a
-                            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hello Gatibi Rental, I would like to leave a review: ")}`}
+                            href="https://maps.app.goo.gl/XTPtodW1a63V7pcBA"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-2 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-xl text-sm font-medium transition-colors"
                         >
                             <Star className="w-4 h-4" />
                             <span className="hidden sm:inline">Leave Review</span>
+                        </a>
+                        <a
+                            href="https://maps.app.goo.gl/XTPtodW1a63V7pcBA"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl text-sm font-medium transition-colors"
+                        >
+                            <MapPin className="w-4 h-4" />
+                            <span className="hidden sm:inline">Get Directions</span>
                         </a>
                         <a
                             href={`https://wa.me/${WHATSAPP_NUMBER}`}

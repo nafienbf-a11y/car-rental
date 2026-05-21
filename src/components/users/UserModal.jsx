@@ -6,7 +6,7 @@ import { supabase } from '../../lib/supabase';
 import { useNotification } from '../../context/NotificationContext';
 
 const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
-    const { showNotification } = useNotification();
+    const { showNotification, confirmAction } = useNotification();
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
@@ -48,7 +48,11 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
         try {
             if (user) {
                 // Update
-                if (!window.confirm("Are you sure you want to modify this user?")) {
+                const confirmed = await confirmAction({
+                    title: 'Confirm Update',
+                    message: "Are you sure you want to modify this user?"
+                });
+                if (!confirmed) {
                     setLoading(false);
                     return;
                 }

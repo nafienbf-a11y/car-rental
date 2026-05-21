@@ -7,7 +7,8 @@ export const ar = {
         expenses: 'المصاريف',
         history: 'السجل',
         catalog: 'عرض الكتالوج',
-        users: 'المستخدمون'
+        users: 'المستخدمون',
+        reports: 'التقارير'
     },
     sidebar: {
         tagline: 'انطلق في المغامرة، دعنا نقدم لك المفاتيح',
@@ -18,7 +19,10 @@ export const ar = {
         showing: 'عرض',
         of: 'من',
         plate: 'لوحة الترخيص',
-        other: 'أخرى'
+        other: 'أخرى',
+        confirm: 'تأكيد',
+        confirmUpdate: 'تأكيد التحديث',
+        confirmDelete: 'تأكيد الحذف',
     },
     auth: {
         pageTitle: 'تسجيل دخول المسؤول',
@@ -184,8 +188,11 @@ export const ar = {
         upcoming: 'قادم',
         completed: 'مكتمل',
         cancelled: 'ملغى',
+        cancelBtn: 'إلغاء',
+        cancelConfirm: 'هل أنت متأكد أنك تريد إلغاء هذا الحجز؟',
         toTerminate: 'للإنهاء',
         terminateModalTitle: 'إنهاء الحجز',
+        viewDocuments: 'المستندات',
         bookingDetails: 'تفاصيل الحجز',
         confirmTermination: 'تأكيد الإنهاء',
         terminateBtn: 'إنهاء',
@@ -228,11 +235,32 @@ export const ar = {
             actions: 'إجراءات',
         },
     },
+    // Users
+    users: {
+        pageTitle: 'إدارة المستخدمين',
+        pageSubtitle: 'إدارة حسابات المسؤولين والموظفين',
+        searchPlaceholder: 'البحث بالاسم، اسم المستخدم، أو الدور...',
+        addUserBtn: 'إضافة مستخدم',
+        noUsers: 'لم يتم العثور على مستخدمين',
+        noUsersMatch: 'لا يوجد مستخدمين يطابقون بحثك.',
+        forceLogout: 'تسجيل خروج إجباري',
+        forceLogoutConfirm: 'هل أنت متأكد أنك تريد تسجيل خروج هذا المستخدم إجبارياً؟',
+        deleteUser: 'حذف المستخدم',
+        deleteUserConfirm: 'هل أنت متأكد أنك تريد حذف هذا المستخدم؟',
+        table: {
+            name: 'الاسم',
+            username: 'اسم المستخدم',
+            role: 'الدور',
+            status: 'الحالة',
+            actions: 'إجراءات',
+        },
+    },
     // Expenses
     expenses: {
         title: 'المصاريف',
         subtitle: 'تتبع وإدارة تكاليف المركبات',
         addExpense: 'إضافة مصروف',
+        avgCost: 'متوسط التكلفة',
         vehicleHealthStatus: 'حالة المركبة',
         totalExpenses: 'إجمالي المصاريف',
         maintenance: 'صيانة',
@@ -245,6 +273,16 @@ export const ar = {
         adjustSearch: 'جرب تعديل البحث',
         startAdding: 'أضف أول مصروف',
         deleteConfirm: 'هل أنت متأكد أنك تريد حذف هذا المصروف؟',
+        types: {
+            maintenance: 'تغيير الزيت / الصيانة (Vidange)',
+            car_wash: 'غسيل السيارة',
+            fuel: 'وقود',
+            vignette: 'الضريبة السنوية (Vignette)',
+            accountant: 'محاسب',
+            agency_rent: 'كراء الوكالة المحلية',
+            salary: 'راتب',
+            cnss: 'الضمان الاجتماعي (CNSS)',
+        },
         notifications: {
             added: 'تم إضافة المصروف بنجاح!',
             updated: 'تم تحديث المصروف بنجاح!',
@@ -262,22 +300,27 @@ export const ar = {
     // History
     history: {
         title: 'السجل',
-        subtitle: 'عرض سجلات التأجير السابقة',
+        subtitle: 'سجل المراجعة الكامل لجميع الإجراءات',
         totalRecords: 'إجمالي السجلات',
         totalRevenue: 'إجمالي الإيرادات',
         fleetUtilization: 'استخدام الأسطول',
         active: 'نشط',
-        searchPlaceholder: 'تصفية حسب العميل أو المركبة...',
+        searchPlaceholder: 'تصفية حسب الإجراء أو الكيان...',
         noHistoryFound: 'لم يتم العثور على سجلات',
         noHistoryYet: 'لا يوجد سجل متاح',
         adjustSearch: 'جرب تعديل البحث',
-        completedHere: 'ستظهر الحجوزات المكتملة هنا',
+        completedHere: 'ستظهر الإجراءات المسجلة هنا',
         table: {
             date: 'التاريخ',
             vehicle: 'المركبة',
             customer: 'العميل',
             duration: 'المدة',
             total: 'الإجمالي',
+            timestamp: 'الوقت',
+            action: 'الإجراء',
+            entity: 'الكيان',
+            details: 'التفاصيل',
+            performedBy: 'بواسطة',
         },
     },
     // Modals
@@ -388,5 +431,27 @@ export const ar = {
                 updated: 'تم تحديث المصروف بنجاح!',
             },
         },
+    },
+    // Reports
+    reports: {
+        subtitle: 'تحليل مالي شامل',
+        monthlyLog: 'السجل المالي الشهري',
+        dailyVisitors: 'سجل الزوار اليومي',
+        visitors: 'زوار',
+        table: {
+            month: 'الشهر',
+            revenue: 'الإيرادات',
+            expenses: 'المصاريف',
+            profit: 'صافي الربح',
+            date: 'التاريخ',
+            uniqueVisitors: 'الزوار الفريدون',
+        },
+    },
+    // Notifications
+    notifications: {
+        title: 'الإشعارات',
+        empty: 'لا توجد إشعارات جديدة',
+        markAllRead: 'تعيين الكل كمقروء',
+        viewAll: 'عرض الكل',
     },
 };

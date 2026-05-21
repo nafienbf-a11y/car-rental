@@ -2,8 +2,10 @@ import React from 'react';
 import Modal from './Modal';
 import Button from './Button';
 import { AlertTriangle } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
+    const { t } = useLanguage();
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={title || 'Confirm'} size="sm">
             <div className="space-y-6">
@@ -17,14 +19,14 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
                 </div>
                 <div className="flex gap-3 pt-2">
                     <Button variant="secondary" onClick={onClose} className="flex-1">
-                        No, go back
+                        {t('modals.common.cancel', 'No, go back')}
                     </Button>
                     <Button
                         variant="primary"
                         onClick={() => { onConfirm(); onClose(); }}
                         className="flex-1 bg-red-500 hover:bg-red-600 border-red-500"
                     >
-                        Yes, confirm
+                        {t('modals.common.confirm', 'Yes, confirm')}
                     </Button>
                 </div>
             </div>

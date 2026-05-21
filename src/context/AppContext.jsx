@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { useAuth } from './AuthContext';
 
 const AppContext = createContext();
 
@@ -12,6 +13,7 @@ export const useApp = () => {
 };
 
 export const AppProvider = ({ children }) => {
+    const { user: authUser } = useAuth();
     const [vehicles, setVehicles] = useState([]);
     const [bookings, setBookings] = useState([]);
     const [expenses, setExpenses] = useState([]);
@@ -89,6 +91,7 @@ export const AppProvider = ({ children }) => {
     };
 
     const logAction = async (actionType, entityType, entityId, details) => {
+        const username = authUser ? (authUser.name || authUser.username) : 'Admin';
         const { data, error } = await supabase
             .from('audit_logs')
             .insert([{
@@ -96,7 +99,7 @@ export const AppProvider = ({ children }) => {
                 entity_type: entityType,
                 entity_id: entityId?.toString(),
                 details: details,
-                performed_by: 'Admin'
+                performed_by: username
             }])
             .select()
             .single();

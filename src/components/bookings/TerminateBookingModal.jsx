@@ -14,10 +14,12 @@ const TerminateBookingModal = ({ isOpen, onClose, booking, onTerminate }) => {
 
     useEffect(() => {
         if (booking) {
-            setEndingKm(booking.endingKm || '');
+            const v = vehicles.find(item => item.id === booking.vehicleId);
+            // Preload the vehicle's current mileage as the starting point for endingKm
+            setEndingKm(v ? v.mileage : (booking.endingKm || ''));
             setError('');
         }
-    }, [booking, isOpen]);
+    }, [booking, isOpen, vehicles]);
 
     if (!booking) return null;
 

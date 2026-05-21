@@ -11,7 +11,7 @@ import ClientDetailModal from '../components/clients/ClientDetailModal';
 const Clients = () => {
     const { clients = [], addClient, updateClient, deleteClient, bookings = [] } = useApp();
     const { t } = useLanguage();
-    const { showNotification } = useNotification();
+    const { showNotification, confirmAction } = useNotification();
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClient, setSelectedClient] = useState(null);
@@ -28,9 +28,14 @@ const Clients = () => {
         setIsModalOpen(true);
     };
 
-    const handleSubmit = (clientData) => {
+    const handleSubmit = async (clientData) => {
         if (selectedClient) {
-            if (!window.confirm("Are you sure you want to modify this client?")) return;
+            const confirmed = await confirmAction({
+                title: t('common.confirmUpdate') || 'Confirm Update',
+                message: "Are you sure you want to modify this client?",
+                type: 'warning'
+            });
+            if (!confirmed) return;
             updateClient(clientData.id, clientData);
         } else {
             addClient(clientData);
@@ -38,7 +43,13 @@ const Clients = () => {
     };
 
     const handleDeleteClient = async (id) => {
-        if (window.confirm(t('clients.deleteConfirm'))) {
+        const confirmed = await confirmAction({
+            title: t('common.confirmDelete') || 'Confirm Deletion',
+            message: t('clients.deleteConfirm'),
+            type: 'danger'
+        });
+
+        if (confirmed) {
             try {
                 await deleteClient(id);
                 showNotification("Client deleted successfully", 'success');
@@ -69,8 +80,8 @@ const Clients = () => {
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('clients.title')}</h1>
-                    <p className="text-zinc-500 font-medium tracking-tight">{t('clients.subtitle')}</p>
+                    <h1 className="text-3xl font-extrabold text-theme-primary tracking-tight mb-1">{t('clients.title')}</h1>
+                    <p className="text-theme-secondary font-medium tracking-tight">{t('clients.subtitle')}</p>
                 </div>
                 <Button variant="primary" icon={Plus} onClick={handleAddClient}>
                     {t('clients.addClient')}
@@ -155,19 +166,19 @@ const Clients = () => {
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b border-zinc-800">
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                    <th className="text-left rtl:text-right py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
                                         {t('clients.table.client')}
                                     </th>
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                    <th className="text-left rtl:text-right py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
                                         {t('clients.table.contact')}
                                     </th>
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                    <th className="text-left rtl:text-right py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
                                         {t('clients.table.license')}
                                     </th>
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                    <th className="text-left rtl:text-right py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
                                         {t('clients.table.bookings')}
                                     </th>
-                                    <th className="text-right py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                    <th className="text-right rtl:text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
                                         {t('clients.table.actions')}
                                     </th>
                                 </tr>
@@ -176,32 +187,32 @@ const Clients = () => {
                                 {(filteredClients || []).map((client) => {
                                     if (!client) return null;
                                     return (
-                                        <tr key={client.id || Math.random()} className="border-b border-zinc-800/50 hover:bg-zinc-900/30 transition-colors">
-                                            <td className="py-4 px-4">
+                                        <tr key={client.id || Math.random()} className="border-b border-zinc-800 hover:bg-zinc-900/30 transition-colors">
+                                            <td className="py-4 px-4 text-left rtl:text-right">
                                                 <div>
-                                                    <p className="font-bold text-white">{client.name || t('clients.unknown')}</p>
+                                                    <p className="font-bold text-theme-primary">{client.name || t('clients.unknown')}</p>
                                                     {client.address && (
-                                                        <p className="text-xs text-zinc-500 flex items-center gap-1 mt-1">
+                                                        <p className="text-xs text-theme-secondary flex items-center gap-1 mt-1">
                                                             <MapPin className="w-3 h-3" />
                                                             {client.address}
                                                         </p>
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="py-4 px-4">
+                                            <td className="py-4 px-4 text-left rtl:text-right">
                                                 <div className="space-y-1">
-                                                    <p className="text-sm text-zinc-300 flex items-center gap-2">
-                                                        <Mail className="w-3.5 h-3.5 text-zinc-500" />
+                                                    <p className="text-sm text-theme-primary flex items-center gap-2">
+                                                        <Mail className="w-3.5 h-3.5 text-theme-secondary" />
                                                         {client.email || '-'}
                                                     </p>
-                                                    <p className="text-sm text-zinc-300 flex items-center gap-2">
-                                                        <Phone className="w-3.5 h-3.5 text-zinc-500" />
+                                                    <p className="text-sm text-theme-primary flex items-center gap-2">
+                                                        <Phone className="w-3.5 h-3.5 text-theme-secondary" />
                                                         {client.phone || '-'}
                                                     </p>
                                                 </div>
                                             </td>
                                             <td className="py-4 px-4">
-                                                <p className="text-sm text-zinc-400 font-mono">
+                                                <p className="text-sm text-theme-secondary font-mono">
                                                     {client.licenseNumber || 'N/A'}
                                                 </p>
                                             </td>
@@ -214,21 +225,21 @@ const Clients = () => {
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button
                                                         onClick={() => { setDetailClient(client); setIsDetailOpen(true); }}
-                                                        className="p-2 hover:bg-brand-blue/10 rounded-lg text-zinc-400 hover:text-brand-blue transition-colors"
+                                                        className="p-2 hover:bg-brand-blue/10 rounded-lg text-theme-secondary hover:text-brand-blue transition-colors"
                                                         title="View details"
                                                     >
                                                         <Eye className="w-4 h-4" />
                                                     </button>
                                                     <button
                                                         onClick={() => handleEditClient(client)}
-                                                        className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white transition-colors"
+                                                        className="p-2 hover:bg-zinc-800 rounded-lg text-theme-secondary hover:text-theme-primary transition-colors"
                                                         title="Edit client"
                                                     >
                                                         <Edit2 className="w-4 h-4" />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDeleteClient(client.id)}
-                                                        className="p-2 hover:bg-red-500/10 rounded-lg text-zinc-400 hover:text-red-500 transition-colors"
+                                                        className="p-2 hover:bg-red-500/10 rounded-lg text-theme-secondary hover:text-red-500 transition-colors"
                                                         title="Delete client"
                                                     >
                                                         <Trash2 className="w-4 h-4" />

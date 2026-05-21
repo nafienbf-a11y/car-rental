@@ -74,7 +74,7 @@ const Dashboard = () => {
             {/* Page Header with Actions */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('dashboard.welcome')}</h2>
+                    <h2 className="text-3xl font-extrabold text-theme-primary tracking-tight mb-1">{t('dashboard.welcome')}</h2>
                 </div>
                 <div className="flex gap-3">
                     <Button
@@ -135,10 +135,10 @@ const Dashboard = () => {
                 <DashboardTimeline />
 
                 {/* Pending Terminations */}
-                <div className="bg-zinc-950 border border-red-900/30 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+                <div className="bg-theme-sidebar border border-red-900/30 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-2 h-full bg-red-500"></div>
                     <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-xl font-bold text-white">{t('bookings.pendingTerminations') || 'Pending Terminations'}</h3>
+                        <h3 className="text-xl font-bold text-theme-primary">{t('bookings.pendingTerminations') || 'Pending Terminations'}</h3>
                         <span className="px-3 py-1 bg-red-500/10 text-red-500 font-bold text-xs rounded-full">
                             {pendingTerminations.length}
                         </span>
@@ -153,10 +153,10 @@ const Dashboard = () => {
                                 return (
                                     <div key={booking.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-red-500/5 border border-red-500/20 rounded-xl">
                                         <div>
-                                            <p className="text-white font-bold text-sm mb-1">
+                                            <p className="text-theme-primary font-bold text-sm mb-1">
                                                 Terminate booking of {vName}
                                             </p>
-                                            <div className="flex items-center gap-2 text-zinc-400 text-xs font-medium">
+                                            <div className="flex items-center gap-2 text-theme-secondary text-xs font-medium">
                                                 <Calendar className="w-3 h-3" />
                                                 <span>{formatDate(booking.startDate)} - {formatDate(booking.endDate)}</span>
                                             </div>
@@ -164,7 +164,7 @@ const Dashboard = () => {
                                         <Button
                                             variant="secondary"
                                             onClick={() => handleTerminate(booking)}
-                                            className="text-[10px] uppercase font-bold tracking-widest bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500 hover:text-white shrink-0"
+                                            className="text-[10px] uppercase font-bold tracking-widest bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500 hover:text-theme-primary shrink-0"
                                         >
                                             {t('bookings.terminateBtn') || 'Terminate'}
                                         </Button>
@@ -173,43 +173,46 @@ const Dashboard = () => {
                             })}
                         </div>
                     ) : (
-                        <div className="text-center py-8 text-zinc-500 flex flex-col items-center justify-center">
-                            <div className="w-12 h-12 rounded-full bg-zinc-900 flex items-center justify-center mb-3">
+                        <div className="text-center py-8 text-theme-secondary flex flex-col items-center justify-center">
+                            <div className="w-12 h-12 rounded-full bg-theme-sidebar flex items-center justify-center mb-3">
                                 <CheckCircle className="w-6 h-6 text-emerald-500" />
                             </div>
                             <p className="text-sm font-medium">All caught up! No pending terminations.</p>
                         </div>
                     )}
                 </div>
+            </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <MonthlyBookingsChart />
-                    <FleetStatusChart />
-                </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <MonthlyBookingsChart />
+                <FleetStatusChart />
             </div>
 
             {/* Recent Activity */}
-            <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
-                <h3 className="text-xl font-bold text-white mb-6">{t('dashboard.recentActivity')}</h3>
+            <div className="bg-theme-sidebar border border-theme rounded-2xl p-6 shadow-2xl">
+                <h3 className="text-xl font-bold text-theme-primary mb-6">{t('dashboard.recentActivity')}</h3>
                 {recentActivities.length > 0 ? (
                     <div className="space-y-3">
                         {recentActivities.slice(0, 5).map((activity) => (
-                            <div key={activity.id} className="flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-xl hover:border-zinc-700 transition-colors">
-                                <div className={`w-2 h-2 rounded-full ${activity.type === 'booking_new' ? 'bg-brand-blue' :
-                                    activity.type === 'booking_start' ? 'bg-emerald-500' :
-                                        activity.type === 'booking_end' ? 'bg-orange-500' :
-                                            'bg-zinc-500'
+                            <div key={activity.id} className="flex items-center gap-4 p-4 bg-zinc-50 dark:bg-zinc-50 dark:bg-zinc-800/50 border border-theme rounded-xl hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors">
+                                <div className={`w-2 h-2 rounded-full ${activity.type === 'vehicle_new' ? 'bg-purple-500' :
+                                        activity.type === 'client_new' ? 'bg-emerald-500' :
+                                            activity.type === 'booking_new' ? 'bg-brand-blue' :
+                                                activity.type === 'booking_cancel' ? 'bg-red-500' :
+                                                    activity.type === 'booking_terminate' ? 'bg-orange-500' :
+                                                        activity.type === 'expense_new' ? 'bg-yellow-500' :
+                                                            'bg-zinc-500'
                                     }`} />
                                 <div className="flex-1">
-                                    <p className="text-zinc-200 font-medium">{activity.title}</p>
-                                    <p className="text-zinc-500 text-sm font-medium">{activity.message}</p>
+                                    <p className="text-theme-primary font-medium">{activity.title}</p>
+                                    <p className="text-theme-secondary text-sm font-medium">{activity.message}</p>
                                 </div>
-                                <span className="text-xs text-zinc-500 font-semibold">{getTimeAgo(activity.date)}</span>
+                                <span className="text-xs text-theme-secondary font-semibold">{getTimeAgo(activity.date)}</span>
                             </div>
                         ))}
                     </div>
                 ) : (
-                    <div className="text-center py-8 text-zinc-500">
+                    <div className="text-center py-8 text-theme-secondary">
                         <p className="text-sm font-medium">{t('dashboard.noActivity')}</p>
                     </div>
                 )}

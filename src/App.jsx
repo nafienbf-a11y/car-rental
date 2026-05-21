@@ -4,7 +4,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { AppProvider } from './context/AppContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { AuthProvider } from './context/AuthContext';
-import { useVisitorTracking } from './hooks/useVisitorTracking';
+
 import MainLayout from './components/layout/MainLayout';
 import Toast from './components/common/Toast';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -29,7 +29,7 @@ function App() {
 }
 
 function AppContent() {
-  useVisitorTracking(); // Track visitor once per session across the whole app
+
 
   return (
     <LanguageProvider>

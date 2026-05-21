@@ -54,7 +54,12 @@ const CalendarGrid = ({
             <div className="flex items-center justify-between mb-4">
                 <button
                     onClick={handlePrevMonth}
-                    disabled={currentDate <= new Date()} // Prevent going back too far
+                    disabled={(() => {
+                        const minMonthDate = new Date();
+                        minMonthDate.setDate(minMonthDate.getDate() - 30);
+                        return currentDate.getFullYear() < minMonthDate.getFullYear() || 
+                            (currentDate.getFullYear() === minMonthDate.getFullYear() && currentDate.getMonth() <= minMonthDate.getMonth());
+                    })()} // Prevent going back too far (allow 30 days past)
                     type="button"
                     className="p-1 hover:bg-zinc-900 rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-30"
                 >
@@ -92,10 +97,13 @@ const CalendarGrid = ({
 
                     const now = new Date();
                     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                    const isToday = date.getTime() === today.getTime();
-                    const isPast = date < today;
+                    const limitPastDate = new Date(today);
+                    limitPastDate.setDate(limitPastDate.getDate() - 30);
 
-                    if (isPast) {
+                    const isToday = date.getTime() === today.getTime();
+                    const isTooFarPast = date < limitPastDate;
+
+                    if (isTooFarPast) {
                         return (
                             <div key={day} className="aspect-square flex items-center justify-center rounded-lg text-xs font-medium text-zinc-700 cursor-not-allowed bg-zinc-950/50">
                                 {day}

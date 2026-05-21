@@ -7,7 +7,8 @@ export const en = {
         expenses: 'Expenses',
         history: 'History',
         catalog: 'View Catalog',
-        users: 'Users'
+        users: 'Users',
+        reports: 'Reports'
     },
     sidebar: {
         tagline: 'Embark on the adventure, let us provide the keys',
@@ -18,7 +19,10 @@ export const en = {
         showing: 'Showing',
         of: 'of',
         plate: 'Plate',
-        other: 'Other'
+        other: 'Other',
+        confirm: 'Confirm',
+        confirmUpdate: 'Confirm Update',
+        confirmDelete: 'Confirm Deletion',
     },
     auth: {
         pageTitle: 'Admin Login',
@@ -241,11 +245,32 @@ export const en = {
             actions: 'Actions',
         },
     },
+    // Users
+    users: {
+        pageTitle: 'User Management',
+        pageSubtitle: 'Manage admin and staff accounts',
+        searchPlaceholder: 'Search by name, username, or role...',
+        addUserBtn: 'Add User',
+        noUsers: 'No users found',
+        noUsersMatch: 'No users match your criteria.',
+        forceLogout: 'Force Logout',
+        forceLogoutConfirm: 'Are you sure you want to forcibly log out this user?',
+        deleteUser: 'Delete User',
+        deleteUserConfirm: 'Are you sure you want to delete this user?',
+        table: {
+            name: 'Name',
+            username: 'Username',
+            role: 'Role',
+            status: 'Status',
+            actions: 'Actions',
+        },
+    },
     // Expenses
     expenses: {
         title: 'Expenses',
         subtitle: 'Track and manage vehicle costs',
         addExpense: 'Add Expense',
+        avgCost: 'Avg Cost',
         vehicleHealthStatus: 'Vehicle Health Status',
         totalExpenses: 'Total Expenses',
         maintenance: 'Maintenance',
@@ -258,6 +283,16 @@ export const en = {
         adjustSearch: 'Try adjusting your search',
         startAdding: 'Add your first expense',
         deleteConfirm: 'Are you sure you want to delete this expense?',
+        types: {
+            maintenance: 'Maintenance / Oil Change',
+            car_wash: 'Car Wash',
+            fuel: 'Fuel',
+            vignette: 'Vignette',
+            accountant: 'Accountant',
+            agency_rent: 'Agency Rent',
+            salary: 'Salary',
+            cnss: 'CNSS',
+        },
         notifications: {
             added: 'Expense added successfully!',
             updated: 'Expense updated successfully!',

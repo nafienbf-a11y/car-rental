@@ -18,7 +18,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         { name: t('nav.clients'), path: '/admin/clients', icon: Users },
         { name: t('nav.expenses'), path: '/admin/expenses', icon: DollarSign },
         { name: t('nav.history'), path: '/admin/history', icon: History },
-        { name: 'Reports', path: '/admin/reports', icon: TrendingUp },
+        { name: t('nav.reports', 'Reports'), path: '/admin/reports', icon: TrendingUp },
     ];
 
     if (user?.role === 'admin') {

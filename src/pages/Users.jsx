@@ -110,11 +110,11 @@ const Users = () => {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">User Management</h1>
-                    <p className="text-zinc-500 font-medium tracking-tight">Manage admin and staff accounts</p>
+                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('users.pageTitle', 'User Management')}</h1>
+                    <p className="text-zinc-500 font-medium tracking-tight">{t('users.pageSubtitle', 'Manage admin and staff accounts')}</p>
                 </div>
                 <Button variant="primary" icon={Plus} onClick={handleAddUser}>
-                    Add User
+                    {t('users.addUserBtn', 'Add User')}
                 </Button>
             </div>
 
@@ -123,7 +123,7 @@ const Users = () => {
                     <SearchBar
                         value={searchTerm}
                         onChange={(val) => setSearchTerm(val)}
-                        placeholder="Search by name, username, or role..."
+                        placeholder={t('users.searchPlaceholder', 'Search by name, username, or role...')}
                     />
                 </div>
             </div>
@@ -134,19 +134,19 @@ const Users = () => {
                 ) : filteredUsers.length === 0 ? (
                     <div className="text-center py-12">
                         <Shield className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-white mb-2">No users found</h3>
-                        <p className="text-zinc-500 mb-6">No users match your criteria.</p>
+                        <h3 className="text-xl font-bold text-white mb-2">{t('users.noUsers', 'No users found')}</h3>
+                        <p className="text-zinc-500 mb-6">{t('users.noUsersMatch', 'No users match your criteria.')}</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b border-zinc-800">
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Name</th>
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Username</th>
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Role</th>
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Status</th>
-                                    <th className="text-right py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Actions</th>
+                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('users.table.name')}</th>
+                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('users.table.username')}</th>
+                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('users.table.role')}</th>
+                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('users.table.status')}</th>
+                                    <th className="text-right py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('users.table.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -202,16 +202,16 @@ const Users = () => {
                 isOpen={!!userToLogout}
                 onClose={() => setUserToLogout(null)}
                 onConfirm={confirmForceLogout}
-                title="Force Logout"
-                message="Are you sure you want to forcibly log out this user?"
+                title={t('users.forceLogout', 'Force Logout')}
+                message={t('users.forceLogoutConfirm', 'Are you sure you want to forcibly log out this user?')}
             />
 
             <ConfirmModal
                 isOpen={!!userToDelete}
                 onClose={() => setUserToDelete(null)}
                 onConfirm={confirmDeleteUser}
-                title="Delete User"
-                message="Are you sure you want to delete this user?"
+                title={t('users.deleteUser', 'Delete User')}
+                message={t('users.deleteUserConfirm', 'Are you sure you want to delete this user?')}
             />
         </div>
     );

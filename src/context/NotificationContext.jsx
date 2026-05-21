@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import ConfirmModal from '../components/common/ConfirmModal';
 
 const NotificationContext = createContext();
 
@@ -12,6 +13,7 @@ export const useNotification = () => {
 
 export const NotificationProvider = ({ children }) => {
     const [notification, setNotification] = useState(null);
+    const [confirmState, setConfirmState] = useState(null);
     const [readNotificationIds, setReadNotificationIds] = useState(() => {
         const saved = localStorage.getItem('read_notifications');
         return saved ? JSON.parse(saved) : [];
@@ -49,9 +51,51 @@ export const NotificationProvider = ({ children }) => {
         setNotification(null);
     };
 
+    const confirmAction = ({ title, message }) => {
+        return new Promise((resolve) => {
+            setConfirmState({
+                title,
+                message,
+                resolve
+            });
+        });
+    };
+
+    const handleConfirm = () => {
+        if (confirmState) {
+            confirmState.resolve(true);
+            setConfirmState(null);
+        }
+    };
+
+    const handleCancel = () => {
+        if (confirmState) {
+            confirmState.resolve(false);
+            setConfirmState(null);
+        }
+    };
+
     return (
-        <NotificationContext.Provider value={{ notification, showNotification, hideNotification, readNotificationIds, markAsRead, markAllAsRead }}>
+        <NotificationContext.Provider value={{
+            notification,
+            showNotification,
+            hideNotification,
+            readNotificationIds,
+            markAsRead,
+            markAllAsRead,
+            confirmAction
+        }}>
             {children}
+            {confirmState && (
+                <ConfirmModal
+                    isOpen={!!confirmState}
+                    onClose={handleCancel}
+                    onConfirm={handleConfirm}
+                    title={confirmState.title}
+                    message={confirmState.message}
+                />
+            )}
         </NotificationContext.Provider>
     );
 };
+

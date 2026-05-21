@@ -1,4 +1,3 @@
-import { calculateDays } from './helpers';
 
 // Check if a date is within a range (inclusive)
 export const isDateInRange = (date, startDate, endDate) => {
@@ -20,7 +19,7 @@ export const getBlockedDates = (vehicleId, bookings) => {
 
     const vehicleBookings = bookings.filter(b =>
         b.vehicleId === vehicleId &&
-        (b.status === 'Active' || b.status === 'Maintenance')
+        (b.status === 'Active' || b.status === 'Maintenance' || b.status === 'Upcoming' || b.status === 'Completed')
     );
 
     const blockedDates = [];
@@ -79,16 +78,17 @@ export const validateBookingRange = (startDate, endDate, blockedDates) => {
     const startStr = startDate.split('T')[0];
     const endStr = endDate.split('T')[0];
 
-    // Get today's date in local YYYY-MM-DD format
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const todayStr = `${year}-${month}-${day}`;
 
-    // 1. Check for past dates (String comparison works for YYYY-MM-DD)
-    if (startStr < todayStr) {
-        return { valid: false, error: 'Cannot book past dates' };
+    // 1. Check for dates earlier than 30 days ago
+    const minPastDate = new Date();
+    minPastDate.setDate(minPastDate.getDate() - 30);
+    const pastYear = minPastDate.getFullYear();
+    const pastMonth = String(minPastDate.getMonth() + 1).padStart(2, '0');
+    const pastDay = String(minPastDate.getDate()).padStart(2, '0');
+    const pastLimitStr = `${pastYear}-${pastMonth}-${pastDay}`;
+
+    if (startStr < pastLimitStr) {
+        return { valid: false, error: 'Cannot book dates more than 30 days in the past' };
     }
 
     // 2. Check blocked dates within range

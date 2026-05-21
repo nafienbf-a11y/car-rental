@@ -102,6 +102,25 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
         }
     }, [formData.vehicleId, booking, vehicles]);
 
+    // Auto-fill Ending KM when vehicle is selected (Edit Booking only)
+    useEffect(() => {
+        if (booking && formData.vehicleId) {
+            const vehicle = vehicles.find(v => v.id === formData.vehicleId);
+            if (vehicle) {
+                setFormData(prev => {
+                    // Use booking's endingKm if original vehicle, otherwise load vehicle mileage
+                    const targetEndingKm = (formData.vehicleId === booking.vehicleId && booking.endingKm)
+                        ? booking.endingKm
+                        : vehicle.mileage;
+                    return {
+                        ...prev,
+                        endingKm: targetEndingKm,
+                    };
+                });
+            }
+        }
+    }, [formData.vehicleId, booking, vehicles]);
+
 
     const availableVehicles = vehicles.filter(v => v.status !== 'Maintenance' && v.status !== 'Deleted');
 
@@ -299,6 +318,8 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
             securityDeposit: 0,
             documents: [],
         });
+        setSelectionStep('start');
+        setError('');
         setSelectionStep('start');
         setError('');
     };
