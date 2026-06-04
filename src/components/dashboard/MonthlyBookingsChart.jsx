@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -7,21 +8,25 @@ const MonthlyBookingsChart = () => {
     const { bookings } = useApp();
     const { t } = useLanguage();
 
+    const [monthOffset, setMonthOffset] = useState(0);
+
     // Calculate monthly data from real bookings
     const getMonthlyData = () => {
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const currentDate = new Date();
         const monthlyData = [];
 
-        // Get last 6 months
+        // Get 6 months based on offset
         for (let i = 5; i >= 0; i--) {
-            const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+            const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - (i + monthOffset), 1);
             const month = monthNames[date.getMonth()];
             const year = date.getFullYear();
 
             // Filter bookings for this month
             const monthBookings = bookings.filter(booking => {
-                const bookingDate = new Date(booking.createdAt);
+                if (!booking) return false;
+                const bookingDate = new Date(booking.startDate || booking.createdAt);
+                if (isNaN(bookingDate.getTime())) return false;
                 return bookingDate.getMonth() === date.getMonth() &&
                     bookingDate.getFullYear() === date.getFullYear();
             });
@@ -55,7 +60,30 @@ const MonthlyBookingsChart = () => {
 
     return (
         <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-6">{t('dashboard.monthlyBookings')}</h3>
+            <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold text-white">{t('dashboard.monthlyBookings')}</h3>
+                <div className="flex items-center gap-2">
+                    <button 
+                        onClick={() => setMonthOffset(prev => prev + 6)}
+                        className="p-1.5 bg-zinc-900 border border-zinc-800 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
+                        title="Older"
+                    >
+                        <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button 
+                        onClick={() => setMonthOffset(prev => Math.max(0, prev - 6))}
+                        disabled={monthOffset === 0}
+                        className={`p-1.5 border rounded-lg transition-colors ${
+                            monthOffset === 0 
+                                ? 'bg-zinc-900/50 border-zinc-800/50 text-zinc-600 cursor-not-allowed'
+                                : 'bg-zinc-900 border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-white'
+                        }`}
+                        title="Newer"
+                    >
+                        <ChevronRight className="w-4 h-4" />
+                    </button>
+                </div>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={data}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />

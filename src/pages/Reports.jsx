@@ -31,8 +31,9 @@ const Reports = () => {
 
         // Process Bookings (Revenue)
         bookings.forEach(b => {
-            if (b.status === 'Cancelled' || !b.createdAt) return;
-            const date = new Date(b.createdAt);
+            if (!b || b.status === 'Cancelled' || (!b.startDate && !b.createdAt)) return;
+            const date = new Date(b.startDate || b.createdAt);
+            if (isNaN(date.getTime())) return;
             const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
             if (!monthsMap.has(monthKey)) {

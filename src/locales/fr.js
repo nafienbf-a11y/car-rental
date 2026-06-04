@@ -186,6 +186,10 @@ export const fr = {
         cancelBtn: 'Annuler',
         cancelConfirm: 'Êtes-vous sûr de vouloir annuler cette réservation ?',
         toTerminate: 'À terminer',
+        tobeterminated: 'À terminer',
+        terminateModalTitle: 'Terminer la réservation',
+        confirmTermination: 'Confirmer la fin',
+        terminateBtn: 'Terminer',
         pendingTerminations: 'Résiliations en attente',
         viewDocuments: 'Documents',
         table: {

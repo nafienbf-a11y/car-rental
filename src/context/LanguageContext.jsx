@@ -47,20 +47,35 @@ export const LanguageProvider = ({ children }) => {
     // Supports nested keys like 'nav.dashboard'
     const t = (key) => {
         const keys = key.split('.');
-        let value = translations[language];
+        
+        const getValue = (lang) => {
+            let val = translations[lang];
+            for (const k of keys) {
+                if (val && val[k] !== undefined) {
+                    val = val[k];
+                } else {
+                    return undefined;
+                }
+            }
+            return val;
+        };
 
-        for (const k of keys) {
-            if (value && value[k]) {
-                value = value[k];
-            } else {
-                // Fallback to English if key missing in current language
-                // Or return key itself if completely missing
-                console.warn(`Translation missing for key: ${key} in language: ${language}`);
-                return key;
+        let value = getValue(language);
+        if (value !== undefined) {
+            return value;
+        }
+
+        // Fallback to English
+        if (language !== 'en') {
+            value = getValue('en');
+            if (value !== undefined) {
+                console.warn(`Translation missing for key: ${key} in language: ${language}, falling back to English`);
+                return value;
             }
         }
 
-        return value;
+        console.warn(`Translation missing for key: ${key} in language: ${language}`);
+        return key;
     };
 
     const value = {

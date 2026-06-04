@@ -15,6 +15,7 @@ create table public.vehicles (
   status text not null default 'Available',
   mileage integer not null default 0,
   last_maintenance date not null default current_date,
+  is_legacy boolean not null default false,
   constraint vehicles_pkey primary key (id)
 );
 

@@ -326,6 +326,11 @@ export const en = {
             customer: 'Customer',
             duration: 'Duration',
             total: 'Total',
+            timestamp: 'Timestamp',
+            action: 'Action',
+            entity: 'Entity',
+            details: 'Details',
+            performedBy: 'Performed By',
         },
     },
     confirm: {
@@ -442,6 +447,21 @@ export const en = {
                 added: 'Expense added successfully!',
                 updated: 'Expense updated successfully!',
             },
+        },
+    },
+    // Reports
+    reports: {
+        subtitle: 'Comprehensive financial analysis',
+        monthlyLog: 'Monthly Financial Log',
+        dailyVisitors: 'Daily Visitors Log',
+        visitors: 'visitors',
+        table: {
+            month: 'Month',
+            revenue: 'Revenue',
+            expenses: 'Expenses',
+            profit: 'Net Profit',
+            date: 'Date',
+            uniqueVisitors: 'Unique Visitors',
         },
     },
 };
