@@ -45,7 +45,9 @@ export const LanguageProvider = ({ children }) => {
 
     // Translation function
     // Supports nested keys like 'nav.dashboard'
-    const t = (key) => {
+    // Also supports parameter substitution: t('key', { name: 'John' })
+    const t = (key, params = {}) => {
+        if (!key || typeof key !== 'string') return '';
         const keys = key.split('.');
         
         const getValue = (lang) => {
@@ -62,6 +64,11 @@ export const LanguageProvider = ({ children }) => {
 
         let value = getValue(language);
         if (value !== undefined) {
+            if (typeof value === 'string' && params && Object.keys(params).length > 0) {
+                return Object.entries(params).reduce((str, [k, v]) => {
+                    return str.replaceAll(`{${k}}`, String(v !== undefined && v !== null ? v : ''));
+                }, value);
+            }
             return value;
         }
 
@@ -70,6 +77,11 @@ export const LanguageProvider = ({ children }) => {
             value = getValue('en');
             if (value !== undefined) {
                 console.warn(`Translation missing for key: ${key} in language: ${language}, falling back to English`);
+                if (typeof value === 'string' && params && Object.keys(params).length > 0) {
+                    return Object.entries(params).reduce((str, [k, v]) => {
+                        return str.replaceAll(`{${k}}`, String(v !== undefined && v !== null ? v : ''));
+                    }, value);
+                }
                 return value;
             }
         }

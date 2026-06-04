@@ -206,7 +206,11 @@ const Bookings = () => {
         return (
             <div className="flex flex-col sm:flex-row items-center justify-between p-5 bg-zinc-900/30 gap-4">
                 <span className="text-zinc-500 text-xs font-bold">
-                    Showing {filteredBookings.length === 0 ? 0 : ((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredBookings.length)} of {filteredBookings.length} entries
+                    {t('common.showingEntries', { 
+                        start: filteredBookings.length === 0 ? 0 : ((currentPage - 1) * itemsPerPage) + 1, 
+                        end: Math.min(currentPage * itemsPerPage, filteredBookings.length), 
+                        total: filteredBookings.length 
+                    })}
                 </span>
                 <div className="flex gap-2">
                     <Button 
@@ -215,7 +219,7 @@ const Bookings = () => {
                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                         className="px-3 py-1 text-xs"
                     >
-                        Previous
+                        {t('common.previous')}
                     </Button>
                     <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-xs font-bold shadow-inner">
                         {currentPage} / {totalPages || 1}
@@ -226,7 +230,7 @@ const Bookings = () => {
                         onClick={() => setCurrentPage(p => Math.min(totalPages || 1, p + 1))}
                         className="px-3 py-1 text-xs"
                     >
-                        Next
+                        {t('common.next')}
                     </Button>
                 </div>
             </div>
@@ -249,7 +253,7 @@ const Bookings = () => {
                         icon={Upload}
                         onClick={() => setIsLegacyImportModalOpen(true)}
                     >
-                        Import Legacy
+                        {t('common.importLegacy')}
                     </Button>
                     <Button
                         variant="primary"
@@ -293,7 +297,7 @@ const Bookings = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
                     {/* Date Range Picker */}
                     <div className="flex items-center gap-2 bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5 w-full sm:w-auto overflow-x-auto">
-                        <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2 whitespace-nowrap">Filter Dates:</span>
+                        <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2 whitespace-nowrap">{t('common.filterDates')}</span>
                         <input 
                             type="date" 
                             value={startDateFilter}
@@ -312,23 +316,23 @@ const Bookings = () => {
                                 onClick={() => { setStartDateFilter(''); setEndDateFilter(''); setCurrentPage(1); }}
                                 className="text-zinc-500 hover:text-white px-3 py-1.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors"
                             >
-                                Clear
+                                {t('common.clear')}
                             </button>
                         )}
                     </div>
                     
                     {/* Rows per page selector */}
                     <div className="flex items-center gap-2 bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5">
-                        <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2">Show:</span>
+                        <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2">{t('common.showLabel')}</span>
                         <select 
                             value={itemsPerPage} 
                             onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
                             className="bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
                         >
-                            <option value={10}>10 rows</option>
-                            <option value={20}>20 rows</option>
-                            <option value={50}>50 rows</option>
-                            <option value={999999}>All rows</option>
+                            <option value={10}>{t('common.rowsCount', { count: 10 })}</option>
+                            <option value={20}>{t('common.rowsCount', { count: 20 })}</option>
+                            <option value={50}>{t('common.rowsCount', { count: 50 })}</option>
+                            <option value={999999}>{t('common.allRows')}</option>
                         </select>
                     </div>
                 </div>

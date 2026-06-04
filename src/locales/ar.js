@@ -23,6 +23,26 @@ export const ar = {
         confirm: 'تأكيد',
         confirmUpdate: 'تأكيد التحديث',
         confirmDelete: 'تأكيد الحذف',
+        showingEntries: 'عرض {start} إلى {end} من {total} مدخلات',
+        previous: 'السابق',
+        next: 'التالي',
+        rowsCount: '{count} صفوف',
+        allRows: 'جميع الصفوف',
+        showLabel: 'عرض:',
+        clear: 'مسح',
+        filterDates: 'تصفية التواريخ:',
+        importLegacy: 'استيراد البيانات القديمة',
+        actions: 'إجراءات',
+        showingEntries: 'عرض {start} إلى {end} من {total} مدخلات',
+        previous: 'السابق',
+        next: 'التالي',
+        rowsCount: '{count} صفوف',
+        allRows: 'جميع الصفوف',
+        showLabel: 'عرض:',
+        clear: 'مسح',
+        filterDates: 'تصفية التواريخ:',
+        importLegacy: 'استيراد البيانات القديمة',
+        actions: 'إجراءات',
     },
     auth: {
         pageTitle: 'تسجيل دخول المسؤول',
@@ -147,7 +167,6 @@ export const ar = {
         viewAll: 'عرض جميع الإشعارات',
         markAllRead: 'تحديد الكل كمقروء'
     },
-    // Fleet
     fleet: {
         title: 'إدارة الأسطول',
         subtitle: 'إدارة مخزون المركبات الخاص بك',
@@ -164,7 +183,6 @@ export const ar = {
         startAdding: 'أضف مركبتك الأولى للبدء',
         deleteConfirm: 'هل أنت متأكد أنك تريد حذف هذه المركبة؟',
         importConfirm: 'استيراد المركبات من التخزين المحلي؟ سيتم تخطي التكرارات.',
-        // Notifications
         addedSuccess: 'تم إضافة المركبة بنجاح!',
         updatedSuccess: 'تم تحديث المركبة بنجاح!',
         deletedSuccess: 'تم حذف المركبة بنجاح!',
@@ -176,9 +194,18 @@ export const ar = {
         outOfService: 'خارج الخدمة',
         rented: 'مؤجرة',
         deleteTooltip: 'حذف المركبة',
-        edit: 'تعديل'
+        edit: 'تعديل',
+        table: {
+            brand: 'العلامة التجارية',
+            model: 'الموديل',
+            year: 'السنة',
+            price: 'السعر/اليوم',
+            mileage: 'المسافة المقطوعة',
+            lastMaintenance: 'آخر صيانة',
+            status: 'الحالة',
+            actions: 'إجراءات'
+        }
     },
-    // Bookings
     bookings: {
         title: 'الحجوزات',
         subtitle: 'إدارة حجوزات العملاء',
@@ -209,9 +236,13 @@ export const ar = {
         notifications: {
             created: 'تم إنشاء الحجز بنجاح!',
             updated: 'تم تحديث الحجز بنجاح!',
+            cancelled: 'تم إلغاء الحجز بنجاح!',
         },
+        noBookingsFound: 'لم يتم العثور على حجوزات تطابق عوامل التصفية.',
+        traveled: 'المسافة المقطوعة',
+        startKm: 'البداية',
+        endKm: 'النهاية'
     },
-    // Clients
     clients: {
         title: 'العملاء',
         subtitle: 'إدارة قاعدة بيانات العملاء',
@@ -236,7 +267,6 @@ export const ar = {
             actions: 'إجراءات',
         },
     },
-    // Users
     users: {
         pageTitle: 'إدارة المستخدمين',
         pageSubtitle: 'إدارة حسابات المسؤولين والموظفين',
@@ -256,7 +286,6 @@ export const ar = {
             actions: 'إجراءات',
         },
     },
-    // Expenses
     expenses: {
         title: 'المصاريف',
         subtitle: 'تتبع وإدارة تكاليف المركبات',
@@ -298,7 +327,6 @@ export const ar = {
             actions: 'إجراءات',
         },
     },
-    // History
     history: {
         title: 'السجل',
         subtitle: 'سجل المراجعة الكامل لجميع الإجراءات',
@@ -324,7 +352,6 @@ export const ar = {
             performedBy: 'بواسطة',
         },
     },
-    // Modals
     modals: {
         common: {
             cancel: 'إلغاء',
@@ -334,6 +361,10 @@ export const ar = {
             add: 'إضافة',
             edit: 'تعديل',
             select: 'اختر',
+            confirmAction: {
+                update: 'هل أنت متأكد أنك تريد تعديل هذا العنصر؟',
+                delete: 'هل أنت متأكد أنك تريد حذف هذا العنصر؟'
+            }
         },
         calendar: {
             available: 'متاح',
@@ -399,14 +430,17 @@ export const ar = {
             phone: 'الهاتف',
             address: 'العنوان',
             license: 'رقم الرخصة',
+            documents: 'المستندات',
+            addDocument: 'إضافة مستند',
+            documentName: 'اسم المستند',
             notes: 'ملاحظات',
             placeholderName: 'مثال: محمد أحمد',
             placeholderEmail: 'mohamed@example.com',
-            placeholderPhone: '+1 234 567 8900',
-            placeholderAddress: 'العنوان بالكامل',
+            placeholderPhone: '+212 600 000000',
+            placeholderAddress: 'العنوان، المدينة، البلد',
             placeholderLicense: 'DL-123456',
             placeholderNotes: 'ملاحظات إضافية حول العميل...',
-            submitAdd: 'إضافة عميل',
+            submitAdd: 'إضافة العميل',
             submitUpdate: 'تحديث العميل',
             notifications: {
                 added: 'تم إضافة العميل بنجاح!',
@@ -432,6 +466,37 @@ export const ar = {
                 updated: 'تم تحديث المصروف بنجاح!',
             },
         },
+        importLegacy: {
+            title: 'استيراد البيانات القديمة',
+            description: 'قم بتحميل ملف Excel أو CSV الخاص بك. سنقوم باستخراج العملاء والمركبات الفريدة، وإعادة إنشاء جميع الحجوزات السابقة. سيتم تخطي الأعمدة المتجاهلة (المستفيد، المدة).',
+            selectFile: 'اختر ملفًا (.csv, .xlsx)',
+            cancel: 'إلغاء',
+            startImport: 'بدء الاستيراد',
+            processing: 'جاري المعالجة...',
+            successTitle: 'تم الاستيراد بنجاح!',
+            successDesc: 'تم تعيين جميع البيانات واستيرادها بشكل صحيح.',
+            clients: 'العملاء',
+            cars: 'السيارات',
+            bookings: 'الحجوزات',
+            closeReload: 'إغلاق وإعادة تحميل البيانات',
+            errorSelectFile: 'يرجى تحديد ملف أولاً.',
+            startingImport: 'بدء عملية الاستيراد...',
+            foundRows: 'تم العثور على {count} صفوف لمعالجتها.',
+            identifiedStats: 'تم تحديد {clients} من العملاء الفريدين و {vehicles} من المركبات الفريدة.',
+            importingClients: 'جاري استيراد العملاء...',
+            importedClientsCount: 'تم استيراد {count} من العملاء الجدد بنجاح.',
+            linkingVehicles: 'ربط المركبات عن طريق لوحة الترخيص...',
+            warningNoVehicle: 'تحذير: لم يتم العثور على مركبة باللوحة {plate}',
+            linkedVehiclesCount: 'تم ربط {count} من المركبات بنجاح.',
+            importingBookings: 'جاري استيراد الحجوزات...',
+            importedBookingsCount: 'تم استيراد {count} من الحجوزات بنجاح.',
+            finished: 'انتهت عملية الاستيراد بنجاح!',
+            failed: 'فشل: {message}'
+        },
+    },
+    confirm: {
+        update: 'هل أنت متأكد أنك تريد تعديل هذا العنصر؟',
+        delete: 'هل أنت متأكد أنك تريد حذف هذا العنصر؟'
     },
     // Reports
     reports: {

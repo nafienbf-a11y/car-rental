@@ -141,7 +141,7 @@ const History = () => {
                             disabled={currentPage === 1}
                             className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-white"
                         >
-                            Previous
+                            {t('common.previous')}
                         </Button>
 
                         <div className="flex gap-2">
@@ -166,7 +166,7 @@ const History = () => {
                             disabled={currentPage === totalPages}
                             className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-white"
                         >
-                            Next
+                            {t('common.next')}
                         </Button>
                     </div>
                 )}
