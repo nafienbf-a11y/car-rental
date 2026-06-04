@@ -4,23 +4,29 @@ import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
 
 const FleetStatusChart = () => {
-    const { vehicles } = useApp();
+    const { vehicles, bookings } = useApp();
     const { t } = useLanguage();
+
+    const activeVehicleIds = new Set(bookings.filter(b => b.status === 'Active').map(b => b.vehicleId));
+    
+    const maintenanceCount = vehicles.filter(v => v.status === 'Maintenance').length;
+    const rentedCount = vehicles.filter(v => v.status !== 'Maintenance' && activeVehicleIds.has(v.id)).length;
+    const availableCount = vehicles.filter(v => v.status !== 'Maintenance' && v.status !== 'Deleted' && !activeVehicleIds.has(v.id)).length;
 
     const data = [
         {
             name: t('dashboard.active'),
-            value: vehicles.filter(v => v.status === 'Available').length,
+            value: availableCount,
             color: '#27272a'
         },
         {
             name: t('fleet.rented'),
-            value: vehicles.filter(v => v.status === 'Rented').length,
+            value: rentedCount,
             color: '#2563eb'
         },
         {
             name: t('dashboard.maintenance'),
-            value: vehicles.filter(v => v.status === 'Maintenance').length,
+            value: maintenanceCount,
             color: '#dc2626'
         },
     ];

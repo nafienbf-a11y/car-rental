@@ -382,8 +382,9 @@ export const AppProvider = ({ children }) => {
         totalRevenue: bookings.filter(b => b.status !== 'Cancelled').reduce((sum, b) => sum + (b.totalCost || 0), 0),
         monthlyRevenue: bookings
             .filter(b => {
-                if (b.status === 'Cancelled' || !b.createdAt) return false;
-                const date = new Date(b.createdAt);
+                if (!b || b.status === 'Cancelled' || (!b.startDate && !b.createdAt)) return false;
+                const date = new Date(b.startDate || b.createdAt);
+                if (isNaN(date.getTime())) return false;
                 const now = new Date();
                 return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
             })

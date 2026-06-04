@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, User, DollarSign, Plus, FileText } from 'lucide-react';
+import { Calendar, User, DollarSign, Plus, FileText, Upload } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/common/Button';
@@ -8,6 +8,7 @@ import TerminateBookingModal from '../components/bookings/TerminateBookingModal'
 import ClientDetailModal from '../components/clients/ClientDetailModal';
 import VehicleDetailModal from '../components/fleet/VehicleDetailModal';
 import BookingDocumentsModal from '../components/bookings/BookingDocumentsModal';
+import LegacyImportModal from '../components/bookings/LegacyImportModal';
 import { formatDate, formatCurrency, getStatusBadgeClass } from '../utils/helpers';
 
 import { useNotification } from '../context/NotificationContext';
@@ -17,6 +18,11 @@ const Bookings = () => {
     const { showNotification, confirmAction } = useNotification();
     const { t } = useLanguage();
     const [statusFilter, setStatusFilter] = useState('All');
+    const [startDateFilter, setStartDateFilter] = useState('');
+    const [endDateFilter, setEndDateFilter] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'desc' });
     const [editingBooking, setEditingBooking] = useState(null);
     const [terminatingBooking, setTerminatingBooking] = useState(null);
     const [isTerminateModalOpen, setIsTerminateModalOpen] = useState(false);
@@ -27,6 +33,7 @@ const Bookings = () => {
     const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
     const [docsBooking, setDocsBooking] = useState(null);
     const [isDocsModalOpen, setIsDocsModalOpen] = useState(false);
+    const [isLegacyImportModalOpen, setIsLegacyImportModalOpen] = useState(false);
 
     const handleCarClick = (vehicleId) => {
         const vehicle = vehicles.find(v => v.id === vehicleId);
@@ -110,14 +117,6 @@ const Bookings = () => {
         return booking.status === 'Active' && today > endDateObj;
     };
 
-    const filteredBookings = (statusFilter === 'All'
-        ? bookings
-        : statusFilter === 'toTerminate'
-            ? bookings.filter(b => isReadyToTerminate(b))
-            : bookings.filter(b => b.status === statusFilter))
-        .slice()
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
     const getVehicleName = (vehicleId) => {
         const vehicle = vehicles.find(v => v.id === vehicleId);
         return vehicle ? `${vehicle.brand} ${vehicle.model}` : 'Unknown';
@@ -126,6 +125,112 @@ const Bookings = () => {
     const getClientName = (clientId) => {
         const client = clients.find(c => c.id === clientId);
         return client ? client.name : 'Unknown';
+    };
+
+    const handleSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const SortableHeader = ({ label, sortKey }) => (
+        <th 
+            className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest cursor-pointer hover:text-white transition-colors group"
+            onClick={() => handleSort(sortKey)}
+        >
+            <div className="flex items-center gap-1">
+                {label}
+                <div className="flex flex-col">
+                    <span className={`text-[8px] leading-[0.5] ${sortConfig?.key === sortKey && sortConfig.direction === 'asc' ? 'text-brand-blue' : 'text-zinc-700 group-hover:text-zinc-500'}`}>▲</span>
+                    <span className={`text-[8px] leading-[0.5] ${sortConfig?.key === sortKey && sortConfig.direction === 'desc' ? 'text-brand-blue' : 'text-zinc-700 group-hover:text-zinc-500'}`}>▼</span>
+                </div>
+            </div>
+        </th>
+    );
+
+    const getDateFilteredBookings = () => {
+        let b = bookings;
+        if (startDateFilter) b = b.filter(x => x.startDate >= startDateFilter);
+        if (endDateFilter) b = b.filter(x => x.endDate <= endDateFilter);
+        return b;
+    };
+
+    const dateFilteredBookings = getDateFilteredBookings();
+
+    const filteredBookings = (statusFilter === 'All'
+        ? dateFilteredBookings
+        : statusFilter === 'toTerminate'
+            ? dateFilteredBookings.filter(b => isReadyToTerminate(b))
+            : dateFilteredBookings.filter(b => b.status === statusFilter))
+        .slice()
+        .sort((a, b) => {
+            if (!sortConfig) return 0;
+            const { key, direction } = sortConfig;
+            let aVal = a[key];
+            let bVal = b[key];
+
+            if (key === 'vehicleId') {
+                aVal = getVehicleName(a.vehicleId).toLowerCase();
+                bVal = getVehicleName(b.vehicleId).toLowerCase();
+            } else if (key === 'clientId') {
+                aVal = getClientName(a.clientId).toLowerCase();
+                bVal = getClientName(b.clientId).toLowerCase();
+            } else if (key === 'startDate' || key === 'endDate' || key === 'createdAt') {
+                aVal = new Date(a[key]).getTime();
+                bVal = new Date(b[key]).getTime();
+            } else if (key === 'totalCost') {
+                aVal = Number(a.totalCost) || 0;
+                bVal = Number(b.totalCost) || 0;
+            } else {
+                aVal = aVal?.toString().toLowerCase() || '';
+                bVal = bVal?.toString().toLowerCase() || '';
+            }
+
+            if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+            if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+    const totalPages = Math.ceil(filteredBookings.length / itemsPerPage) || 1;
+    const paginatedBookings = filteredBookings.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const renderPagination = () => {
+        if (totalPages <= 1 && itemsPerPage !== 999999) return null;
+        if (itemsPerPage === 999999 && filteredBookings.length === 0) return null;
+
+        return (
+            <div className="flex flex-col sm:flex-row items-center justify-between p-5 bg-zinc-900/30 gap-4">
+                <span className="text-zinc-500 text-xs font-bold">
+                    Showing {filteredBookings.length === 0 ? 0 : ((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredBookings.length)} of {filteredBookings.length} entries
+                </span>
+                <div className="flex gap-2">
+                    <Button 
+                        variant="secondary" 
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        className="px-3 py-1 text-xs"
+                    >
+                        Previous
+                    </Button>
+                    <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-xs font-bold shadow-inner">
+                        {currentPage} / {totalPages || 1}
+                    </span>
+                    <Button 
+                        variant="secondary" 
+                        disabled={currentPage === totalPages || totalPages === 0}
+                        onClick={() => setCurrentPage(p => Math.min(totalPages || 1, p + 1))}
+                        className="px-3 py-1 text-xs"
+                    >
+                        Next
+                    </Button>
+                </div>
+            </div>
+        );
     };
 
     const statusFilters = ['All', 'Active', 'Upcoming', 'Completed', 'Cancelled', 'toTerminate'];
@@ -138,27 +243,38 @@ const Bookings = () => {
                     <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('bookings.title')}</h1>
                     <p className="text-zinc-500 font-medium tracking-tight">{t('bookings.subtitle')}</p>
                 </div>
-                <Button
-                    variant="primary"
-                    icon={Plus}
-                    onClick={() => setIsNewBookingModalOpen(true)}
-                >
-                    {t('bookings.newBooking')}
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        variant="secondary"
+                        icon={Upload}
+                        onClick={() => setIsLegacyImportModalOpen(true)}
+                    >
+                        Import Legacy
+                    </Button>
+                    <Button
+                        variant="primary"
+                        icon={Plus}
+                        onClick={() => setIsNewBookingModalOpen(true)}
+                    >
+                        {t('bookings.newBooking')}
+                    </Button>
+                </div>
             </div>
 
-            {/* Status Filter Tabs */}
-            <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5 inline-flex gap-1.5 overflow-x-auto max-w-full">
-                {statusFilters.map((status) => {
-                    const count = status === 'All'
-                        ? bookings.length
-                        : status === 'toTerminate'
-                            ? bookings.filter(b => isReadyToTerminate(b)).length
-                            : bookings.filter(b => b.status === status).length;
-                    return (
-                        <button
-                            key={status}
-                            onClick={() => setStatusFilter(status)}
+            {/* Filters Row */}
+            <div className="flex flex-col gap-4 mb-4">
+                {/* Status Filter Tabs */}
+                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5 inline-flex gap-1.5 overflow-x-auto max-w-full">
+                    {statusFilters.map((status) => {
+                        const count = status === 'All'
+                            ? dateFilteredBookings.length
+                            : status === 'toTerminate'
+                                ? dateFilteredBookings.filter(b => isReadyToTerminate(b)).length
+                                : dateFilteredBookings.filter(b => b.status === status).length;
+                        return (
+                            <button
+                                key={status}
+                                onClick={() => { setStatusFilter(status); setCurrentPage(1); }}
                             className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 whitespace-nowrap ${statusFilter === status
                                 ? 'bg-white text-black shadow-lg'
                                 : 'text-zinc-500 hover:bg-zinc-900 hover:text-white'
@@ -171,24 +287,78 @@ const Bookings = () => {
                         </button>
                     );
                 })}
+                </div>
+
+                {/* Date Range & Rows Per Page */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
+                    {/* Date Range Picker */}
+                    <div className="flex items-center gap-2 bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5 w-full sm:w-auto overflow-x-auto">
+                        <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2 whitespace-nowrap">Filter Dates:</span>
+                        <input 
+                            type="date" 
+                            value={startDateFilter}
+                            onChange={e => { setStartDateFilter(e.target.value); setCurrentPage(1); }}
+                            className="bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue"
+                        />
+                        <span className="text-zinc-500 text-xs font-bold">-</span>
+                        <input 
+                            type="date" 
+                            value={endDateFilter}
+                            onChange={e => { setEndDateFilter(e.target.value); setCurrentPage(1); }}
+                            className="bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue"
+                        />
+                        {(startDateFilter || endDateFilter) && (
+                            <button 
+                                onClick={() => { setStartDateFilter(''); setEndDateFilter(''); setCurrentPage(1); }}
+                                className="text-zinc-500 hover:text-white px-3 py-1.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors"
+                            >
+                                Clear
+                            </button>
+                        )}
+                    </div>
+                    
+                    {/* Rows per page selector */}
+                    <div className="flex items-center gap-2 bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5">
+                        <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2">Show:</span>
+                        <select 
+                            value={itemsPerPage} 
+                            onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+                            className="bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
+                        >
+                            <option value={10}>10 rows</option>
+                            <option value={20}>20 rows</option>
+                            <option value={50}>50 rows</option>
+                            <option value={999999}>All rows</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
             {/* Bookings Table */}
             <div className="bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
+                <div className="border-b border-zinc-800">
+                    {renderPagination()}
+                </div>
                 <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="border-b border-zinc-800">
-                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.vehicle')}</th>
-                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.customer')}</th>
-                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.dates')}</th>
-                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.status')}</th>
-                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('bookings.table.total')}</th>
+                                <SortableHeader label={t('bookings.table.vehicle')} sortKey="vehicleId" />
+                                <SortableHeader label={t('bookings.table.customer')} sortKey="clientId" />
+                                <SortableHeader label={t('bookings.table.dates')} sortKey="startDate" />
+                                <SortableHeader label={t('bookings.table.status')} sortKey="status" />
+                                <SortableHeader label={t('bookings.table.total')} sortKey="totalCost" />
                                 <th className="text-right rtl:text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('clients.table.actions') || 'Actions'}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-800">
-                            {filteredBookings.map((booking) => (
+                            {paginatedBookings.length === 0 ? (
+                                <tr>
+                                    <td colSpan="6" className="p-8 text-center text-zinc-500 text-sm font-bold">
+                                        No bookings found matching your filters.
+                                    </td>
+                                </tr>
+                            ) : paginatedBookings.map((booking) => (
                                 <tr
                                     key={booking.id}
                                     className="hover:bg-zinc-100 dark:hover:bg-zinc-900/50 transition-colors group"
@@ -280,6 +450,11 @@ const Bookings = () => {
                         </tbody>
                     </table>
                 </div>
+                
+                {/* Pagination Controls */}
+                <div className="border-t border-zinc-800">
+                    {renderPagination()}
+                </div>
             </div>
 
             {/* Booking Modal (New & Edit) */}
@@ -322,6 +497,11 @@ const Bookings = () => {
                 isOpen={isDocsModalOpen}
                 onClose={() => { setIsDocsModalOpen(false); setDocsBooking(null); }}
                 booking={docsBooking}
+            />
+
+            <LegacyImportModal 
+                isOpen={isLegacyImportModalOpen}
+                onClose={() => setIsLegacyImportModalOpen(false)}
             />
         </div>
     );

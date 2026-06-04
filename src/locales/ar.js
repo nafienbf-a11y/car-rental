@@ -191,6 +191,7 @@ export const ar = {
         cancelBtn: 'إلغاء',
         cancelConfirm: 'هل أنت متأكد أنك تريد إلغاء هذا الحجز؟',
         toTerminate: 'للإنهاء',
+        tobeterminated: 'للإنهاء',
         terminateModalTitle: 'إنهاء الحجز',
         viewDocuments: 'المستندات',
         bookingDetails: 'تفاصيل الحجز',

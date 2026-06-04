@@ -13,6 +13,9 @@ const Expenses = () => {
     const { showNotification, confirmAction } = useNotification();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingExpense, setEditingExpense] = useState(null);
+    const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'desc' });
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     const getVehicleName = (vehicleId) => {
         if (!vehicleId) return '-';
@@ -57,6 +60,93 @@ const Expenses = () => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setEditingExpense(null);
+    };
+
+    const handleSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const SortableHeader = ({ label, sortKey }) => (
+        <th 
+            className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest cursor-pointer hover:text-white transition-colors group"
+            onClick={() => handleSort(sortKey)}
+        >
+            <div className="flex items-center gap-1">
+                {label}
+                <div className="flex flex-col">
+                    <span className={`text-[8px] leading-[0.5] ${sortConfig?.key === sortKey && sortConfig.direction === 'asc' ? 'text-brand-blue' : 'text-zinc-700 group-hover:text-zinc-500'}`}>▲</span>
+                    <span className={`text-[8px] leading-[0.5] ${sortConfig?.key === sortKey && sortConfig.direction === 'desc' ? 'text-brand-blue' : 'text-zinc-700 group-hover:text-zinc-500'}`}>▼</span>
+                </div>
+            </div>
+        </th>
+    );
+
+    const sortedExpenses = [...(expenses || [])].sort((a, b) => {
+        if (!sortConfig) return 0;
+        const { key, direction } = sortConfig;
+        
+        let aVal, bVal;
+        if (key === 'vehicleId') {
+            aVal = getVehicleName(a.vehicleId).toLowerCase();
+            bVal = getVehicleName(b.vehicleId).toLowerCase();
+        } else if (key === 'amount') {
+            aVal = Number(a.amount) || 0;
+            bVal = Number(b.amount) || 0;
+        } else if (key === 'date') {
+            aVal = new Date(a.date).getTime();
+            bVal = new Date(b.date).getTime();
+        } else {
+            aVal = a[key]?.toString().toLowerCase() || '';
+            bVal = b[key]?.toString().toLowerCase() || '';
+        }
+
+        if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+        if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    const totalPages = Math.ceil(sortedExpenses.length / itemsPerPage) || 1;
+    const paginatedExpenses = sortedExpenses.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const renderPagination = () => {
+        if (totalPages <= 1 && itemsPerPage !== 999999) return null;
+        if (itemsPerPage === 999999 && sortedExpenses.length === 0) return null;
+
+        return (
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-zinc-900/30 gap-4 border-b border-zinc-800">
+                <span className="text-zinc-500 text-xs font-bold">
+                    Showing {sortedExpenses.length === 0 ? 0 : ((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, sortedExpenses.length)} of {sortedExpenses.length} entries
+                </span>
+                <div className="flex gap-2">
+                    <Button 
+                        variant="secondary" 
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                        className="px-3 py-1 text-xs"
+                    >
+                        Previous
+                    </Button>
+                    <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-xs font-bold shadow-inner">
+                        {currentPage} / {totalPages || 1}
+                    </span>
+                    <Button 
+                        variant="secondary" 
+                        disabled={currentPage === totalPages || totalPages === 0}
+                        onClick={() => setCurrentPage(p => Math.min(totalPages || 1, p + 1))}
+                        className="px-3 py-1 text-xs"
+                    >
+                        Next
+                    </Button>
+                </div>
+            </div>
+        );
     };
 
     const totalExpenses = expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
@@ -105,25 +195,40 @@ const Expenses = () => {
                 </div>
             </div>
 
+            {/* Controls Row */}
+            <div className="flex justify-end mb-4">
+                <div className="flex items-center gap-2 bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5">
+                    <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2">Show:</span>
+                    <select 
+                        value={itemsPerPage} 
+                        onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+                        className="bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
+                    >
+                        <option value={10}>10 rows</option>
+                        <option value={20}>20 rows</option>
+                        <option value={50}>50 rows</option>
+                        <option value={999999}>All rows</option>
+                    </select>
+                </div>
+            </div>
+
             {/* Expenses Table */}
             <div className="bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
-                <div className="p-6 border-b border-zinc-800">
-                    <h3 className="text-xl font-extrabold text-white tracking-tight">{t('dashboard.recentActivity')}</h3>
-                </div>
+                {renderPagination()}
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
                             <tr className="border-b border-zinc-800">
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.date')}</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.vehicle')}</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.category')}</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.description')}</th>
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.amount')}</th>
+                                <SortableHeader label={t('expenses.table.date')} sortKey="date" />
+                                <SortableHeader label={t('expenses.table.vehicle')} sortKey="vehicleId" />
+                                <SortableHeader label={t('expenses.table.category')} sortKey="category" />
+                                <SortableHeader label={t('expenses.table.description')} sortKey="description" />
+                                <SortableHeader label={t('expenses.table.amount')} sortKey="amount" />
                                 <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-900">
-                            {expenses.map((expense) => (
+                            {paginatedExpenses.map((expense) => (
                                 <tr
                                     key={expense.id}
                                     className="hover:bg-zinc-900/50 transition-colors"
