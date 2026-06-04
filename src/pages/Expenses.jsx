@@ -122,7 +122,11 @@ const Expenses = () => {
         return (
             <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-zinc-900/30 gap-4 border-b border-zinc-800">
                 <span className="text-zinc-500 text-xs font-bold">
-                    Showing {sortedExpenses.length === 0 ? 0 : ((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, sortedExpenses.length)} of {sortedExpenses.length} entries
+                    {t('common.showingEntries', { 
+                        start: sortedExpenses.length === 0 ? 0 : ((currentPage - 1) * itemsPerPage) + 1, 
+                        end: Math.min(currentPage * itemsPerPage, sortedExpenses.length), 
+                        total: sortedExpenses.length 
+                    })}
                 </span>
                 <div className="flex gap-2">
                     <Button 
@@ -131,7 +135,7 @@ const Expenses = () => {
                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                         className="px-3 py-1 text-xs"
                     >
-                        Previous
+                        {t('common.previous')}
                     </Button>
                     <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-xs font-bold shadow-inner">
                         {currentPage} / {totalPages || 1}
@@ -142,7 +146,7 @@ const Expenses = () => {
                         onClick={() => setCurrentPage(p => Math.min(totalPages || 1, p + 1))}
                         className="px-3 py-1 text-xs"
                     >
-                        Next
+                        {t('common.next')}
                     </Button>
                 </div>
             </div>
@@ -198,16 +202,16 @@ const Expenses = () => {
             {/* Controls Row */}
             <div className="flex justify-end mb-4">
                 <div className="flex items-center gap-2 bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5">
-                    <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2">Show:</span>
+                    <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2">{t('common.showLabel')}</span>
                     <select 
                         value={itemsPerPage} 
                         onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
                         className="bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
                     >
-                        <option value={10}>10 rows</option>
-                        <option value={20}>20 rows</option>
-                        <option value={50}>50 rows</option>
-                        <option value={999999}>All rows</option>
+                        <option value={10}>{t('common.rowsCount', { count: 10 })}</option>
+                        <option value={20}>{t('common.rowsCount', { count: 20 })}</option>
+                        <option value={50}>{t('common.rowsCount', { count: 50 })}</option>
+                        <option value={999999}>{t('common.allRows')}</option>
                     </select>
                 </div>
             </div>

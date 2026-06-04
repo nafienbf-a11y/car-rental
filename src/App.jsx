@@ -4,6 +4,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { AppProvider } from './context/AppContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { AuthProvider } from './context/AuthContext';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 import MainLayout from './components/layout/MainLayout';
 import Toast from './components/common/Toast';
@@ -22,11 +23,14 @@ import Reports from './pages/Reports';
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <AppContent />
+      </Router>
+    </ErrorBoundary>
   );
 }
+
 
 function AppContent() {
 
