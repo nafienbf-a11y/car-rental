@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, Bell, User } from 'lucide-react';
+import { Menu, Bell, User, Sun, Moon } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import LanguageSelector from '../common/LanguageSelector';
@@ -13,7 +13,7 @@ const Topbar = ({ onMenuClick }) => {
     const [showNotifications, setShowNotifications] = useState(false);
 
     // Notifications Logic
-    const { auditLogs } = useApp();
+    const { auditLogs, theme, toggleTheme } = useApp();
     const { readNotificationIds, markAsRead, markAllAsRead } = useNotification();
 
     // Filter unread notifications mapped from audit logs
@@ -72,15 +72,15 @@ const Topbar = ({ onMenuClick }) => {
     };
 
     return (
-        <header className="bg-black border-b border-zinc-800 sticky top-0 z-10">
+        <header className="bg-theme-topbar border-b border-theme sticky top-0 z-10 transition-colors duration-300">
             <div className="flex items-center justify-between px-6 py-4">
                 {/* Left section */}
                 <div className="flex items-center gap-4 flex-1">
                     <button
                         onClick={onMenuClick}
-                        className="lg:hidden p-2 hover:bg-zinc-900 rounded-lg transition-colors"
+                        className="lg:hidden p-2 hover:bg-theme-input rounded-lg transition-colors"
                     >
-                        <Menu className="w-6 h-6 text-zinc-400" />
+                        <Menu className="w-6 h-6 text-theme-secondary" />
                     </button>
                 </div>
 
@@ -88,13 +88,27 @@ const Topbar = ({ onMenuClick }) => {
                 <div className="flex items-center gap-4">
                     <LanguageSelector />
 
+                    {/* Theme Toggle */}
+                    <button
+                        onClick={toggleTheme}
+                        className="p-2 hover:bg-theme-input rounded-lg text-theme-secondary hover:text-theme-primary transition-all duration-300"
+                        title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                        aria-label="Toggle Theme"
+                    >
+                        {theme === 'dark' ? (
+                            <Sun className="w-5 h-5 text-yellow-500" />
+                        ) : (
+                            <Moon className="w-5 h-5 text-indigo-600" />
+                        )}
+                    </button>
+
                     {/* Notifications */}
                     <div className="relative">
                         <button
                             onClick={() => setShowNotifications(!showNotifications)}
-                            className="relative p-2 hover:bg-zinc-900 rounded-lg transition-colors"
+                            className="relative p-2 hover:bg-theme-input rounded-lg transition-colors"
                         >
-                            <Bell className="w-6 h-6 text-zinc-400" />
+                            <Bell className="w-6 h-6 text-theme-secondary" />
                             {unreadCount > 0 && (
                                 <span className="absolute top-1 right-1 w-5 h-5 bg-brand-red text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                                     {unreadCount}
@@ -109,9 +123,9 @@ const Topbar = ({ onMenuClick }) => {
                                     className="fixed inset-0 z-10"
                                     onClick={() => setShowNotifications(false)}
                                 />
-                                <div className="absolute right-0 mt-2 w-80 bg-zinc-950 rounded-xl shadow-2xl border border-zinc-800 z-20 overflow-hidden" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-                                    <div className="p-4 border-b border-zinc-800 flex justify-between items-center">
-                                        <h3 className="font-semibold text-white">{t('notifications.title')}</h3>
+                                <div className="absolute right-0 mt-2 w-80 bg-theme-popover rounded-xl shadow-2xl border border-theme z-20 overflow-hidden" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+                                    <div className="p-4 border-b border-theme flex justify-between items-center">
+                                        <h3 className="font-semibold text-theme-primary">{t('notifications.title')}</h3>
                                         {unreadCount > 0 && (
                                             <button
                                                 onClick={handleMarkAllRead}
@@ -127,7 +141,7 @@ const Topbar = ({ onMenuClick }) => {
                                                 <div
                                                     key={notif.id}
                                                     onClick={() => handleNotificationClick(notif.id)}
-                                                    className="p-4 border-b border-zinc-800 hover:bg-zinc-900 transition-colors cursor-pointer bg-zinc-900/30"
+                                                    className="p-4 border-b border-theme hover:bg-theme-input transition-colors cursor-pointer bg-theme-input/20"
                                                 >
                                                     <div className="flex gap-3">
                                                         <div className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${notif.type === 'booking_new' ? 'bg-brand-blue' :
@@ -136,22 +150,22 @@ const Topbar = ({ onMenuClick }) => {
                                                                     'bg-zinc-500'
                                                             }`} />
                                                         <div>
-                                                            <p className="text-sm text-zinc-200">{notif.title}</p>
-                                                            <p className="text-xs text-zinc-400 mt-0.5">{notif.message}</p>
-                                                            <p className="text-[10px] text-zinc-500 mt-1">{getTimeAgo(notif.date)}</p>
+                                                            <p className="text-sm text-theme-primary">{notif.title}</p>
+                                                            <p className="text-xs text-theme-secondary mt-0.5">{notif.message}</p>
+                                                            <p className="text-[10px] text-theme-tertiary mt-1">{getTimeAgo(notif.date)}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             ))
                                         ) : (
-                                            <div className="p-8 text-center text-zinc-500">
+                                            <div className="p-8 text-center text-theme-tertiary">
                                                 <Bell className="w-8 h-8 mx-auto mb-2 opacity-20" />
                                                 <p className="text-sm">{t('notifications.empty')}</p>
                                             </div>
                                         )}
                                     </div>
                                     {unreadCount > 0 && (
-                                        <div className="p-3 text-center border-t border-zinc-800">
+                                        <div className="p-3 text-center border-t border-theme">
                                             <button className="text-sm text-brand-blue hover:underline">
                                                 {t('notifications.viewAll')}
                                             </button>
@@ -163,12 +177,12 @@ const Topbar = ({ onMenuClick }) => {
                     </div>
 
                     {/* Admin Profile */}
-                    <div className={`flex items-center gap-3 ${language === 'ar' ? 'pr-4 border-r' : 'pl-4 border-l'} border-zinc-800`}>
+                    <div className={`flex items-center gap-3 ${language === 'ar' ? 'pr-4 border-r' : 'pl-4 border-l'} border-theme`}>
                         <div className="text-right hidden sm:block">
-                            <p className="text-sm font-semibold text-white">{user?.name || 'Admin'}</p>
-                            <p className="text-xs text-zinc-500 font-medium capitalize">{user?.role || 'user'}</p>
+                            <p className="text-sm font-semibold text-theme-primary">{user?.name || 'Admin'}</p>
+                            <p className="text-xs text-theme-tertiary font-medium capitalize">{user?.role || 'user'}</p>
                         </div>
-                        <div className="w-10 h-10 bg-zinc-900 text-white rounded-xl flex items-center justify-center border border-zinc-800">
+                        <div className="w-10 h-10 bg-theme-input text-theme-primary rounded-xl flex items-center justify-center border border-theme">
                             <User className="w-5 h-5" />
                         </div>
                     </div>

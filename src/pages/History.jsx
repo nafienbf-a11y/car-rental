@@ -109,7 +109,7 @@ const History = () => {
                                         </span>
                                     </td>
                                     <td className="p-5 text-left rtl:text-right">
-                                        <div className="flex items-center gap-2 text-white font-bold text-sm">
+                                        <div className="flex items-center gap-2 text-theme-primary font-bold text-sm">
                                             {getEntityIcon(log.entity_type)}
                                             {log.entity_type}
                                         </div>
@@ -139,7 +139,7 @@ const History = () => {
                             size="sm"
                             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                             disabled={currentPage === 1}
-                            className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-white"
+                            className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-theme-primary"
                         >
                             {t('common.previous')}
                         </Button>
@@ -150,8 +150,8 @@ const History = () => {
                                     key={page}
                                     onClick={() => setCurrentPage(page)}
                                     className={`w-8 h-8 rounded-lg text-xs font-bold transition-all border ${currentPage === page
-                                        ? 'bg-white text-black border-white'
-                                        : 'text-zinc-500 border-zinc-800 hover:bg-zinc-900 hover:text-white'
+                                        ? 'bg-white text-black border-white dark:bg-zinc-50 dark:text-zinc-950 dark:border-zinc-50'
+                                        : 'text-zinc-500 border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-theme-primary'
                                         }`}
                                 >
                                     {page}
@@ -164,7 +164,7 @@ const History = () => {
                             size="sm"
                             onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                             disabled={currentPage === totalPages}
-                            className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-white"
+                            className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-theme-primary"
                         >
                             {t('common.next')}
                         </Button>

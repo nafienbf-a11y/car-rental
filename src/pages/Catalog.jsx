@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Fuel, Users, Gauge, MessageCircle, Car, Search, SlidersHorizontal, X, Star, MapPin } from 'lucide-react';
+import { Fuel, Users, Gauge, MessageCircle, Car, Search, SlidersHorizontal, X, Star, MapPin, Moon, Sun } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSelector from '../components/common/LanguageSelector';
@@ -12,7 +12,7 @@ const WHATSAPP_NUMBER = '212763296157';
 
 const Catalog = () => {
     useVisitorTracking();
-    const { vehicles, loading } = useApp();
+    const { vehicles, loading, theme, toggleTheme } = useApp();
     const { t, isRTL } = useLanguage();
     const [search, setSearch] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('all');
@@ -51,22 +51,29 @@ const Catalog = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#0a0e27] flex items-center justify-center">
+            <div className="min-h-screen bg-theme-bg flex items-center justify-center">
                 <div className="w-10 h-10 border-4 border-brand-blue border-t-transparent rounded-full animate-spin"></div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#0a0e27] text-white" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="min-h-screen bg-theme-bg text-theme-primary transition-colors duration-300" dir={isRTL ? 'rtl' : 'ltr'}>
             {/* Header */}
-            <header className="sticky top-0 z-40 bg-[#0a0e27]/80 backdrop-blur-xl border-b border-zinc-800">
+            <header className="sticky top-0 z-40 bg-theme-topbar/80 backdrop-blur-xl border-b border-theme transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <Logo className="w-10 h-10" showText={false} />
-                        <h1 className="text-lg font-bold text-white hidden sm:block">Gatibi Rental</h1>
+                        <h1 className="text-lg font-bold text-theme-primary hidden sm:block">Gatibi Rental</h1>
                     </div>
                     <div className="flex items-center gap-3">
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2 bg-theme-input hover:bg-theme-border border border-theme rounded-xl text-theme-primary transition-colors flex items-center justify-center"
+                            title={theme === 'dark' ? 'Switch to Bright Mode' : 'Switch to Dark Mode'}
+                        >
+                            {theme === 'dark' ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5 text-blue-500" />}
+                        </button>
                         <div className="w-36">
                             <LanguageSelector />
                         </div>
@@ -74,7 +81,7 @@ const Catalog = () => {
                             href="https://maps.app.goo.gl/XTPtodW1a63V7pcBA"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-xl text-sm font-medium transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-xl text-sm font-medium transition-colors"
                         >
                             <Star className="w-4 h-4" />
                             <span className="hidden sm:inline">Leave Review</span>
@@ -83,7 +90,7 @@ const Catalog = () => {
                             href="https://maps.app.goo.gl/XTPtodW1a63V7pcBA"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl text-sm font-medium transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors"
                         >
                             <MapPin className="w-4 h-4" />
                             <span className="hidden sm:inline">Get Directions</span>
@@ -92,7 +99,7 @@ const Catalog = () => {
                             href={`https://wa.me/${WHATSAPP_NUMBER}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 rounded-xl text-sm font-medium transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-medium transition-colors"
                         >
                             <MessageCircle className="w-4 h-4" />
                             <span className="hidden sm:inline">{t('catalog.contactUs')}</span>
@@ -117,7 +124,7 @@ const Catalog = () => {
                         <h2 className="text-3xl sm:text-5xl font-bold mb-4 leading-tight">
                             {t('catalog.heroTitle')}
                         </h2>
-                        <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
+                        <p className="text-theme-secondary text-lg max-w-2xl mx-auto">
                             {t('catalog.heroSubtitle')}
                         </p>
                     </motion.div>
@@ -129,20 +136,20 @@ const Catalog = () => {
                 <div className="flex flex-col sm:flex-row gap-3">
                     {/* Search */}
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-tertiary" />
                         <input
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder={t('catalog.searchPlaceholder')}
-                            className="w-full pl-10 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 transition-all"
+                            className="w-full pl-10 pr-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/50 transition-all"
                         />
                     </div>
                     {/* Category Filter */}
                     <select
                         value={categoryFilter}
                         onChange={(e) => setCategoryFilter(e.target.value)}
-                        className="px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 transition-all appearance-none cursor-pointer"
+                        className="px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue/50 transition-all appearance-none cursor-pointer"
                     >
                         <option value="all">{t('catalog.allCategories')}</option>
                         {categories.map(cat => (
@@ -153,7 +160,7 @@ const Catalog = () => {
                     <select
                         value={transmissionFilter}
                         onChange={(e) => setTransmissionFilter(e.target.value)}
-                        className="px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 transition-all appearance-none cursor-pointer"
+                        className="px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue/50 transition-all appearance-none cursor-pointer"
                     >
                         <option value="all">{t('catalog.allTransmissions')}</option>
                         <option value="Automatic">{t('catalog.automatic')}</option>
@@ -165,8 +172,8 @@ const Catalog = () => {
 
             {/* Vehicle Count */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 mb-6">
-                <p className="text-zinc-400 text-sm">
-                    {t('catalog.showing')} <span className="text-white font-semibold">{filteredVehicles.length}</span> {t('catalog.vehicles')}
+                <p className="text-theme-secondary text-sm">
+                    {t('catalog.showing')} <span className="text-theme-primary font-semibold">{filteredVehicles.length}</span> {t('catalog.vehicles')}
                 </p>
             </section>
 
@@ -174,8 +181,8 @@ const Catalog = () => {
             <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
                 {filteredVehicles.length === 0 ? (
                     <div className="text-center py-20">
-                        <Car className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                        <p className="text-zinc-500 text-lg">{t('catalog.noVehicles')}</p>
+                        <Car className="w-16 h-16 text-theme-tertiary mx-auto mb-4" />
+                        <p className="text-theme-secondary text-lg">{t('catalog.noVehicles')}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -188,11 +195,11 @@ const Catalog = () => {
                                     exit={{ opacity: 0, scale: 0.95 }}
                                     transition={{ duration: 0.3, delay: index * 0.05 }}
                                     whileHover={{ y: -6 }}
-                                    className="bg-zinc-950 rounded-2xl overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-all duration-300 group"
+                                    className="bg-theme-card rounded-2xl overflow-hidden border border-theme hover:border-theme-secondary transition-all duration-300 group"
                                 >
                                     {/* Image */}
                                     {vehicle.image && (
-                                        <div className="relative h-52 overflow-hidden bg-zinc-900">
+                                        <div className="relative h-52 overflow-hidden bg-theme-input">
                                             <img
                                                 src={vehicle.image}
                                                 alt={`${vehicle.brand} ${vehicle.model}`}
@@ -204,15 +211,15 @@ const Catalog = () => {
                                             </div>
                                             <div className="absolute bottom-3 left-3">
                                                 <p className="text-white font-bold text-lg">{vehicle.brand} {vehicle.model}</p>
-                                                <p className="text-zinc-400 text-sm">{vehicle.year}</p>
+                                                <p className="text-zinc-300 text-sm">{vehicle.year}</p>
                                             </div>
                                         </div>
                                     )}
 
                                     {!vehicle.image && (
-                                        <div className="p-5 border-b border-zinc-800 bg-zinc-900/30">
-                                            <p className="text-white font-bold text-lg">{vehicle.brand} {vehicle.model}</p>
-                                            <p className="text-zinc-400 text-sm">{vehicle.year}</p>
+                                        <div className="p-5 border-b border-theme bg-theme-input/20">
+                                            <p className="text-theme-primary font-bold text-lg">{vehicle.brand} {vehicle.model}</p>
+                                            <p className="text-theme-secondary text-sm">{vehicle.year}</p>
                                         </div>
                                     )}
 
@@ -220,17 +227,17 @@ const Catalog = () => {
                                     <div className="p-5">
                                         {/* Specs */}
                                         <div className="grid grid-cols-3 gap-3 mb-5">
-                                            <div className="flex flex-col items-center gap-1 p-2.5 bg-zinc-900 rounded-xl">
+                                            <div className="flex flex-col items-center gap-1 p-2.5 bg-theme-input rounded-xl">
                                                 <Fuel className="w-4 h-4 text-blue-400" />
-                                                <span className="text-xs text-zinc-400">{vehicle.fuel}</span>
+                                                <span className="text-xs text-theme-secondary">{vehicle.fuel}</span>
                                             </div>
-                                            <div className="flex flex-col items-center gap-1 p-2.5 bg-zinc-900 rounded-xl">
+                                            <div className="flex flex-col items-center gap-1 p-2.5 bg-theme-input rounded-xl">
                                                 <Users className="w-4 h-4 text-blue-400" />
-                                                <span className="text-xs text-zinc-400">{vehicle.seats} {t('catalog.seats')}</span>
+                                                <span className="text-xs text-theme-secondary">{vehicle.seats} {t('catalog.seats')}</span>
                                             </div>
-                                            <div className="flex flex-col items-center gap-1 p-2.5 bg-zinc-900 rounded-xl">
+                                            <div className="flex flex-col items-center gap-1 p-2.5 bg-theme-input rounded-xl">
                                                 <Gauge className="w-4 h-4 text-blue-400" />
-                                                <span className="text-xs text-zinc-400">{vehicle.transmission === 'Automatic' ? t('catalog.automatic') : t('catalog.manual')}</span>
+                                                <span className="text-xs text-theme-secondary">{vehicle.transmission === 'Automatic' ? t('catalog.automatic') : t('catalog.manual')}</span>
                                             </div>
                                         </div>
 
@@ -240,7 +247,7 @@ const Catalog = () => {
                                             </div>
                                             <button
                                                 onClick={() => handleBookNow(vehicle)}
-                                                className="flex items-center gap-2 px-5 py-2.5 bg-brand-blue hover:bg-blue-600 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
+                                                className="flex items-center gap-2 px-5 py-2.5 bg-brand-blue hover:bg-blue-600 text-white rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
                                             >
                                                 <Car className="w-4 h-4" />
                                                 {t('catalog.rentNow')}
@@ -258,12 +265,12 @@ const Catalog = () => {
             {/* Location Section */}
             < section className="max-w-7xl mx-auto px-4 sm:px-6 py-16" >
                 <div className="text-center mb-10">
-                    <h2 className="text-3xl font-extrabold text-white mb-3">{t('catalog.locationTitle')}</h2>
-                    <p className="text-zinc-400 text-lg">{t('catalog.locationSubtitle')}</p>
+                    <h2 className="text-3xl font-extrabold text-theme-primary mb-3">{t('catalog.locationTitle')}</h2>
+                    <p className="text-theme-secondary text-lg">{t('catalog.locationSubtitle')}</p>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Map */}
-                    <div className="rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl h-80 lg:h-auto">
+                    <div className="rounded-2xl overflow-hidden border border-theme shadow-2xl h-80 lg:h-auto">
                         <iframe
                             title="Gatibi Rental Location"
                             src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3000!2d-5.3748333!3d35.5658889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzXCsDMzJzU3LjIiTiA1wrAyMicyOS40Ilc!5e0!3m2!1sen!2sma!4v1700000000000"
@@ -277,10 +284,10 @@ const Catalog = () => {
                     </div>
 
                     {/* Info Card */}
-                    <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-8 flex flex-col justify-center gap-6">
+                    <div className="bg-theme-card border border-theme rounded-2xl p-8 flex flex-col justify-center gap-6">
                         <div>
-                            <h3 className="text-xl font-bold text-white mb-2">Gatibi Rental</h3>
-                            <p className="text-zinc-400 leading-relaxed">{t('catalog.locationDescription')}</p>
+                            <h3 className="text-xl font-bold text-theme-primary mb-2">Gatibi Rental</h3>
+                            <p className="text-theme-secondary leading-relaxed">{t('catalog.locationDescription')}</p>
                         </div>
 
                         <div className="space-y-4">
@@ -291,9 +298,9 @@ const Catalog = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
                                 </div>
-                                <div>
-                                    <p className="text-white font-semibold text-sm">{t('catalog.address')}</p>
-                                    <p className="text-zinc-400 text-sm">35°33'57.2"N 5°22'29.4"W</p>
+                                        <div>
+                                    <p className="text-theme-primary font-semibold text-sm">{t('catalog.address')}</p>
+                                    <p className="text-theme-secondary text-sm">35°33'57.2"N 5°22'29.4"W</p>
                                 </div>
                             </div>
 
@@ -304,8 +311,8 @@ const Catalog = () => {
                                     </svg>
                                 </div>
                                 <div>
-                                    <p className="text-white font-semibold text-sm">{t('catalog.phone')}</p>
-                                    <p className="text-zinc-400 text-sm">+212 763-296157</p>
+                                    <p className="text-theme-primary font-semibold text-sm">{t('catalog.phone')}</p>
+                                    <p className="text-theme-secondary text-sm">+212 763-296157</p>
                                 </div>
                             </div>
 
@@ -316,8 +323,8 @@ const Catalog = () => {
                                     </svg>
                                 </div>
                                 <div>
-                                    <p className="text-white font-semibold text-sm">{t('catalog.hours')}</p>
-                                    <p className="text-zinc-400 text-sm">{t('catalog.hoursValue')}</p>
+                                    <p className="text-theme-primary font-semibold text-sm">{t('catalog.hours')}</p>
+                                    <p className="text-theme-secondary text-sm">{t('catalog.hoursValue')}</p>
                                 </div>
                             </div>
                         </div>
@@ -326,7 +333,7 @@ const Catalog = () => {
                             href="https://www.google.com/maps/search/?api=1&query=35.5658889,-5.3748333"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-2 inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-blue hover:bg-blue-600 rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
+                            className="mt-2 inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-blue hover:bg-blue-600 text-white rounded-xl text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -339,8 +346,8 @@ const Catalog = () => {
             </section >
 
             {/* Footer */}
-            < footer className="border-t border-zinc-800 py-8 text-center" >
-                <p className="text-zinc-500 text-sm">&copy; 2026 Gatibi Rental. {t('catalog.allRightsReserved')}</p>
+            < footer className="border-t border-theme py-8 text-center" >
+                <p className="text-theme-tertiary text-sm">&copy; 2026 Gatibi Rental. {t('catalog.allRightsReserved')}</p>
             </footer >
 
             {/* Modal removed to redirect directly to WhatsApp */}

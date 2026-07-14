@@ -21,7 +21,7 @@ const MainLayout = () => {
     } = useApp();
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen bg-theme-bg text-theme-primary transition-colors duration-300">
             <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
 
             <div className={`${isRTL ? 'lg:pr-64' : 'lg:pl-64'} min-h-screen flex flex-col transition-all duration-300`}>

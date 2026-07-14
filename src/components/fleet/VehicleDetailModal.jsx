@@ -44,7 +44,7 @@ const VehicleDetailModal = ({ isOpen, onClose, vehicle }) => {
                                 {t('fleet.table.brand') || 'Brand'}
                             </span>
                         </div>
-                        <p className="text-white font-bold text-sm">{vehicle.brand}</p>
+                        <p className="text-theme-primary font-bold text-sm">{vehicle.brand}</p>
                     </div>
 
                     <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
@@ -54,7 +54,7 @@ const VehicleDetailModal = ({ isOpen, onClose, vehicle }) => {
                                 {t('fleet.table.model') || 'Model'}
                             </span>
                         </div>
-                        <p className="text-white font-bold text-sm">{vehicle.model}</p>
+                        <p className="text-theme-primary font-bold text-sm">{vehicle.model}</p>
                     </div>
 
                     <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
@@ -64,7 +64,7 @@ const VehicleDetailModal = ({ isOpen, onClose, vehicle }) => {
                                 {t('fleet.table.year') || 'Year'}
                             </span>
                         </div>
-                        <p className="text-white font-bold text-sm">{vehicle.year}</p>
+                        <p className="text-theme-primary font-bold text-sm">{vehicle.year}</p>
                     </div>
 
                     <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
@@ -74,7 +74,7 @@ const VehicleDetailModal = ({ isOpen, onClose, vehicle }) => {
                                 {t('fleet.table.price') || 'Price/Day'}
                             </span>
                         </div>
-                        <p className="text-white font-bold text-sm">{formatCurrency(vehicle.pricePerDay)}</p>
+                        <p className="text-theme-primary font-bold text-sm">{formatCurrency(vehicle.pricePerDay)}</p>
                     </div>
 
                     <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
@@ -84,7 +84,7 @@ const VehicleDetailModal = ({ isOpen, onClose, vehicle }) => {
                                 {t('modals.addVehicle.transmission') || 'Transmission'}
                             </span>
                         </div>
-                        <p className="text-white font-bold text-sm capitalize">{vehicle.transmission || '-'}</p>
+                        <p className="text-theme-primary font-bold text-sm capitalize">{vehicle.transmission || '-'}</p>
                     </div>
 
                     <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
@@ -94,7 +94,7 @@ const VehicleDetailModal = ({ isOpen, onClose, vehicle }) => {
                                 {t('modals.addVehicle.fuel') || 'Fuel'}
                             </span>
                         </div>
-                        <p className="text-white font-bold text-sm capitalize">{vehicle.fuel || '-'}</p>
+                        <p className="text-theme-primary font-bold text-sm capitalize">{vehicle.fuel || '-'}</p>
                     </div>
 
                     <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
@@ -104,7 +104,7 @@ const VehicleDetailModal = ({ isOpen, onClose, vehicle }) => {
                                 {t('modals.addVehicle.seats') || 'Seats'}
                             </span>
                         </div>
-                        <p className="text-white font-bold text-sm">{vehicle.seats || '-'}</p>
+                        <p className="text-theme-primary font-bold text-sm">{vehicle.seats || '-'}</p>
                     </div>
 
                     <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
@@ -114,7 +114,7 @@ const VehicleDetailModal = ({ isOpen, onClose, vehicle }) => {
                                 {t('fleet.table.mileage') || 'Mileage'}
                             </span>
                         </div>
-                        <p className="text-white font-bold text-sm">{vehicle.mileage ? `${vehicle.mileage} km` : '-'}</p>
+                        <p className="text-theme-primary font-bold text-sm">{vehicle.mileage ? `${vehicle.mileage} km` : '-'}</p>
                     </div>
 
                     <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
@@ -124,7 +124,7 @@ const VehicleDetailModal = ({ isOpen, onClose, vehicle }) => {
                                 {t('fleet.table.lastMaintenance') || 'Last Maintenance'}
                             </span>
                         </div>
-                        <p className="text-white font-bold text-sm">{vehicle.lastMaintenance || '-'}</p>
+                        <p className="text-theme-primary font-bold text-sm">{vehicle.lastMaintenance || '-'}</p>
                     </div>
                 </div>
             </div>

@@ -56,7 +56,7 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
             {/* Vehicle Details */}
             <div className="p-5">
                 <div className="mb-5">
-                    <h3 className="text-xl font-extrabold text-white mb-1 tracking-tight">
+                    <h3 className="text-xl font-extrabold text-theme-primary mb-1 tracking-tight">
                         {vehicle.brand} {vehicle.model}
                     </h3>
                     <p className="text-xs text-zinc-500 font-bold tracking-widest uppercase">{vehicle.plate} • {vehicle.year}</p>
@@ -65,15 +65,15 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
                 {/* Specs Grid */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
                     <div className="flex items-center gap-2 text-zinc-400">
-                        <Users className="w-4 h-4 text-white" />
+                        <Users className="w-4 h-4 text-theme-primary" />
                         <span className="text-xs font-bold uppercase tracking-wide">{vehicle.seats} {t('modals.addVehicle.seats')}</span>
                     </div>
                     <div className="flex items-center gap-2 text-zinc-400">
-                        <Fuel className="w-4 h-4 text-white" />
+                        <Fuel className="w-4 h-4 text-theme-primary" />
                         <span className="text-xs font-bold uppercase tracking-wide">{vehicle.fuel}</span>
                     </div>
                     <div className="flex items-center gap-2 text-zinc-400">
-                        <Gauge className="w-4 h-4 text-white" />
+                        <Gauge className="w-4 h-4 text-theme-primary" />
                         <span className="text-xs font-bold uppercase tracking-wide">{vehicle.mileage.toLocaleString()} km</span>
                     </div>
                     <div className="flex items-center gap-2 text-zinc-400">
@@ -126,7 +126,7 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
                     </Button>
                     <button
                         onClick={() => onDelete(vehicle.id)}
-                        className="p-2 hover:bg-red-500/10 rounded-lg text-zinc-400 hover:text-red-500 transition-colors border border-zinc-800 hover:border-red-500"
+                        className="p-2 hover:bg-red-500/10 rounded-lg text-zinc-400 hover:text-red-500 transition-colors border border-theme hover:border-red-500"
                         title={t('fleet.deleteTooltip')}
                     >
                         <Trash2 className="w-4 h-4" />

@@ -110,7 +110,7 @@ const Users = () => {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('users.pageTitle', 'User Management')}</h1>
+                    <h1 className="text-3xl font-extrabold text-theme-primary tracking-tight mb-1">{t('users.pageTitle', 'User Management')}</h1>
                     <p className="text-zinc-500 font-medium tracking-tight">{t('users.pageSubtitle', 'Manage admin and staff accounts')}</p>
                 </div>
                 <Button variant="primary" icon={Plus} onClick={handleAddUser}>
@@ -134,7 +134,7 @@ const Users = () => {
                 ) : filteredUsers.length === 0 ? (
                     <div className="text-center py-12">
                         <Shield className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-white mb-2">{t('users.noUsers', 'No users found')}</h3>
+                        <h3 className="text-xl font-bold text-theme-primary mb-2">{t('users.noUsers', 'No users found')}</h3>
                         <p className="text-zinc-500 mb-6">{t('users.noUsersMatch', 'No users match your criteria.')}</p>
                     </div>
                 ) : (
@@ -151,8 +151,8 @@ const Users = () => {
                             </thead>
                             <tbody>
                                 {filteredUsers.map((u) => (
-                                    <tr key={u.id} className="border-b border-zinc-800/50 hover:bg-zinc-900/30 transition-colors">
-                                        <td className="py-4 px-4 font-bold text-white">{u.name || '-'}</td>
+                                    <tr key={u.id} className="border-b border-zinc-800 hover:bg-zinc-900/30 transition-colors">
+                                        <td className="py-4 px-4 font-bold text-theme-primary">{u.name || '-'}</td>
                                         <td className="py-4 px-4 text-zinc-300 font-mono text-sm">{u.username}</td>
                                         <td className="py-4 px-4">
                                             <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-widest ${u.role === 'admin' ? 'bg-purple-500/10 text-purple-400' : 'bg-blue-500/10 text-blue-400'}`}>
@@ -171,7 +171,7 @@ const Users = () => {
                                                         <Power className="w-4 h-4" />
                                                     </button>
                                                 )}
-                                                <button onClick={() => handleEditUser(u)} className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white transition-colors" title="Edit">
+                                                <button onClick={() => handleEditUser(u)} className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-theme-primary transition-colors" title="Edit">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
                                                 {u.username !== 'gatibi' && (

@@ -112,7 +112,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                                 }));
                             }}
                             required
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-white transition-colors font-bold appearance-none cursor-pointer"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                         >
                             <option value="">{t('modals.addVehicle.selectBrand')}</option>
                             <option value="Renault">Renault</option>
@@ -133,7 +133,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                                 value={formData.model}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-white transition-colors font-bold appearance-none cursor-pointer"
+                                className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                             >
                                 <option value="">{t('modals.addVehicle.selectModel')}</option>
                                 {formData.brand === 'Renault' && (
@@ -166,7 +166,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                                 value={formData.model}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                                className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
                                 placeholder={t('modals.addVehicle.placeholderModel')}
                             />
                         )}
@@ -185,7 +185,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             required
                             min="2000"
                             max={new Date().getFullYear() + 1}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
                         />
                     </div>
 
@@ -200,7 +200,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             value={formData.plate}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold uppercase"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold uppercase"
                             placeholder={t('modals.addVehicle.placeholderPlate')}
                         />
                     </div>
@@ -218,7 +218,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             required
                             min="0"
                             step="0.01"
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
                             placeholder={t('modals.addVehicle.placeholderPrice')}
                         />
                     </div>
@@ -232,7 +232,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-white transition-colors font-bold appearance-none cursor-pointer"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                         >
                             <option value="Sedan">Sedan</option>
                             <option value="SUV">SUV</option>
@@ -254,7 +254,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             required
                             min="2"
                             max="9"
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
                         />
                     </div>
 
@@ -267,7 +267,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             name="transmission"
                             value={formData.transmission}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-white transition-colors font-bold appearance-none cursor-pointer"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                         >
                             <option value="Automatic">Automatic</option>
                             <option value="Manual">Manual</option>
@@ -283,7 +283,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             name="fuel"
                             value={formData.fuel}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-white transition-colors font-bold appearance-none cursor-pointer"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                         >
                             <option value="Petrol">Petrol</option>
                             <option value="Diesel">Diesel</option>
@@ -302,7 +302,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             name="image"
                             value={formData.image}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
                             placeholder="https://example.com/image.jpg"
                         />
                     </div>

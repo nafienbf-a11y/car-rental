@@ -61,17 +61,17 @@ const CalendarGrid = ({
                             (currentDate.getFullYear() === minMonthDate.getFullYear() && currentDate.getMonth() <= minMonthDate.getMonth());
                     })()} // Prevent going back too far (allow 30 days past)
                     type="button"
-                    className="p-1 hover:bg-zinc-900 rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-30"
+                    className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg text-zinc-400 hover:text-theme-primary transition-colors disabled:opacity-30"
                 >
                     <ChevronLeft className="w-5 h-5" />
                 </button>
-                <div className="text-white font-bold text-sm uppercase tracking-wider">
+                <div className="text-theme-primary font-bold text-sm uppercase tracking-wider">
                     {monthName} {currentDate.getFullYear()}
                 </div>
                 <button
                     onClick={handleNextMonth}
                     type="button"
-                    className="p-1 hover:bg-zinc-900 rounded-lg text-zinc-400 hover:text-white transition-colors"
+                    className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg text-zinc-400 hover:text-theme-primary transition-colors"
                 >
                     <ChevronRight className="w-5 h-5" />
                 </button>

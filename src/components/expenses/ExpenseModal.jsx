@@ -95,16 +95,16 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                 {/* Header */}
                 <div className="sticky top-0 bg-zinc-950 border-b border-zinc-800 p-6 flex items-center justify-between z-10">
                     <div>
-                        <h2 className="text-2xl font-extrabold text-white tracking-tight">
+                        <h2 className="text-2xl font-extrabold text-theme-primary tracking-tight">
                             {expense ? t('modals.expense.titleEdit') : t('modals.expense.titleAdd')}
                         </h2>
                         <p className="text-sm text-zinc-500 mt-1">{t('modals.expense.subtitle')}</p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
+                        className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg transition-colors"
                     >
-                        <X className="w-5 h-5 text-zinc-400" />
+                        <X className="w-5 h-5 text-zinc-500 hover:text-theme-primary" />
                     </button>
                 </div>
 
@@ -118,7 +118,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                         <select
                             value={formData.type}
                             onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent cursor-pointer"
                             required
                         >
                             {expenseTypes.map(type => (
@@ -138,7 +138,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                             <select
                                 value={formData.vehicleId}
                                 onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
-                                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent cursor-pointer"
                                 required={isVehicleRequired}
                             >
                                 <option value="">{t('modals.expense.selectVehicle')}</option>
@@ -161,7 +161,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                             step="0.01"
                             value={formData.cost}
                             onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
-                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
                             placeholder={t('modals.expense.placeholderCost')}
                             required
                         />
@@ -176,7 +176,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                             type="date"
                             value={formData.date}
                             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
                             required
                         />
                     </div>
@@ -189,7 +189,7 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
                         <textarea
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent resize-none"
+                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent resize-none"
                             rows="3"
                             placeholder={t('modals.expense.placeholderDesc')}
                         />

@@ -15,11 +15,11 @@ const Button = ({
 
     const variants = {
         primary: 'bg-brand-blue hover:bg-blue-700 text-white shadow-lg shadow-blue-500/10',
-        secondary: 'bg-zinc-900 border border-zinc-700 text-white hover:bg-zinc-800',
+        secondary: 'bg-theme-input border border-theme text-theme-primary hover:bg-theme-border/50',
         success: 'bg-brand-blue hover:bg-blue-700 text-white shadow-lg shadow-blue-500/10',
         danger: 'bg-brand-red hover:bg-red-700 text-white shadow-lg shadow-red-500/10',
         warning: 'bg-brand-red hover:bg-red-700 text-white shadow-lg shadow-red-500/10',
-        ghost: 'hover:bg-zinc-900 text-zinc-400 hover:text-white',
+        ghost: 'hover:bg-theme-input/50 text-theme-secondary hover:text-theme-primary',
     };
 
     const sizes = {

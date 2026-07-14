@@ -83,7 +83,7 @@ const Reports = () => {
                 <div className="p-6 border-b border-zinc-800 flex items-center justify-between bg-zinc-950">
                     <div className="flex items-center gap-3">
                         <TrendingUp className="w-5 h-5 text-emerald-500" />
-                        <h3 className="text-xl font-extrabold text-white tracking-tight">{t('reports.monthlyLog')}</h3>
+                        <h3 className="text-xl font-extrabold text-theme-primary tracking-tight">{t('reports.monthlyLog')}</h3>
                     </div>
                 </div>
                 <div className="overflow-x-auto">
@@ -100,7 +100,7 @@ const Reports = () => {
                             {monthlyFinancials.map((data) => (
                                 <tr key={data.month} className="hover:bg-zinc-900/30 transition-colors">
                                     <td className="p-5 text-left rtl:text-right">
-                                        <div className="flex items-center gap-2 text-white font-bold text-sm">
+                                        <div className="flex items-center gap-2 text-theme-primary font-bold text-sm">
                                             <Calendar className="w-4 h-4 text-brand-blue" />
                                             {formatMonth(data.month)}
                                         </div>
@@ -112,7 +112,7 @@ const Reports = () => {
                                         <span className="text-brand-red font-black text-sm">{formatCurrency(data.expense)}</span>
                                     </td>
                                     <td className="p-5">
-                                        <span className={`font-black text-sm ${data.profit >= 0 ? 'text-white' : 'text-orange-500'}`}>
+                                        <span className={`font-black text-sm ${data.profit >= 0 ? 'text-theme-primary' : 'text-orange-500'}`}>
                                             {formatCurrency(data.profit)}
                                         </span>
                                     </td>
@@ -135,7 +135,7 @@ const Reports = () => {
                 <div className="p-6 border-b border-zinc-800 flex items-center justify-between bg-zinc-950">
                     <div className="flex items-center gap-3">
                         <Globe className="w-5 h-5 text-brand-blue" />
-                        <h3 className="text-xl font-extrabold text-white tracking-tight">{t('reports.dailyVisitors')}</h3>
+                        <h3 className="text-xl font-extrabold text-theme-primary tracking-tight">{t('reports.dailyVisitors')}</h3>
                     </div>
                 </div>
                 <div className="overflow-x-auto">
@@ -157,7 +157,7 @@ const Reports = () => {
                                 visitorStats.map((stat) => (
                                     <tr key={stat.id} className="hover:bg-zinc-900/30 transition-colors">
                                         <td className="p-5">
-                                            <div className="flex items-center gap-2 text-white font-bold text-sm">
+                                            <div className="flex items-center gap-2 text-theme-primary font-bold text-sm">
                                                 <Calendar className="w-4 h-4 text-zinc-500" />
                                                 {stat.visit_date}
                                             </div>

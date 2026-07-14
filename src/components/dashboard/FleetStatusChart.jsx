@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
 
 const FleetStatusChart = () => {
-    const { vehicles, bookings } = useApp();
+    const { vehicles, bookings, theme } = useApp();
     const { t } = useLanguage();
 
     const activeVehicleIds = new Set(bookings.filter(b => b.status === 'Active').map(b => b.vehicleId));
@@ -13,11 +13,14 @@ const FleetStatusChart = () => {
     const rentedCount = vehicles.filter(v => v.status !== 'Maintenance' && activeVehicleIds.has(v.id)).length;
     const availableCount = vehicles.filter(v => v.status !== 'Maintenance' && v.status !== 'Deleted' && !activeVehicleIds.has(v.id)).length;
 
+    const isDark = theme === 'dark';
+    const neutralColor = isDark ? '#27272a' : '#cbd5e1';
+
     const data = [
         {
             name: t('dashboard.active'),
             value: availableCount,
-            color: '#27272a'
+            color: neutralColor
         },
         {
             name: t('fleet.rented'),
@@ -34,12 +37,12 @@ const FleetStatusChart = () => {
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 shadow-2xl">
-                    <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-1">{payload[0].name}</p>
-                    <p className="font-bold text-white">
+                <div className="bg-theme-popover p-4 rounded-xl border border-theme shadow-2xl transition-colors duration-300">
+                    <p className="text-theme-secondary text-[10px] uppercase tracking-widest font-bold mb-1">{payload[0].name}</p>
+                    <p className="font-bold text-theme-primary">
                         {payload[0].value} {t('dashboard.tooltips.vehicles')}
                     </p>
-                    <p className="text-zinc-500 text-[10px] font-bold mt-1 uppercase tracking-tight">
+                    <p className="text-theme-tertiary text-[10px] font-bold mt-1 uppercase tracking-tight">
                         {((payload[0].value / vehicles.length) * 100).toFixed(1)}% {t('dashboard.tooltips.ofFleet')}
                     </p>
                 </div>
@@ -57,7 +60,7 @@ const FleetStatusChart = () => {
                             className="w-2.5 h-2.5 rounded-sm"
                             style={{ backgroundColor: entry.color }}
                         />
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{entry.value}</span>
+                        <span className="text-[10px] font-bold text-theme-secondary uppercase tracking-widest">{entry.value}</span>
                     </div>
                 ))}
             </div>
@@ -65,8 +68,8 @@ const FleetStatusChart = () => {
     };
 
     return (
-        <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-6">{t('dashboard.fleetStatus')}</h3>
+        <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl transition-colors duration-300">
+            <h3 className="text-xl font-bold text-theme-primary mb-6">{t('dashboard.fleetStatus')}</h3>
             <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                     <Pie

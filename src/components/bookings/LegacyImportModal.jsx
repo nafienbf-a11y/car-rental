@@ -260,7 +260,7 @@ const LegacyImportModal = ({ isOpen, onClose }) => {
                                     type="file"
                                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                     onChange={handleFileChange}
-                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-brand-blue/10 file:text-brand-blue hover:file:bg-brand-blue/20 transition-all cursor-pointer"
+                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-brand-blue/10 file:text-brand-blue hover:file:bg-brand-blue/20 transition-all cursor-pointer"
                                 />
                             </div>
                         </div>
@@ -304,17 +304,17 @@ const LegacyImportModal = ({ isOpen, onClose }) => {
                                 <p className="text-emerald-400/80 mt-2">All data has been properly mapped and imported.</p>
                             </div>
                             
-                            <div className="grid grid-cols-3 gap-4 w-full mt-6 bg-zinc-950 p-4 rounded-xl">
+                             <div className="grid grid-cols-3 gap-4 w-full mt-6 bg-zinc-950 p-4 rounded-xl">
                                 <div>
-                                    <p className="text-3xl font-black text-white">{stats?.clients}</p>
+                                    <p className="text-3xl font-black text-theme-primary">{stats?.clients}</p>
                                     <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Clients</p>
                                 </div>
                                 <div>
-                                    <p className="text-3xl font-black text-white">{stats?.vehicles}</p>
+                                    <p className="text-3xl font-black text-theme-primary">{stats?.vehicles}</p>
                                     <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Cars</p>
                                 </div>
                                 <div>
-                                    <p className="text-3xl font-black text-white">{stats?.bookings}</p>
+                                    <p className="text-3xl font-black text-theme-primary">{stats?.bookings}</p>
                                     <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Bookings</p>
                                 </div>
                             </div>
