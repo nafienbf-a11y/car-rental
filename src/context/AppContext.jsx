@@ -27,6 +27,29 @@ export const AppProvider = ({ children }) => {
     const [isClientModalOpen, setIsClientModalOpen] = useState(false);
     const [visitorCount, setVisitorCount] = useState(0);
 
+    // Unified Light/Dark Theme management
+    const [theme, setThemeState] = useState(() => {
+        const saved = localStorage.getItem('theme');
+        if (saved) return saved;
+        // Fallback to system preference, but default to dark if not set
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return prefersDark ? 'dark' : 'dark'; // defaulting to dark theme as base
+    });
+
+    useEffect(() => {
+        const root = document.documentElement;
+        if (theme === 'dark') {
+            root.classList.add('dark');
+        } else {
+            root.classList.remove('dark');
+        }
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setThemeState(prev => prev === 'dark' ? 'light' : 'dark');
+    };
+
     // Initial Data Fetch
     useEffect(() => {
         const fetchData = async () => {
@@ -401,7 +424,7 @@ export const AppProvider = ({ children }) => {
         addBooking, updateBooking, deleteBooking, cancelBooking,
         addClient, updateClient, deleteClient,
         addExpense, updateExpense, deleteExpense,
-        migrateVehicles, stats
+        migrateVehicles, stats, theme, toggleTheme
     };
 
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

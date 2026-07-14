@@ -19,7 +19,7 @@ const StatCard = ({ title, value, icon: Icon, trend, trendValue, color = 'neutra
             <div className="flex items-start justify-between">
                 <div className="flex-1">
                     <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold mb-2">{title}</p>
-                    <h3 className="text-3xl font-extrabold text-white tracking-tight mb-3">{value}</h3>
+                    <h3 className="text-3xl font-extrabold text-theme-primary tracking-tight mb-3">{value}</h3>
 
                     {trend && (
                         <div className="flex items-center gap-2">

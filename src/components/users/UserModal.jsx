@@ -93,7 +93,7 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
                             <Shield className="w-5 h-5 text-brand-blue" />
                         </div>
                         <div>
-                            <h3 className="text-white font-bold">Account Details</h3>
+                            <h3 className="text-theme-primary font-bold">Account Details</h3>
                             <p className="text-zinc-500 text-xs mt-0.5">Basic user information and credentials</p>
                         </div>
                     </div>
@@ -109,7 +109,7 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
                                 value={formData.name}
                                 onChange={handleChange}
                                 placeholder="E.g. Jane Doe"
-                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-600 transition-colors"
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors"
                             />
                         </div>
 
@@ -124,7 +124,7 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
                                 value={formData.username}
                                 onChange={handleChange}
                                 placeholder="Unique username"
-                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-600 transition-colors"
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors"
                             />
                         </div>
 
@@ -140,12 +140,12 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="Enter secure password"
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-4 pr-12 py-3 text-white focus:outline-none focus:border-zinc-600 transition-colors"
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-4 pr-12 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-theme-primary transition-colors"
                                 >
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -160,7 +160,7 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
                                 name="role"
                                 value={formData.role}
                                 onChange={handleChange}
-                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-600 transition-colors appearance-none"
+                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors appearance-none cursor-pointer"
                             >
                                 <option value="staff">Staff - Read & write standard records</option>
                                 <option value="admin">Admin - Full access including settings</option>

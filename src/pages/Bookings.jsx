@@ -137,7 +137,7 @@ const Bookings = () => {
 
     const SortableHeader = ({ label, sortKey }) => (
         <th 
-            className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest cursor-pointer hover:text-white transition-colors group"
+            className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest cursor-pointer hover:text-theme-primary transition-colors group"
             onClick={() => handleSort(sortKey)}
         >
             <div className="flex items-center gap-1">
@@ -221,7 +221,7 @@ const Bookings = () => {
                     >
                         {t('common.previous')}
                     </Button>
-                    <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-xs font-bold shadow-inner">
+                    <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-theme-primary text-xs font-bold shadow-inner">
                         {currentPage} / {totalPages || 1}
                     </span>
                     <Button 
@@ -244,7 +244,7 @@ const Bookings = () => {
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('bookings.title')}</h1>
+                    <h1 className="text-3xl font-extrabold text-theme-primary tracking-tight mb-1">{t('bookings.title')}</h1>
                     <p className="text-zinc-500 font-medium tracking-tight">{t('bookings.subtitle')}</p>
                 </div>
                 <div className="flex gap-2">
@@ -280,8 +280,8 @@ const Bookings = () => {
                                 key={status}
                                 onClick={() => { setStatusFilter(status); setCurrentPage(1); }}
                             className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 whitespace-nowrap ${statusFilter === status
-                                ? 'bg-white text-black shadow-lg'
-                                : 'text-zinc-500 hover:bg-zinc-900 hover:text-white'
+                                ? 'bg-white text-black dark:bg-zinc-50 dark:text-zinc-950 shadow-lg'
+                                : 'text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-theme-primary'
                                 }`}
                         >
                             <span>{status === 'toTerminate' ? t('bookings.toTerminate') || 'To Terminate' : t(`bookings.${status.toLowerCase()}`)}</span>
@@ -302,19 +302,19 @@ const Bookings = () => {
                             type="date" 
                             value={startDateFilter}
                             onChange={e => { setStartDateFilter(e.target.value); setCurrentPage(1); }}
-                            className="bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue"
+                            className="bg-zinc-900 border border-zinc-800 text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue"
                         />
                         <span className="text-zinc-500 text-xs font-bold">-</span>
                         <input 
                             type="date" 
                             value={endDateFilter}
                             onChange={e => { setEndDateFilter(e.target.value); setCurrentPage(1); }}
-                            className="bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue"
+                            className="bg-zinc-900 border border-zinc-800 text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue"
                         />
                         {(startDateFilter || endDateFilter) && (
                             <button 
                                 onClick={() => { setStartDateFilter(''); setEndDateFilter(''); setCurrentPage(1); }}
-                                className="text-zinc-500 hover:text-white px-3 py-1.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors"
+                                className="text-zinc-500 hover:text-theme-primary px-3 py-1.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors"
                             >
                                 {t('common.clear')}
                             </button>
@@ -327,7 +327,7 @@ const Bookings = () => {
                         <select 
                             value={itemsPerPage} 
                             onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                            className="bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
+                            className="bg-zinc-900 border border-zinc-800 text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
                         >
                             <option value={10}>{t('common.rowsCount', { count: 10 })}</option>
                             <option value={20}>{t('common.rowsCount', { count: 20 })}</option>
@@ -368,12 +368,12 @@ const Bookings = () => {
                                     className="hover:bg-zinc-100 dark:hover:bg-zinc-900/50 transition-colors group"
                                 >
                                     <td className="p-5 text-left rtl:text-right">
-                                        <button onClick={() => handleCarClick(booking.vehicleId)} className="text-white hover:underline font-bold text-sm text-left rtl:text-right transition-colors">
+                                        <button onClick={() => handleCarClick(booking.vehicleId)} className="text-theme-primary hover:underline font-bold text-sm text-left rtl:text-right transition-colors">
                                             {getVehicleName(booking.vehicleId)}
                                         </button>
                                     </td>
                                     <td className="p-5 text-left rtl:text-right">
-                                        <button onClick={() => handleClientClick(booking.clientId)} className="text-white hover:underline font-bold text-sm text-left rtl:text-right transition-colors">
+                                        <button onClick={() => handleClientClick(booking.clientId)} className="text-theme-primary hover:underline font-bold text-sm text-left rtl:text-right transition-colors">
                                             {getClientName(booking.clientId)}
                                         </button>
                                     </td>

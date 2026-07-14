@@ -143,7 +143,7 @@ const Fleet = () => {
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('fleet.title')}</h1>
+                    <h1 className="text-3xl font-extrabold text-theme-primary tracking-tight mb-1">{t('fleet.title')}</h1>
                     <p className="text-zinc-500 font-medium tracking-tight">{t('fleet.subtitle')}</p>
                 </div>
                 <div className="flex gap-2">
@@ -169,8 +169,8 @@ const Fleet = () => {
                             key={status}
                             onClick={() => setStatusFilter(status)}
                             className={`px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 whitespace-nowrap ${statusFilter === status
-                                ? 'bg-white text-black shadow-lg'
-                                : 'text-zinc-500 hover:bg-zinc-900 hover:text-white'
+                                ? 'bg-white text-black dark:bg-zinc-50 dark:text-zinc-950 shadow-lg'
+                                : 'text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-theme-primary'
                                 }`}
                         >
                             {t(`fleet.${status.toLowerCase()}`)}
@@ -189,7 +189,7 @@ const Fleet = () => {
                         <Car className="w-5 h-5 text-zinc-400" />
                         <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('fleet.totalVehicles')}</p>
                     </div>
-                    <p className="text-3xl font-extrabold text-white tracking-tight">
+                    <p className="text-3xl font-extrabold text-theme-primary tracking-tight">
                         {vehiclesWithStatus.filter(v => v.status !== 'Deleted').length}
                     </p>
                 </div>
@@ -198,7 +198,7 @@ const Fleet = () => {
                         <CheckCircle className="w-5 h-5 text-brand-blue" />
                         <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('fleet.available')}</p>
                     </div>
-                    <p className="text-3xl font-extrabold text-white tracking-tight">
+                    <p className="text-3xl font-extrabold text-theme-primary tracking-tight">
                         {vehiclesWithStatus.filter(v => v.status === 'Available').length}
                     </p>
                 </div>
@@ -207,7 +207,7 @@ const Fleet = () => {
                         <Key className="w-5 h-5 text-zinc-400" />
                         <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('fleet.rented')}</p>
                     </div>
-                    <p className="text-3xl font-extrabold text-white tracking-tight">
+                    <p className="text-3xl font-extrabold text-theme-primary tracking-tight">
                         {vehiclesWithStatus.filter(v => v.status === 'Rented').length}
                     </p>
                 </div>
@@ -216,7 +216,7 @@ const Fleet = () => {
                         <Wrench className="w-5 h-5 text-brand-red" />
                         <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('fleet.maintenance')}</p>
                     </div>
-                    <p className="text-3xl font-extrabold text-white tracking-tight">
+                    <p className="text-3xl font-extrabold text-theme-primary tracking-tight">
                         {vehiclesWithStatus.filter(v => v.status === 'Maintenance').length}
                     </p>
                 </div>
@@ -255,7 +255,7 @@ const Fleet = () => {
             <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl mt-12">
                 <div className="flex items-center gap-3 mb-6">
                     <Wrench className="w-6 h-6 text-brand-blue" />
-                    <h3 className="text-xl font-extrabold text-white tracking-tight">Mileage & Maintenance Monitoring</h3>
+                    <h3 className="text-xl font-extrabold text-theme-primary tracking-tight">Mileage & Maintenance Monitoring</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {vehicles.filter(v => v.status !== 'Deleted').map((vehicle) => {
@@ -265,7 +265,7 @@ const Fleet = () => {
                             <div key={vehicle.id} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
                                 <div className="flex items-center justify-between mb-3 border-b border-zinc-800 pb-2">
                                     <div>
-                                        <p className="text-white font-bold text-sm">{vehicle.brand} {vehicle.model}</p>
+                                        <p className="text-theme-primary font-bold text-sm">{vehicle.brand} {vehicle.model}</p>
                                         <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">{vehicle.plate}</p>
                                     </div>
                                     <span className="text-xs font-black text-brand-blue bg-brand-blue/10 px-2.5 py-1 rounded-lg">
@@ -275,7 +275,7 @@ const Fleet = () => {
                                 <div className="space-y-2 mt-2">
                                     <div className="flex justify-between text-xs">
                                         <span className="text-zinc-500">Last Maintenance:</span>
-                                        <span className="font-semibold text-white">{vehicle.lastMaintenance ? formatDate(vehicle.lastMaintenance) : 'Never'}</span>
+                                        <span className="font-semibold text-theme-primary">{vehicle.lastMaintenance ? formatDate(vehicle.lastMaintenance) : 'Never'}</span>
                                     </div>
                                     <div className="flex justify-between text-xs">
                                         <span className="text-zinc-500">Maintenance Expenses:</span>

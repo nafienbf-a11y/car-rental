@@ -72,7 +72,7 @@ const Expenses = () => {
 
     const SortableHeader = ({ label, sortKey }) => (
         <th 
-            className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest cursor-pointer hover:text-white transition-colors group"
+            className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest cursor-pointer hover:text-theme-primary transition-colors group"
             onClick={() => handleSort(sortKey)}
         >
             <div className="flex items-center gap-1">
@@ -137,7 +137,7 @@ const Expenses = () => {
                     >
                         {t('common.previous')}
                     </Button>
-                    <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-xs font-bold shadow-inner">
+                    <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-theme-primary text-xs font-bold shadow-inner">
                         {currentPage} / {totalPages || 1}
                     </span>
                     <Button 
@@ -160,7 +160,7 @@ const Expenses = () => {
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight mb-1">{t('expenses.title')}</h1>
+                    <h1 className="text-3xl font-extrabold text-theme-primary tracking-tight mb-1">{t('expenses.title')}</h1>
                     <p className="text-zinc-500 font-medium tracking-tight">{t('expenses.subtitle')}</p>
                 </div>
                 <Button
@@ -179,21 +179,21 @@ const Expenses = () => {
                         <DollarSign className="w-5 h-5 text-brand-red" />
                         <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('expenses.totalExpenses')}</p>
                     </div>
-                    <p className="text-3xl font-extrabold text-white tracking-tight">{formatCurrency(totalExpenses)}</p>
+                    <p className="text-3xl font-extrabold text-theme-primary tracking-tight">{formatCurrency(totalExpenses)}</p>
                 </div>
                 <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-3 mb-2">
                         <Wrench className="w-5 h-5 text-zinc-400" />
                         <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('expenses.maintenance')}</p>
                     </div>
-                    <p className="text-3xl font-extrabold text-white tracking-tight">{expenses.length}</p>
+                    <p className="text-3xl font-extrabold text-theme-primary tracking-tight">{expenses.length}</p>
                 </div>
                 <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-3 mb-2">
                         <DollarSign className="w-5 h-5 text-brand-blue" />
                         <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('expenses.avgCost', 'Avg Cost')}</p>
                     </div>
-                    <p className="text-3xl font-extrabold text-white tracking-tight">
+                    <p className="text-3xl font-extrabold text-theme-primary tracking-tight">
                         {formatCurrency(totalExpenses / expenses.length || 0)}
                     </p>
                 </div>
@@ -206,7 +206,7 @@ const Expenses = () => {
                     <select 
                         value={itemsPerPage} 
                         onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                        className="bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
+                        className="bg-zinc-900 border border-zinc-800 text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
                     >
                         <option value={10}>{t('common.rowsCount', { count: 10 })}</option>
                         <option value={20}>{t('common.rowsCount', { count: 20 })}</option>
@@ -241,7 +241,7 @@ const Expenses = () => {
                                         <span className="text-zinc-400 font-bold text-xs">{formatDate(expense.date)}</span>
                                     </td>
                                     <td className="p-5">
-                                        <span className="text-white font-bold text-sm">{getVehicleName(expense.vehicleId)}</span>
+                                        <span className="text-theme-primary font-bold text-sm">{getVehicleName(expense.vehicleId)}</span>
                                     </td>
                                     <td className="p-5">
                                         <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest bg-zinc-900 text-zinc-400 border border-zinc-800 ${getCategoryColor(expense.category)}`}>

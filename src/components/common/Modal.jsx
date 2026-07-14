@@ -50,12 +50,12 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
                         >
                             {/* Header */}
                             <div className="flex items-center justify-between p-6 border-b border-zinc-800">
-                                <h2 className="text-2xl font-extrabold text-white tracking-tight">{title}</h2>
+                                <h2 className="text-2xl font-extrabold text-theme-primary tracking-tight">{title}</h2>
                                 <button
                                     onClick={onClose}
-                                    className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
+                                    className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg transition-colors"
                                 >
-                                    <X className="w-5 h-5 text-zinc-500 hover:text-white transition-colors" />
+                                    <X className="w-5 h-5 text-zinc-500 hover:text-theme-primary transition-colors" />
                                 </button>
                             </div>
 

@@ -42,18 +42,18 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
             {/* Sidebar */}
             <aside
-                className={`fixed top-0 h-screen w-64 bg-[#0a0e27] z-30 transition-transform duration-300
-                    ${isRTL ? 'right-0 border-l border-zinc-800' : 'left-0 border-r border-zinc-800'}
+                className={`fixed top-0 h-screen w-64 bg-theme-sidebar z-30 transition-transform duration-300
+                    ${isRTL ? 'right-0 border-l border-theme' : 'left-0 border-r border-theme'}
                     ${isOpen ? 'translate-x-0' : (isRTL ? 'translate-x-full' : '-translate-x-full')}
                     lg:translate-x-0
                 `}
             >
                 <div className="flex flex-col h-full">
                     {/* Logo */}
-                    <div className="p-6 border-b border-zinc-800">
+                    <div className="p-6 border-b border-theme">
                         <div className="flex flex-col items-center gap-3">
                             <Logo className="w-24 h-24" />
-                            <p className="text-[9px] text-zinc-400 uppercase tracking-wider font-medium leading-tight text-center">
+                            <p className="text-[9px] text-theme-secondary uppercase tracking-wider font-medium leading-tight text-center">
                                 {t('sidebar.tagline')}
                             </p>
                         </div>
@@ -69,18 +69,18 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                 onClick={() => setIsOpen(false)}
                                 className={({ isActive }) =>
                                     `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${isActive
-                                        ? 'bg-white text-black font-semibold'
-                                        : 'text-zinc-500 hover:bg-zinc-900 hover:text-white'
+                                        ? 'bg-brand-blue text-white shadow-lg shadow-blue-500/10 font-semibold'
+                                        : 'text-theme-secondary hover:bg-theme-input hover:text-theme-primary'
                                     }`
                                 }
                             >
                                 {({ isActive }) => (
                                     <>
-                                        <item.icon className={`w-5 h-5 ${isActive ? 'text-brand-blue' : ''}`} />
+                                        <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : ''}`} />
                                         <span className="font-medium">{item.name}</span>
                                         {isActive && (
                                             <div
-                                                className="ml-auto w-1.5 h-1.5 bg-brand-blue rounded-full"
+                                                className="ml-auto w-1.5 h-1.5 bg-white rounded-full"
                                             />
                                         )}
                                     </>
@@ -90,26 +90,26 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     </nav>
 
                     {/* Footer */}
-                    <div className="p-4 border-t border-zinc-800 space-y-2">
+                    <div className="p-4 border-t border-theme space-y-2">
                         <button
                             onClick={handleOpenCatalog}
-                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:bg-blue-500/10 hover:text-blue-400 transition-all duration-300"
+                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-theme-secondary hover:bg-blue-500/10 hover:text-blue-400 transition-all duration-300"
                         >
                             <ExternalLink className="w-5 h-5" />
                             <span className="font-medium">{t('nav.catalog')}</span>
                         </button>
                         <button
                             onClick={logout}
-                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:bg-red-500/10 hover:text-red-500 transition-all duration-300"
+                            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-theme-secondary hover:bg-red-500/10 hover:text-red-500 transition-all duration-300"
                         >
                             <span className="font-medium">{t('auth.logout')}</span>
                         </button>
 
-                        <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                            <p className="text-xs text-zinc-500 mb-1">{t('sidebar.systemStatus')}</p>
+                        <div className="bg-theme-input rounded-xl p-4 border border-theme">
+                            <p className="text-xs text-theme-tertiary mb-1">{t('sidebar.systemStatus')}</p>
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 bg-brand-blue rounded-full animate-pulse shadow-[0_0_8px_rgba(37,99,235,0.5)]" />
-                                <span className="text-sm text-zinc-300">{t('sidebar.operational')}</span>
+                                <span className="text-sm text-theme-secondary">{t('sidebar.operational')}</span>
                             </div>
                         </div>
                     </div>

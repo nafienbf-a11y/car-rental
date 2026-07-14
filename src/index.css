@@ -4,9 +4,91 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Light Theme */
+  --bg-app: #f8fafc;
+  --bg-sidebar: #ffffff;
+  --bg-topbar: #ffffff;
+  --bg-card: #ffffff;
+  --bg-popover: #ffffff;
+  --bg-input: #f1f5f9;
+  
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-light: #94a3b8;
+  
+  --border-main: #e2e8f0;
+  --border-muted: #cbd5e1;
+
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-hover: rgba(0, 0, 0, 0.04);
+  
+  --chart-grid: #e2e8f0;
+  --chart-axis: #64748b;
+  --chart-tick: #94a3b8;
+  --border-timeline: rgba(226, 232, 240, 0.5);
+  --border-timeline-grid: rgba(226, 232, 240, 0.3);
+  --bg-timeline-track: rgba(241, 245, 249, 0.3);
+
+  /* Zinc overrides for Light Mode */
+  --zinc-50: #f9fafb;
+  --zinc-100: #f1f5f9;
+  --zinc-200: #e2e8f0;
+  --zinc-300: #cbd5e1;
+  --zinc-400: #94a3b8;
+  --zinc-500: #64748b;
+  --zinc-600: #475569;
+  --zinc-700: #334155;
+  --zinc-800: #e2e8f0;   /* Light card border */
+  --zinc-900: #f8fafc;   /* Light sub-card/input bg */
+  --zinc-950: #ffffff;   /* Light card bg */
+}
+
+.dark {
+  /* Dark Theme */
+  --bg-app: #0a0e27;
+  --bg-sidebar: #0a0e27;
+  --bg-topbar: #000000;
+  --bg-card: #09090b;
+  --bg-popover: #09090b;
+  --bg-input: #18181b;
+  
+  --text-main: #ffffff;
+  --text-muted: #a1a1aa;
+  --text-light: #71717a;
+  
+  --border-main: rgba(255, 255, 255, 0.08);
+  --border-muted: rgba(255, 255, 255, 0.04);
+
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-hover: rgba(255, 255, 255, 0.08);
+
+  --chart-grid: #27272a;
+  --chart-axis: #52525b;
+  --chart-tick: #71717a;
+  --border-timeline: rgba(39, 39, 42, 0.5);
+  --border-timeline-grid: rgba(39, 39, 42, 0.3);
+  --bg-timeline-track: rgba(24, 24, 27, 0.3);
+
+  /* Zinc overrides for Dark Mode */
+  --zinc-50: #fafafa;
+  --zinc-100: #f4f4f5;
+  --zinc-200: #e4e4e7;
+  --zinc-300: #d4d4d8;
+  --zinc-400: #a1a1aa;
+  --zinc-500: #71717a;
+  --zinc-600: #52525b;
+  --zinc-700: #3f3f46;
+  --zinc-800: #27272a;   /* Dark border color */
+  --zinc-900: #18181b;   /* Dark input bg */
+  --zinc-950: #09090b;   /* Dark card bg */
+}
+
 @layer base {
   body {
-    @apply bg-[#0a0e27] text-white antialiased;
+    @apply bg-theme-bg text-theme-primary antialiased transition-colors duration-300;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
   
@@ -17,15 +99,32 @@
 
 @layer utilities {
   .glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
   }
 
   .glass-dark {
-    @apply bg-[#0f1435]/80 backdrop-blur-xl border border-zinc-800/50;
+    background-color: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-main);
+  }
+
+  .border-timeline {
+    border-color: var(--border-timeline);
+  }
+  .border-timeline-grid {
+    border-color: var(--border-timeline-grid);
+  }
+  .bg-timeline-track {
+    background-color: var(--bg-timeline-track);
   }
 
   .glass-hover {
-    @apply hover:bg-white/10 hover:shadow-[0_0_20px_rgba(255, 255, 255, 0.05)] transition-all duration-300;
+    transition: all 0.3s ease;
+  }
+  .glass-hover:hover {
+    background-color: var(--glass-hover);
   }
 
   .animate-shimmer {

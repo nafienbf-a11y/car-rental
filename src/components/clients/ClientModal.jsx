@@ -135,7 +135,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             value={formData.name}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
                             placeholder={t('modals.client.placeholderName')}
                         />
                     </div>
@@ -151,7 +151,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
                             placeholder={t('modals.client.placeholderEmail')}
                         />
                     </div>
@@ -167,7 +167,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             value={formData.phone}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
                             placeholder={t('modals.client.placeholderPhone')}
                         />
                     </div>
@@ -182,7 +182,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             name="address"
                             value={formData.address}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
                             placeholder={t('modals.client.placeholderAddress')}
                         />
                     </div>
@@ -197,7 +197,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             name="licenseNumber"
                             value={formData.licenseNumber}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
                             placeholder={t('modals.client.placeholderLicense')}
                         />
                     </div>
@@ -238,7 +238,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                                                 type="text"
                                                 value={doc.name}
                                                 onChange={(e) => handleDocNameChange(doc.id, e.target.value)}
-                                                className="w-full px-3 py-1.5 bg-transparent border border-transparent hover:border-zinc-700 focus:border-zinc-600 rounded-lg text-white text-sm font-medium focus:outline-none transition-colors"
+                                                className="w-full px-3 py-1.5 bg-transparent border border-transparent hover:border-zinc-700 focus:border-zinc-600 rounded-lg text-theme-primary text-sm font-medium focus:outline-none transition-colors"
                                                 placeholder={t('modals.client.documentName') || 'Document name'}
                                             />
                                             <p className="text-[10px] text-zinc-600 mt-0.5 px-3">
@@ -274,7 +274,7 @@ const ClientModal = ({ isOpen, onClose, onSubmit, client }) => {
                             value={formData.notes}
                             onChange={handleChange}
                             rows="3"
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-700 focus:outline-none focus:border-white transition-colors font-bold resize-none"
+                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold resize-none"
                             placeholder={t('modals.client.placeholderNotes')}
                         />
                     </div>

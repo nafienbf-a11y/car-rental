@@ -37,16 +37,16 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0a0e27] flex items-center justify-center p-4 relative">
+        <div className="min-h-screen bg-theme-bg flex items-center justify-center p-4 relative transition-colors duration-300">
             {/* Language Selector */}
             <div className="absolute top-4 right-4 w-40 z-50">
                 <LanguageSelector />
             </div>
-            <div className="w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-2xl p-8 shadow-2xl">
+            <div className="w-full max-w-md bg-theme-card border border-theme rounded-2xl p-8 shadow-2xl transition-colors duration-300">
                 <div className="flex flex-col items-center mb-8">
                     <Logo className="w-24 h-24 mb-4" />
-                    <h1 className="text-2xl font-bold text-white mb-2">{t('auth.pageTitle')}</h1>
-                    <p className="text-zinc-400 text-sm text-center">{t('auth.subtitle')}</p>
+                    <h1 className="text-2xl font-bold text-theme-primary mb-2">{t('auth.pageTitle')}</h1>
+                    <p className="text-theme-secondary text-sm text-center">{t('auth.subtitle')}</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -57,16 +57,16 @@ const Login = () => {
                     )}
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-300 ml-1">{t('auth.username')}</label>
+                        <label className="text-sm font-medium text-theme-secondary ml-1">{t('auth.username')}</label>
                         <div className="relative">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-tertiary">
                                 <User className="w-5 h-5" />
                             </div>
                             <input
                                 type="text"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-transparent transition-all"
+                                className="w-full pl-10 pr-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-transparent transition-all"
                                 placeholder={t('auth.usernamePlaceholder')}
                                 required
                             />
@@ -74,23 +74,23 @@ const Login = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-300 ml-1">{t('auth.password')}</label>
+                        <label className="text-sm font-medium text-theme-secondary ml-1">{t('auth.password')}</label>
                         <div className="relative">
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-tertiary">
                                 <Lock className="w-5 h-5" />
                             </div>
                             <input
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full pl-10 pr-12 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-transparent transition-all"
+                                className="w-full pl-10 pr-12 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-transparent transition-all"
                                 placeholder={t('auth.passwordPlaceholder')}
                                 required
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-tertiary hover:text-theme-primary transition-colors"
                             >
                                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                             </button>
@@ -114,8 +114,8 @@ const Login = () => {
                     </Button>
                 </form>
 
-                <div className="mt-8 pt-6 border-t border-zinc-900 text-center">
-                    <p className="text-zinc-500 text-xs text-center">
+                <div className="mt-8 pt-6 border-t border-theme text-center">
+                    <p className="text-theme-tertiary text-xs text-center">
                         &copy; 2026 Gatibi Rental. All rights reserved.
                     </p>
                 </div>

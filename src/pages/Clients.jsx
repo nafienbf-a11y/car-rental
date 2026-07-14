@@ -89,7 +89,7 @@ const Clients = () => {
 
     const SortableHeader = ({ label, sortKey }) => (
         <th 
-            className="text-left rtl:text-right py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest cursor-pointer hover:text-white transition-colors group"
+            className="text-left rtl:text-right py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest cursor-pointer hover:text-theme-primary transition-colors group"
             onClick={() => handleSort(sortKey)}
         >
             <div className="flex items-center gap-1">
@@ -151,7 +151,7 @@ const Clients = () => {
                     >
                         {t('common.previous')}
                     </Button>
-                    <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-xs font-bold shadow-inner">
+                    <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-theme-primary text-xs font-bold shadow-inner">
                         {currentPage} / {totalPages || 1}
                     </span>
                     <Button 
@@ -189,7 +189,7 @@ const Clients = () => {
                         </div>
                         <div>
                             <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('clients.totalClients')}</p>
-                            <p className="text-2xl font-extrabold text-white">{clients.length}</p>
+                            <p className="text-2xl font-extrabold text-theme-primary">{clients.length}</p>
                         </div>
                     </div>
                 </div>
@@ -200,7 +200,7 @@ const Clients = () => {
                         </div>
                         <div>
                             <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('clients.activeBookings')}</p>
-                            <p className="text-2xl font-extrabold text-white">
+                            <p className="text-2xl font-extrabold text-theme-primary">
                                 {bookings.filter(b => b.status === 'Active').length}
                             </p>
                         </div>
@@ -213,7 +213,7 @@ const Clients = () => {
                         </div>
                         <div>
                             <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('clients.newThisMonth')}</p>
-                            <p className="text-2xl font-extrabold text-white">
+                            <p className="text-2xl font-extrabold text-theme-primary">
                                 {clients.filter(c => {
                                     const created = new Date(c.createdAt);
                                     const now = new Date();
@@ -239,7 +239,7 @@ const Clients = () => {
                     <select 
                         value={itemsPerPage} 
                         onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                        className="bg-zinc-900 border border-zinc-800 text-white rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
+                        className="bg-zinc-900 border border-zinc-800 text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
                     >
                         <option value={10}>{t('common.rowsCount', { count: 10 })}</option>
                         <option value={20}>{t('common.rowsCount', { count: 20 })}</option>
@@ -256,7 +256,7 @@ const Clients = () => {
                     {sortedClients.length === 0 ? (
                         <div className="text-center py-12">
                             <Users className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                            <h3 className="text-xl font-bold text-white mb-2">
+                            <h3 className="text-xl font-bold text-theme-primary mb-2">
                                 {searchTerm ? t('clients.noClientsFound') : t('clients.noClientsYet')}
                             </h3>
                             <p className="text-zinc-500 mb-6">
