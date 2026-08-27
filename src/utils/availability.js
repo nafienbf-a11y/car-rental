@@ -142,11 +142,11 @@ export const getDayStatusColor = (date, blockedDates, selectionStart, selectionE
     const blocked = isDateBlocked(dateStr, blockedDates);
     if (blocked) {
         if (blocked.status === 'Maintenance') {
-            return 'bg-orange-900/50 text-orange-400 cursor-not-allowed border border-orange-800/50'; // Orange for Maintenance
+            return 'bg-orange-500/10 text-orange-400 cursor-not-allowed border border-orange-500/20'; // Orange for Maintenance
         }
-        return 'bg-zinc-900 text-zinc-500 line-through cursor-not-allowed border border-zinc-800 bg-[linear-gradient(45deg,transparent_45%,#ef4444_45%,#ef4444_55%,transparent_55%)] bg-[length:10px_10px]'; // Red strikethrough for Booked
+        return 'bg-red-500/10 text-red-400 line-through cursor-not-allowed border border-red-500/20 bg-[linear-gradient(45deg,transparent_45%,#ef4444_45%,#ef4444_55%,transparent_55%)] bg-[length:10px_10px]'; // Red strikethrough for Booked
     }
 
     // 3. Available
-    return 'hover:bg-zinc-800 text-white cursor-pointer'; // Greenish hover implied by "Available" logic in UI
+    return 'bg-theme-subcard text-theme-primary hover:bg-brand-blue/20 hover:text-brand-blue border border-theme cursor-pointer font-bold'; // Greenish hover implied by "Available" logic in UI
 };

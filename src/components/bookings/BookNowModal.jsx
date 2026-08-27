@@ -337,7 +337,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                     <div className="space-y-6">
                         {/* Vehicle Selection */}
                         <div>
-                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                            <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                                 {t('modals.bookNow.selectVehicle')} *
                             </label>
                             <select
@@ -345,7 +345,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                 value={formData.vehicleId}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
+                                className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                             >
                                 <option value="">{t('modals.bookNow.chooseCar')}</option>
                                 {availableVehicles.map(v => (
@@ -359,13 +359,13 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                         {/* Customer Details */}
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                                <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                                     {t('modals.bookNow.selectClient')} *
                                 </label>
                                 <select
                                     name="clientId"
                                     onChange={handleClientSelect}
-                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
+                                    className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                                     value={formData.clientId || ''}
                                     required
                                 >
@@ -376,14 +376,14 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                         </option>
                                     ))}
                                 </select>
-                                <p className="text-[10px] text-zinc-600 mt-2">
+                                <p className="text-[10px] text-theme-tertiary mt-2">
                                     {t('modals.bookNow.clientHint')}
                                 </p>
                             </div>
 
                             {/* Price Per Day */}
-                            <div className="pt-2 border-t border-zinc-800">
-                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 mt-4">
+                            <div className="pt-2 border-t border-theme">
+                                <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2 mt-4">
                                     {t('modals.bookNow.pricePerDay')}
                                 </label>
                                 <input
@@ -391,15 +391,15 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                     name="pricePerDay"
                                     value={formData.pricePerDay}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
+                                    className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:border-brand-blue transition-colors font-bold"
                                     placeholder="0"
                                 />
                             </div>
 
                             {/* Mileage Tracking */}
-                            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-zinc-800">
+                            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-theme">
                                 <div>
-                                    <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                                    <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                                         {t('modals.bookNow.startingKm')} *
                                     </label>
                                     <input
@@ -408,7 +408,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                         value={formData.startingKm}
                                         onChange={handleChange}
                                         required
-                                        className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
+                                        className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:border-brand-blue transition-colors font-bold"
                                         placeholder="0"
                                     />
                                 </div>
@@ -416,7 +416,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                 {/* Show Ending KM only if Editing existing booking */}
                                 {booking && (
                                     <div>
-                                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                                             {t('modals.bookNow.endingKm')}
                                         </label>
                                         <input
@@ -424,7 +424,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                             name="endingKm"
                                             value={formData.endingKm}
                                             onChange={handleChange}
-                                            className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
+                                            className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:border-brand-blue transition-colors font-bold"
                                             placeholder="0"
                                         />
                                     </div>
@@ -432,8 +432,8 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                             </div>
 
                             {/* Security Deposit */}
-                            <div className="pt-4 border-t border-zinc-800">
-                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                            <div className="pt-4 border-t border-theme">
+                                <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                                     {t('modals.bookNow.securityDeposit')}
                                 </label>
                                 <input
@@ -441,7 +441,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                     name="securityDeposit"
                                     value={formData.securityDeposit}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
+                                    className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:border-brand-blue transition-colors font-bold"
                                     placeholder="0"
                                 />
                             </div>
@@ -449,7 +449,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                             {/* Documents */}
                             <div>
                                 <div className="flex items-center justify-between mb-2">
-                                    <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                    <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest">
                                         {t('modals.client.documents') || 'Documents'}
                                     </label>
                                     <label className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue rounded-lg text-[10px] font-bold transition-colors">
@@ -467,15 +467,15 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                 {formData.documents.length > 0 ? (
                                     <div className="space-y-2 max-h-[150px] overflow-y-auto pr-1">
                                         {formData.documents.map((doc) => (
-                                            <div key={doc.id} className="flex items-center gap-2 p-2 bg-zinc-900/50 border border-zinc-800 rounded-lg group">
-                                                <div className="w-10 h-10 rounded-md overflow-hidden flex-shrink-0 border border-zinc-700">
+                                            <div key={doc.id} className="flex items-center gap-2 p-2 bg-theme-subcard border border-theme rounded-lg group">
+                                                <div className="w-10 h-10 rounded-md overflow-hidden flex-shrink-0 border border-theme">
                                                     <img src={doc.data} alt={doc.name} className="w-full h-full object-cover" />
                                                 </div>
                                                 <span className="text-theme-primary text-xs font-medium flex-1 truncate">{doc.name}</span>
                                                 <button
                                                     type="button"
                                                     onClick={() => handleRemoveDocument(doc.id)}
-                                                    className="p-1 hover:bg-red-500/10 rounded text-zinc-500 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                                    className="p-1 hover:bg-red-500/10 rounded text-theme-secondary hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
                                                 >
                                                     <Trash2 className="w-3.5 h-3.5" />
                                                 </button>
@@ -483,9 +483,9 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="border border-zinc-800 border-dashed rounded-xl p-4 text-center">
-                                        <FileText className="w-5 h-5 text-zinc-700 mx-auto mb-1" />
-                                        <p className="text-zinc-600 text-[10px]">No documents yet</p>
+                                    <div className="border border-theme border-dashed rounded-xl p-4 text-center">
+                                        <FileText className="w-5 h-5 text-theme-tertiary mx-auto mb-1" />
+                                        <p className="text-theme-tertiary text-[10px]">No documents yet</p>
                                     </div>
                                 )}
                             </div>
@@ -494,7 +494,7 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
 
                     {/* Right Column: Calendar */}
                     <div className="space-y-4">
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                             {t('modals.bookNow.selectDates')} {formData.vehicleId ? t('modals.bookNow.available') : t('modals.bookNow.selectFirst')}
                         </label>
 
@@ -517,13 +517,13 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                         )}
 
                         {/* Selection Summary */}
-                        <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800/50">
+                        <div className="bg-theme-subcard p-4 rounded-xl border border-theme">
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-xs text-zinc-500 uppercase font-bold">{t('modals.bookNow.start')}</span>
+                                <span className="text-xs text-theme-secondary uppercase font-bold">{t('modals.bookNow.start')}</span>
                                 <span className="text-sm text-theme-primary font-bold">{formData.startDate || '-'}</span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-xs text-zinc-500 uppercase font-bold">{t('modals.bookNow.end')}</span>
+                                <span className="text-xs text-theme-secondary uppercase font-bold">{t('modals.bookNow.end')}</span>
                                 <span className="text-sm text-theme-primary font-bold">{formData.endDate || '-'}</span>
                             </div>
                         </div>
@@ -531,13 +531,13 @@ const BookNowModal = ({ isOpen, onClose, onAdd, onUpdate, vehicles, booking }) =
                 </div>
 
                 {/* Footer Summary & Actions */}
-                <div className="pt-6 border-t border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div className="pt-6 border-t border-theme flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                     {totalDays > 0 && selectedVehicle ? (
                         <div>
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-0.5">{t('modals.bookNow.totalEstimate')}</p>
+                            <p className="text-[10px] text-theme-secondary uppercase tracking-widest font-bold mb-0.5">{t('modals.bookNow.totalEstimate')}</p>
                             <div className="flex items-baseline gap-2">
                                 <span className="text-3xl font-black text-theme-primary">{formatCurrency(totalCost)}</span>
-                                <span className="text-zinc-500 font-bold">{t('common.for')} {totalDays} {t('modals.bookNow.days')}</span>
+                                <span className="text-theme-secondary font-bold">{t('common.for')} {totalDays} {t('modals.bookNow.days')}</span>
                             </div>
                         </div>
                     ) : (

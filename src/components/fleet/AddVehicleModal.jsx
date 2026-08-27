@@ -98,7 +98,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Brand */}
                     <div>
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                             {t('modals.addVehicle.brand')} *
                         </label>
                         <select
@@ -112,7 +112,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                                 }));
                             }}
                             required
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
+                            className="w-full px-4 py-2.5 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                         >
                             <option value="">{t('modals.addVehicle.selectBrand')}</option>
                             <option value="Renault">Renault</option>
@@ -124,7 +124,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
 
                     {/* Model */}
                     <div>
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                             {t('modals.addVehicle.model')} *
                         </label>
                         {['Renault', 'Peugeot', 'Dacia'].includes(formData.brand) ? (
@@ -133,13 +133,16 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                                 value={formData.model}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
+                                className="w-full px-4 py-2.5 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                             >
                                 <option value="">{t('modals.addVehicle.selectModel')}</option>
                                 {formData.brand === 'Renault' && (
                                     <>
-                                        <option value="CLIO">CLIO</option>
-                                        <option value="MEGANE">MEGANE</option>
+                                        <option value="Clio 5">Clio 5</option>
+                                        <option value="Clio 4">Clio 4</option>
+                                        <option value="Megane">Megane</option>
+                                        <option value="Express">Express</option>
+                                        <option value="Kardian">Kardian</option>
                                     </>
                                 )}
                                 {formData.brand === 'Peugeot' && (
@@ -147,15 +150,14 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                                         <option value="208">208</option>
                                         <option value="308">308</option>
                                         <option value="2008">2008</option>
+                                        <option value="3008">3008</option>
                                     </>
                                 )}
                                 {formData.brand === 'Dacia' && (
                                     <>
-                                        <option value="SANDERO">SANDERO</option>
-                                        <option value="LOGAN">LOGAN</option>
-                                        <option value="STREETWAY">STREETWAY</option>
-                                        <option value="STEPWAY">STEPWAY</option>
-                                        <option value="DUSTER">DUSTER</option>
+                                        <option value="Logan">Logan</option>
+                                        <option value="Sandero Stepway">Sandero Stepway</option>
+                                        <option value="Duster">Duster</option>
                                     </>
                                 )}
                             </select>
@@ -166,7 +168,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                                 value={formData.model}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
+                                className="w-full px-4 py-2.5 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:border-brand-blue transition-colors font-bold"
                                 placeholder={t('modals.addVehicle.placeholderModel')}
                             />
                         )}
@@ -174,7 +176,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
 
                     {/* Year */}
                     <div>
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                             {t('modals.addVehicle.year')} *
                         </label>
                         <input
@@ -185,13 +187,13 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             required
                             min="2000"
                             max={new Date().getFullYear() + 1}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:border-brand-blue transition-colors font-bold"
                         />
                     </div>
 
                     {/* License Plate */}
                     <div>
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                             {t('modals.addVehicle.plate')} *
                         </label>
                         <input
@@ -200,14 +202,14 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             value={formData.plate}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold uppercase"
+                            className="w-full px-4 py-2.5 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:border-brand-blue transition-colors font-bold uppercase"
                             placeholder={t('modals.addVehicle.placeholderPlate')}
                         />
                     </div>
 
                     {/* Price Per Day */}
                     <div>
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                             {t('modals.addVehicle.price')} *
                         </label>
                         <input
@@ -218,21 +220,21 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             required
                             min="0"
                             step="0.01"
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:border-brand-blue transition-colors font-bold"
                             placeholder={t('modals.addVehicle.placeholderPrice')}
                         />
                     </div>
 
                     {/* Category */}
                     <div>
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                             {t('modals.addVehicle.category')} *
                         </label>
                         <select
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
+                            className="w-full px-4 py-2.5 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                         >
                             <option value="Sedan">Sedan</option>
                             <option value="SUV">SUV</option>
@@ -243,7 +245,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
 
                     {/* Seats */}
                     <div>
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                             {t('modals.addVehicle.seats')} *
                         </label>
                         <input
@@ -254,20 +256,20 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             required
                             min="2"
                             max="9"
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:border-brand-blue transition-colors font-bold"
                         />
                     </div>
 
                     {/* Transmission */}
                     <div>
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                             {t('modals.addVehicle.transmission')} *
                         </label>
                         <select
                             name="transmission"
                             value={formData.transmission}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
+                            className="w-full px-4 py-2.5 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                         >
                             <option value="Automatic">Automatic</option>
                             <option value="Manual">Manual</option>
@@ -276,14 +278,14 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
 
                     {/* Fuel Type */}
                     <div>
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                             {t('modals.addVehicle.fuel')} *
                         </label>
                         <select
                             name="fuel"
                             value={formData.fuel}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
+                            className="w-full px-4 py-2.5 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:border-brand-blue transition-colors font-bold appearance-none cursor-pointer"
                         >
                             <option value="Petrol">Petrol</option>
                             <option value="Diesel">Diesel</option>
@@ -294,7 +296,7 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
 
                     {/* Image URL */}
                     <div className="md:col-span-2">
-                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">
+                        <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-2">
                             {t('modals.addVehicle.image')}
                         </label>
                         <input
@@ -302,14 +304,14 @@ const AddVehicleModal = ({ isOpen, onClose, onAdd, vehicle = null }) => {
                             name="image"
                             value={formData.image}
                             onChange={handleChange}
-                            className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold"
+                            className="w-full px-4 py-2.5 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:border-brand-blue transition-colors font-bold"
                             placeholder="https://example.com/image.jpg"
                         />
                     </div>
                 </div>
 
                 {/* Form Actions */}
-                <div className="flex gap-3 justify-end pt-6 border-t border-zinc-800">
+                <div className="flex gap-3 justify-end pt-6 border-t border-theme">
                     <Button variant="ghost" onClick={onClose} type="button" className="text-[10px] uppercase tracking-widest">
                         {t('modals.common.cancel')}
                     </Button>

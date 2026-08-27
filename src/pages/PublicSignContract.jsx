@@ -164,8 +164,8 @@ const PublicSignContract = () => {
 
     if (error || !contract) {
         return (
-            <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center p-4">
-                <div className="max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-2xl p-6 text-center space-y-4 shadow-xl">
+            <div className="min-h-screen bg-theme-bg text-theme-primary flex items-center justify-center p-4">
+                <div className="max-w-md w-full bg-theme-card border border-theme rounded-2xl p-6 text-center space-y-4 shadow-xl">
                     <AlertCircle className="w-12 h-12 text-red-500 mx-auto" />
                     <h2 className="text-xl font-bold text-white">Contract Error</h2>
                     <p className="text-zinc-400 text-sm">{error || "Contract invalid or no longer available."}</p>
@@ -182,7 +182,7 @@ const PublicSignContract = () => {
     const isSigned = contract.status === 'Signed' || signedSuccess;
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-100 py-8 px-4 sm:px-6 flex flex-col items-center justify-center">
+        <div className="min-h-screen bg-theme-bg text-theme-primary py-8 px-4 sm:px-6 flex flex-col items-center justify-center">
             <div className="max-w-xl w-full space-y-6">
 
                 {/* Header Brand */}
@@ -190,10 +190,10 @@ const PublicSignContract = () => {
                     <div className="inline-flex items-center justify-center p-3 bg-blue-500/10 rounded-2xl border border-blue-500/20 text-blue-400 mb-1">
                         <FileText className="w-7 h-7" />
                     </div>
-                    <h1 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+                    <h1 className="text-2xl font-extrabold tracking-tight text-theme-primary sm:text-3xl">
                         {t('contract.publicTitle')}
                     </h1>
-                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+                    <p className="text-xs font-semibold text-theme-secondary uppercase tracking-wider">
                         {t('contract.contractNumber', { number: contract.contractNumber })}
                     </p>
                 </div>
@@ -220,44 +220,44 @@ const PublicSignContract = () => {
                 )}
 
                 {/* Contract Summary Card */}
-                <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 space-y-5 shadow-2xl">
-                    <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-400 pb-2 border-b border-zinc-800">
+                <div className="bg-theme-card border border-theme rounded-2xl p-5 space-y-5 shadow-2xl">
+                    <h2 className="text-xs font-bold uppercase tracking-wider text-theme-secondary pb-2 border-b border-theme">
                         {t('contract.summaryTitle')}
                     </h2>
 
                     {/* Client & Vehicle Quick Info */}
                     <div className="grid grid-cols-2 gap-4 text-xs">
                         <div className="space-y-1">
-                            <p className="text-zinc-500 font-medium">{t('contract.clientName')}</p>
-                            <p className="font-bold text-white text-sm">{client.name || 'N/A'}</p>
-                            <p className="text-zinc-400">{client.phone || ''}</p>
+                            <p className="text-theme-tertiary font-medium">{t('contract.clientName')}</p>
+                            <p className="font-bold text-theme-primary text-sm">{client.name || 'N/A'}</p>
+                            <p className="text-theme-secondary">{client.phone || ''}</p>
                         </div>
                         <div className="space-y-1">
-                            <p className="text-zinc-500 font-medium">{t('contract.vehicle')}</p>
-                            <p className="font-bold text-white text-sm">{vehicle.brand} {vehicle.model}</p>
-                            <p className="text-zinc-400 font-mono">{vehicle.plate}</p>
+                            <p className="text-theme-tertiary font-medium">{t('contract.vehicle')}</p>
+                            <p className="font-bold text-theme-primary text-sm">{vehicle.brand} {vehicle.model}</p>
+                            <p className="text-theme-secondary font-mono">{vehicle.plate}</p>
                         </div>
                     </div>
 
                     {/* Reservation Details */}
-                    <div className="bg-zinc-950/60 p-4 rounded-xl border border-zinc-800/80 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                    <div className="bg-theme-subcard p-4 rounded-xl border border-theme grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                         <div>
-                            <p className="text-zinc-500">{t('contract.startDate')}</p>
-                            <p className="font-semibold text-zinc-200">{booking.startDate ? new Date(booking.startDate).toLocaleDateString() : 'N/A'}</p>
+                            <p className="text-theme-tertiary">{t('contract.startDate')}</p>
+                            <p className="font-semibold text-theme-primary">{booking.startDate ? new Date(booking.startDate).toLocaleDateString() : 'N/A'}</p>
                         </div>
                         <div>
-                            <p className="text-zinc-500">{t('contract.endDate')}</p>
-                            <p className="font-semibold text-zinc-200">{booking.endDate ? new Date(booking.endDate).toLocaleDateString() : 'N/A'}</p>
+                            <p className="text-theme-tertiary">{t('contract.endDate')}</p>
+                            <p className="font-semibold text-theme-primary">{booking.endDate ? new Date(booking.endDate).toLocaleDateString() : 'N/A'}</p>
                         </div>
                         <div className="col-span-2 sm:col-span-1">
-                            <p className="text-zinc-500">{t('contract.totalPrice')}</p>
+                            <p className="text-theme-tertiary">{t('contract.totalPrice')}</p>
                             <p className="font-bold text-blue-400 text-sm">${booking.totalCost || booking.total_price || 0}</p>
                         </div>
                     </div>
 
                     {/* Terms Overview */}
-                    <div className="space-y-2 text-xs text-zinc-400 bg-zinc-950/30 p-3 rounded-xl border border-zinc-800/50">
-                        <p className="font-semibold text-zinc-300">{t('contract.termsTitle')}</p>
+                    <div className="space-y-2 text-xs text-theme-secondary bg-theme-subcard p-3 rounded-xl border border-theme">
+                        <p className="font-semibold text-theme-primary">{t('contract.termsTitle')}</p>
                         <ul className="list-disc pl-4 space-y-1 text-[11px] leading-relaxed">
                             <li>{t('contract.term1')}</li>
                             <li>{t('contract.term2')}</li>
@@ -267,9 +267,9 @@ const PublicSignContract = () => {
                 </div>
 
                 {/* Signature Pad or View Canvas */}
-                <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-4 shadow-2xl">
+                <div className="bg-theme-card border border-theme rounded-2xl p-5 space-y-4 shadow-2xl">
                     <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-2">
+                        <label className="text-xs font-bold uppercase tracking-wider text-theme-primary flex items-center gap-2">
                             {isSigned ? <Lock className="w-4 h-4 text-emerald-400" /> : <FileText className="w-4 h-4 text-blue-400" />}
                             {isSigned ? t('contract.digitalSignatureRecord') : t('contract.signHere')}
                         </label>
@@ -277,7 +277,7 @@ const PublicSignContract = () => {
                             <button
                                 type="button"
                                 onClick={clearCanvas}
-                                className="text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
+                                className="text-xs font-semibold text-theme-secondary hover:text-theme-primary transition-colors"
                             >
                                 {t('contract.clear')}
                             </button>
@@ -285,20 +285,20 @@ const PublicSignContract = () => {
                     </div>
 
                     {isSigned ? (
-                        <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col items-center justify-center min-h-[140px]">
+                        <div className="bg-theme-input border border-theme rounded-xl p-4 flex flex-col items-center justify-center min-h-[140px]">
                             {contract.signatureData ? (
                                 <img
                                     src={contract.signatureData}
                                     alt="Client Signature"
-                                    className="max-h-24 object-contain filter invert"
+                                    className="max-h-24 object-contain filter dark:invert"
                                 />
                             ) : (
-                                <p className="text-xs text-zinc-500 italic">{t('contract.verifiedDigitalSignature')}</p>
+                                <p className="text-xs text-theme-tertiary italic">{t('contract.verifiedDigitalSignature')}</p>
                             )}
-                            <p className="text-[10px] text-zinc-500 mt-2 font-mono">{t('contract.verifiedDigitalSignature')}</p>
+                            <p className="text-[10px] text-theme-tertiary mt-2 font-mono">{t('contract.verifiedDigitalSignature')}</p>
                         </div>
                     ) : (
-                        <div className="relative bg-zinc-950 border-2 border-dashed border-zinc-700 focus-within:border-blue-500 rounded-xl overflow-hidden touch-none">
+                        <div className="relative bg-theme-input border-2 border-dashed border-theme focus-within:border-blue-500 rounded-xl overflow-hidden touch-none">
                             <canvas
                                 ref={canvasRef}
                                 onMouseDown={startDrawing}
@@ -312,7 +312,7 @@ const PublicSignContract = () => {
                                 className="w-full h-40 cursor-crosshair block"
                             />
                             {!hasDrawn && (
-                                <div className="absolute inset-0 pointer-events-none flex items-center justify-center text-zinc-600 text-xs font-medium">
+                                <div className="absolute inset-0 pointer-events-none flex items-center justify-center text-theme-tertiary text-xs font-medium">
                                     {t('contract.drawSignatureHere')}
                                 </div>
                             )}
@@ -337,7 +337,7 @@ const PublicSignContract = () => {
                             className={`w-full py-3.5 px-4 font-bold text-sm rounded-xl transition-all shadow-lg flex items-center justify-center space-x-2 ${
                                 hasDrawn && !submitting
                                     ? 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer'
-                                    : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
+                                    : 'bg-theme-input text-theme-tertiary cursor-not-allowed border border-theme'
                             }`}
                         >
                             {submitting ? (
@@ -355,7 +355,7 @@ const PublicSignContract = () => {
                     )}
                 </div>
 
-                <div className="text-center text-[10px] text-zinc-600 font-mono">
+                <div className="text-center text-[10px] text-theme-tertiary font-mono">
                     {t('contract.systemFooter')}
                 </div>
             </div>

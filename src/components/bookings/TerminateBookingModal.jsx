@@ -56,34 +56,34 @@ const TerminateBookingModal = ({ isOpen, onClose, booking, onTerminate }) => {
             title={t('bookings.terminateModalTitle') || 'Terminate Booking'}
         >
             <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800 space-y-4">
-                    <h3 className="text-theme-primary font-bold mb-4">{t('bookings.bookingDetails') || 'Booking Details'}</h3>
+                <div className="bg-theme-subcard p-6 rounded-xl border border-theme space-y-4">
+                    <h3 className="text-theme-primary font-bold mb-4">{t('bookings.terminateModalTitle') || 'Booking Details'}</h3>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('bookings.table.vehicle')}</label>
+                            <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest">{t('bookings.table.vehicle')}</label>
                             <p className="text-theme-primary font-medium mt-1 opacity-70 cursor-not-allowed">{vehicleName}</p>
                         </div>
                         <div>
-                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('bookings.table.customer')}</label>
+                            <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest">{t('bookings.table.customer')}</label>
                             <p className="text-theme-primary font-medium mt-1 opacity-70 cursor-not-allowed">{client.name}</p>
                         </div>
                         <div>
-                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('bookings.table.dates')}</label>
+                            <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest">{t('bookings.table.dates')}</label>
                             <p className="text-theme-primary font-medium mt-1 opacity-70 cursor-not-allowed">{formatDate(booking.startDate)} - {formatDate(booking.endDate)}</p>
                         </div>
                         <div>
-                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('bookings.table.total')}</label>
+                            <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest">{t('bookings.table.total')}</label>
                             <p className="text-theme-primary font-medium mt-1 opacity-70 cursor-not-allowed">{formatCurrency(booking.totalCost)}</p>
                         </div>
                         <div>
-                            <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('modals.bookNow.startingKm')}</label>
+                            <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest">{t('modals.bookNow.startingKm')}</label>
                             <p className="text-theme-primary font-medium mt-1 opacity-70 cursor-not-allowed">{booking.startingKm}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-zinc-950 p-6 rounded-xl border border-zinc-800">
+                <div className="bg-theme-card p-6 rounded-xl border border-theme">
                     <label className="block text-[10px] font-bold text-brand-blue uppercase tracking-widest mb-2">
                         {t('modals.bookNow.endingKm')} *
                     </label>
@@ -91,7 +91,7 @@ const TerminateBookingModal = ({ isOpen, onClose, booking, onTerminate }) => {
                         type="number"
                         value={endingKm}
                         onChange={(e) => setEndingKm(e.target.value)}
-                        className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-theme-primary placeholder-zinc-500 focus:outline-none focus:border-brand-blue transition-colors font-bold text-lg"
+                        className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary placeholder-theme-tertiary focus:outline-none focus:border-brand-blue transition-colors font-bold text-lg"
                         placeholder="0"
                         required
                         autoFocus

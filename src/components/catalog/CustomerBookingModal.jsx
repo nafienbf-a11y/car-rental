@@ -135,19 +135,19 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={t('catalog.bookTitle')} size="xl">
             {/* Stepper Header */}
-            <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-800">
-                <div className={`flex flex-col items-center ${step >= 1 ? 'text-brand-blue' : 'text-zinc-500'}`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mb-2 ${step >= 1 ? 'bg-brand-blue text-white' : 'bg-zinc-800'}`}>1</div>
+            <div className="flex items-center justify-between mb-8 pb-4 border-b border-theme">
+                <div className={`flex flex-col items-center ${step >= 1 ? 'text-brand-blue' : 'text-theme-tertiary'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mb-2 ${step >= 1 ? 'bg-brand-blue text-white' : 'bg-theme-input text-theme-secondary'}`}>1</div>
                     <span className="text-xs font-semibold">{t('catalog.stepDates')}</span>
                 </div>
-                <div className="h-[2px] flex-1 bg-zinc-800 mx-4"><div className={`h-full bg-brand-blue transition-all ${step >= 2 ? 'w-full' : 'w-0'}`} /></div>
-                <div className={`flex flex-col items-center ${step >= 2 ? 'text-brand-blue' : 'text-zinc-500'}`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mb-2 ${step >= 2 ? 'bg-brand-blue text-white' : 'bg-zinc-800'}`}>2</div>
+                <div className="h-[2px] flex-1 bg-theme-border mx-4"><div className={`h-full bg-brand-blue transition-all ${step >= 2 ? 'w-full' : 'w-0'}`} /></div>
+                <div className={`flex flex-col items-center ${step >= 2 ? 'text-brand-blue' : 'text-theme-tertiary'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mb-2 ${step >= 2 ? 'bg-brand-blue text-white' : 'bg-theme-input text-theme-secondary'}`}>2</div>
                     <span className="text-xs font-semibold">{t('catalog.stepDetails')}</span>
                 </div>
-                <div className="h-[2px] flex-1 bg-zinc-800 mx-4"><div className={`h-full bg-brand-blue transition-all ${step >= 3 ? 'w-full' : 'w-0'}`} /></div>
-                <div className={`flex flex-col items-center ${step >= 3 ? 'text-brand-blue' : 'text-zinc-500'}`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mb-2 ${step >= 3 ? 'bg-brand-blue text-white' : 'bg-zinc-800'}`}>3</div>
+                <div className="h-[2px] flex-1 bg-theme-border mx-4"><div className={`h-full bg-brand-blue transition-all ${step >= 3 ? 'w-full' : 'w-0'}`} /></div>
+                <div className={`flex flex-col items-center ${step >= 3 ? 'text-brand-blue' : 'text-theme-tertiary'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold mb-2 ${step >= 3 ? 'bg-brand-blue text-white' : 'bg-theme-input text-theme-secondary'}`}>3</div>
                     <span className="text-xs font-semibold">{t('catalog.stepPayment')}</span>
                 </div>
             </div>
@@ -157,7 +157,7 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
                 <div className="lg:col-span-2">
                     {step === 1 && (
                         <div className="space-y-4">
-                            <h3 className="text-lg font-bold text-white mb-4">{t('catalog.selectDatesText')}</h3>
+                            <h3 className="text-lg font-bold text-theme-primary mb-4">{t('catalog.selectDatesText')}</h3>
                             <CalendarGrid
                                 currentDate={currentDate}
                                 setCurrentDate={setCurrentDate}
@@ -173,21 +173,21 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
                     {step === 2 && (
                         <div className="space-y-8">
                             <div>
-                                <h3 className="text-lg font-bold text-white mb-4">{t('catalog.addonsTitle')}</h3>
+                                <h3 className="text-lg font-bold text-theme-primary mb-4">{t('catalog.addonsTitle')}</h3>
                                 <div className="space-y-3">
                                     {ADDONS.map(addon => (
                                         <div
                                             key={addon.id}
                                             onClick={() => toggleAddon(addon.id)}
-                                            className={`p-4 rounded-xl border cursor-pointer transition-all flex items-center justify-between ${selectedAddons.includes(addon.id) ? 'bg-brand-blue/10 border-brand-blue' : 'bg-zinc-900/50 border-zinc-800 hover:border-zinc-700'}`}
+                                            className={`p-4 rounded-xl border cursor-pointer transition-all flex items-center justify-between ${selectedAddons.includes(addon.id) ? 'bg-brand-blue/10 border-brand-blue' : 'bg-theme-subcard border-theme hover:border-brand-blue/50'}`}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <div className={`w-5 h-5 rounded flex items-center justify-center ${selectedAddons.includes(addon.id) ? 'bg-brand-blue' : 'border border-zinc-600'}`}>
+                                                <div className={`w-5 h-5 rounded flex items-center justify-center ${selectedAddons.includes(addon.id) ? 'bg-brand-blue' : 'border border-theme'}`}>
                                                     {selectedAddons.includes(addon.id) && <Check className="w-3 h-3 text-white" />}
                                                 </div>
                                                 <div>
-                                                    <p className="text-white font-semibold">{t(`catalog.addons.${addon.id}`)}</p>
-                                                    <p className="text-zinc-400 text-sm">{addon.priceType === 'per_day' ? t('catalog.perDay') : t('catalog.perTrip')}</p>
+                                                    <p className="text-theme-primary font-semibold">{t(`catalog.addons.${addon.id}`)}</p>
+                                                    <p className="text-theme-secondary text-sm">{addon.priceType === 'per_day' ? t('catalog.perDay') : t('catalog.perTrip')}</p>
                                                 </div>
                                             </div>
                                             <span className="text-brand-blue font-bold">+{addon.price} MAD</span>
@@ -197,7 +197,7 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
                             </div>
 
                             <div>
-                                <h3 className="text-lg font-bold text-white mb-4">{t('catalog.customerInfo')}</h3>
+                                <h3 className="text-lg font-bold text-theme-primary mb-4">{t('catalog.customerInfo')}</h3>
                                 <div className="space-y-4">
                                     <input
                                         type="text"
@@ -205,7 +205,7 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
                                         value={customerInfo.name}
                                         onChange={handleCustomerChange}
                                         placeholder={t('catalog.fullName')}
-                                        className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-brand-blue/50 outline-none"
+                                        className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:ring-2 focus:ring-brand-blue/50 outline-none"
                                     />
                                     <input
                                         type="email"
@@ -213,7 +213,7 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
                                         value={customerInfo.email}
                                         onChange={handleCustomerChange}
                                         placeholder={t('catalog.email')}
-                                        className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-brand-blue/50 outline-none"
+                                        className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:ring-2 focus:ring-brand-blue/50 outline-none"
                                     />
                                     <input
                                         type="tel"
@@ -221,7 +221,7 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
                                         value={customerInfo.phone}
                                         onChange={handleCustomerChange}
                                         placeholder={t('catalog.phoneField')}
-                                        className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:ring-2 focus:ring-brand-blue/50 outline-none"
+                                        className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:ring-2 focus:ring-brand-blue/50 outline-none"
                                     />
                                 </div>
                             </div>
@@ -230,11 +230,11 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
 
                     {step === 3 && (
                         <div className="space-y-6">
-                            <h3 className="text-lg font-bold text-white mb-4">{t('catalog.paymentDetails')}</h3>
-                            <div className="bg-zinc-900 p-6 rounded-xl border border-zinc-800">
+                            <h3 className="text-lg font-bold text-theme-primary mb-4">{t('catalog.paymentDetails')}</h3>
+                            <div className="bg-theme-subcard p-6 rounded-xl border border-theme">
                                 <div className="flex items-center gap-3 mb-6 relative">
                                     <ShieldCheck className="w-6 h-6 text-green-500" />
-                                    <span className="text-white font-medium">{t('catalog.securePayment')}</span>
+                                    <span className="text-theme-primary font-medium">{t('catalog.securePayment')}</span>
                                     <div className="absolute top-0 right-0 gap-2 flex">
                                         {/* Mocking Stripe/Visa icons */}
                                         <div className="px-2 py-1 bg-white rounded text-blue-900 font-bold text-xs italic">VISA</div>
@@ -242,10 +242,10 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
                                     </div>
                                 </div>
                                 <div className="space-y-4">
-                                    <input type="text" placeholder={t('catalog.cardNumber')} className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white" />
+                                    <input type="text" placeholder={t('catalog.cardNumber')} className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:ring-2 focus:ring-brand-blue/50 outline-none" />
                                     <div className="grid grid-cols-2 gap-4">
-                                        <input type="text" placeholder="MM/YY" className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white" />
-                                        <input type="text" placeholder="CVC" className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white" />
+                                        <input type="text" placeholder="MM/YY" className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:ring-2 focus:ring-brand-blue/50 outline-none" />
+                                        <input type="text" placeholder="CVC" className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:ring-2 focus:ring-brand-blue/50 outline-none" />
                                     </div>
                                 </div>
                             </div>
@@ -255,31 +255,31 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
 
                 {/* Sidebar Summary */}
                 <div className="lg:col-span-1">
-                    <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden sticky top-0">
-                        <div className="p-4 bg-zinc-950 border-b border-zinc-800 flex gap-4">
+                    <div className="bg-theme-subcard rounded-xl border border-theme overflow-hidden sticky top-0">
+                        <div className="p-4 bg-theme-input border-b border-theme flex gap-4">
                             <img src={vehicle.image} alt={vehicle.brand} className="w-20 h-16 object-contain" />
                             <div>
-                                <h4 className="text-white font-bold">{vehicle.brand} {vehicle.model}</h4>
-                                <p className="text-zinc-400 text-sm">{vehicle.pricePerDay || vehicle.price_per_day} MAD / {t('catalog.day')}</p>
+                                <h4 className="text-theme-primary font-bold">{vehicle.brand} {vehicle.model}</h4>
+                                <p className="text-theme-secondary text-sm">{vehicle.pricePerDay || vehicle.price_per_day} MAD / {t('catalog.day')}</p>
                             </div>
                         </div>
                         <div className="p-5 space-y-4">
-                            <h4 className="text-sm font-bold text-zinc-400 uppercase tracking-wider">{t('catalog.summary')}</h4>
+                            <h4 className="text-sm font-bold text-theme-secondary uppercase tracking-wider">{t('catalog.summary')}</h4>
 
                             <div className="flex justify-between text-sm">
-                                <span className="text-zinc-300">{totalDays} {t('catalog.days')}</span>
-                                <span className="text-white font-semibold">{basePrice} MAD</span>
+                                <span className="text-theme-secondary">{totalDays} {t('catalog.days')}</span>
+                                <span className="text-theme-primary font-semibold">{basePrice} MAD</span>
                             </div>
 
                             {selectedAddons.length > 0 && (
-                                <div className="space-y-2 pt-2 border-t border-zinc-800/50">
+                                <div className="space-y-2 pt-2 border-t border-theme">
                                     {selectedAddons.map(id => {
                                         const ad = ADDONS.find(a => a.id === id);
                                         const c = ad.priceType === 'per_day' ? ad.price * totalDays : ad.price;
                                         return (
                                             <div key={id} className="flex justify-between text-sm">
-                                                <span className="text-zinc-400 w-32 truncate">{t(`catalog.addons.${id}`)}</span>
-                                                <span className="text-white">{c} MAD</span>
+                                                <span className="text-theme-secondary w-32 truncate">{t(`catalog.addons.${id}`)}</span>
+                                                <span className="text-theme-primary">{c} MAD</span>
                                             </div>
                                         );
                                     })}
@@ -287,14 +287,14 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
                             )}
 
                             {isEarlyBooking && (
-                                <div className="flex justify-between text-sm pt-2 border-t border-zinc-800/50 text-green-400">
+                                <div className="flex justify-between text-sm pt-2 border-t border-theme text-green-400">
                                     <span>{t('catalog.earlyDiscount')} (-10%)</span>
                                     <span>-{discount.toFixed(0)} MAD</span>
                                 </div>
                             )}
 
-                            <div className="flex justify-between items-end pt-4 border-t border-zinc-800 mt-4">
-                                <span className="text-zinc-400 uppercase font-bold text-xs">{t('catalog.total')}</span>
+                            <div className="flex justify-between items-end pt-4 border-t border-theme mt-4">
+                                <span className="text-theme-secondary uppercase font-bold text-xs">{t('catalog.total')}</span>
                                 <span className="text-2xl font-black text-brand-blue">{finalTotal.toFixed(0)} MAD</span>
                             </div>
                         </div>
@@ -303,7 +303,7 @@ const CustomerBookingModal = ({ isOpen, onClose, vehicle }) => {
             </div>
 
             {/* Footer Actions */}
-            <div className="mt-8 pt-4 border-t border-zinc-800 flex justify-between">
+            <div className="mt-8 pt-4 border-t border-theme flex justify-between">
                 <Button variant="ghost" onClick={step === 1 ? onClose : handleBack}>
                     {step === 1 ? t('modals.common.cancel') : t('catalog.back')}
                 </Button>

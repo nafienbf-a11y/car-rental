@@ -13,7 +13,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
                     <div className="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center flex-shrink-0">
                         <AlertTriangle className="w-6 h-6 text-red-500" />
                     </div>
-                    <p className="text-zinc-300 text-sm font-medium leading-relaxed pt-2">
+                    <p className="text-theme-secondary text-sm font-medium leading-relaxed pt-2">
                         {message || 'Are you sure?'}
                     </p>
                 </div>

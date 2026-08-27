@@ -87,20 +87,20 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
             size="md"
         >
             <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-6">
+                <div className="bg-theme-subcard border border-theme rounded-2xl p-6">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="w-10 h-10 bg-brand-blue/10 rounded-xl flex items-center justify-center">
                             <Shield className="w-5 h-5 text-brand-blue" />
                         </div>
                         <div>
                             <h3 className="text-theme-primary font-bold">Account Details</h3>
-                            <p className="text-zinc-500 text-xs mt-0.5">Basic user information and credentials</p>
+                            <p className="text-theme-secondary text-xs mt-0.5">Basic user information and credentials</p>
                         </div>
                     </div>
 
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-zinc-400 text-xs font-bold uppercase tracking-wider mb-2">
+                            <label className="block text-theme-secondary text-xs font-bold uppercase tracking-wider mb-2">
                                 Full Name
                             </label>
                             <input
@@ -109,12 +109,12 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
                                 value={formData.name}
                                 onChange={handleChange}
                                 placeholder="E.g. Jane Doe"
-                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors"
+                                className="w-full bg-theme-input border border-theme rounded-xl px-4 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-zinc-400 text-xs font-bold uppercase tracking-wider mb-2">
+                            <label className="block text-theme-secondary text-xs font-bold uppercase tracking-wider mb-2">
                                 Username <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -124,12 +124,12 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
                                 value={formData.username}
                                 onChange={handleChange}
                                 placeholder="Unique username"
-                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors"
+                                className="w-full bg-theme-input border border-theme rounded-xl px-4 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-zinc-400 text-xs font-bold uppercase tracking-wider mb-2">
+                            <label className="block text-theme-secondary text-xs font-bold uppercase tracking-wider mb-2">
                                 Password <span className="text-red-500">*</span>
                             </label>
                             <div className="relative">
@@ -140,12 +140,12 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="Enter secure password"
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl pl-4 pr-12 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors"
+                                    className="w-full bg-theme-input border border-theme rounded-xl pl-4 pr-12 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-theme-primary transition-colors"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-theme-secondary hover:text-theme-primary transition-colors"
                                 >
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
@@ -153,14 +153,14 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
                         </div>
 
                         <div>
-                            <label className="block text-zinc-400 text-xs font-bold uppercase tracking-wider mb-2">
+                            <label className="block text-theme-secondary text-xs font-bold uppercase tracking-wider mb-2">
                                 Role <span className="text-red-500">*</span>
                             </label>
                             <select
                                 name="role"
                                 value={formData.role}
                                 onChange={handleChange}
-                                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors appearance-none cursor-pointer"
+                                className="w-full bg-theme-input border border-theme rounded-xl px-4 py-3 text-theme-primary focus:outline-none focus:border-brand-blue transition-colors appearance-none cursor-pointer"
                             >
                                 <option value="staff">Staff - Read & write standard records</option>
                                 <option value="admin">Admin - Full access including settings</option>
@@ -170,7 +170,7 @@ const UserModal = ({ isOpen, onClose, onSuccess, user }) => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-3 justify-end pt-4 border-t border-zinc-800">
+                <div className="flex gap-3 justify-end pt-4 border-t border-theme">
                     <Button variant="secondary" onClick={onClose} type="button">
                         Cancel
                     </Button>

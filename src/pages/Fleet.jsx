@@ -159,7 +159,7 @@ const Fleet = () => {
             </div>
 
             {/* Status Filter Tabs */}
-            <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5 inline-flex gap-1.5 overflow-x-auto max-w-full">
+            <div className="bg-theme-card border border-theme rounded-2xl p-1.5 inline-flex gap-1.5 overflow-x-auto max-w-full">
                 {statusFilters.map((status) => {
                     const count = status === 'All'
                         ? vehiclesWithStatus.filter(v => v.status !== 'Deleted').length
@@ -169,8 +169,8 @@ const Fleet = () => {
                             key={status}
                             onClick={() => setStatusFilter(status)}
                             className={`px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 whitespace-nowrap ${statusFilter === status
-                                ? 'bg-white text-black dark:bg-zinc-50 dark:text-zinc-950 shadow-lg'
-                                : 'text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-theme-primary'
+                                ? 'bg-brand-blue text-white shadow-lg'
+                                : 'text-theme-secondary hover:bg-theme-input hover:text-theme-primary'
                                 }`}
                         >
                             {t(`fleet.${status.toLowerCase()}`)}
@@ -184,37 +184,37 @@ const Fleet = () => {
 
             {/* Fleet Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+                <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-3 mb-2">
-                        <Car className="w-5 h-5 text-zinc-400" />
-                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('fleet.totalVehicles')}</p>
+                        <Car className="w-5 h-5 text-theme-secondary" />
+                        <p className="text-theme-secondary text-[10px] uppercase tracking-widest font-bold">{t('fleet.totalVehicles')}</p>
                     </div>
                     <p className="text-3xl font-extrabold text-theme-primary tracking-tight">
                         {vehiclesWithStatus.filter(v => v.status !== 'Deleted').length}
                     </p>
                 </div>
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+                <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-3 mb-2">
                         <CheckCircle className="w-5 h-5 text-brand-blue" />
-                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('fleet.available')}</p>
+                        <p className="text-theme-secondary text-[10px] uppercase tracking-widest font-bold">{t('fleet.available')}</p>
                     </div>
                     <p className="text-3xl font-extrabold text-theme-primary tracking-tight">
                         {vehiclesWithStatus.filter(v => v.status === 'Available').length}
                     </p>
                 </div>
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+                <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-3 mb-2">
-                        <Key className="w-5 h-5 text-zinc-400" />
-                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('fleet.rented')}</p>
+                        <Key className="w-5 h-5 text-theme-secondary" />
+                        <p className="text-theme-secondary text-[10px] uppercase tracking-widest font-bold">{t('fleet.rented')}</p>
                     </div>
                     <p className="text-3xl font-extrabold text-theme-primary tracking-tight">
                         {vehiclesWithStatus.filter(v => v.status === 'Rented').length}
                     </p>
                 </div>
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+                <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-3 mb-2">
                         <Wrench className="w-5 h-5 text-brand-red" />
-                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('fleet.maintenance')}</p>
+                        <p className="text-theme-secondary text-[10px] uppercase tracking-widest font-bold">{t('fleet.maintenance')}</p>
                     </div>
                     <p className="text-3xl font-extrabold text-theme-primary tracking-tight">
                         {vehiclesWithStatus.filter(v => v.status === 'Maintenance').length}
@@ -241,9 +241,9 @@ const Fleet = () => {
                     ))}
                 </div>
             ) : (
-                <div className="glass-dark rounded-2xl p-12 text-center">
-                    <p className="text-slate-400 text-lg">{t('fleet.noVehicles')}</p>
-                    <p className="text-slate-500 text-sm mt-2">
+                <div className="bg-theme-card border border-theme rounded-2xl p-12 text-center">
+                    <p className="text-theme-secondary text-lg">{t('fleet.noVehicles')}</p>
+                    <p className="text-theme-tertiary text-sm mt-2">
                         {searchTerm
                             ? t('fleet.adjustFilters')
                             : t('fleet.startAdding')}
@@ -252,7 +252,7 @@ const Fleet = () => {
             )}
 
             {/* Mileage & Maintenance Monitoring */}
-            <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl mt-12">
+            <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl mt-12">
                 <div className="flex items-center gap-3 mb-6">
                     <Wrench className="w-6 h-6 text-brand-blue" />
                     <h3 className="text-xl font-extrabold text-theme-primary tracking-tight">Mileage & Maintenance Monitoring</h3>
@@ -262,8 +262,8 @@ const Fleet = () => {
                         const vehicleExpenses = expenses ? expenses.filter(e => e.vehicleId === vehicle.id) : [];
                         const totalExpense = vehicleExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
                         return (
-                            <div key={vehicle.id} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
-                                <div className="flex items-center justify-between mb-3 border-b border-zinc-800 pb-2">
+                            <div key={vehicle.id} className="bg-theme-subcard border border-theme rounded-xl p-4">
+                                <div className="flex items-center justify-between mb-3 border-b border-theme pb-2">
                                     <div>
                                         <p className="text-theme-primary font-bold text-sm">{vehicle.brand} {vehicle.model}</p>
                                         <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">{vehicle.plate}</p>

@@ -12,6 +12,20 @@
   <meta property="og:description" content="Looking for a car rental in Tetouan? Gatibi Rental offers the best cars at the best prices." />
   <meta property="og:type" content="website" />
   <title>Gatibi Rental - Car Rental in Tetouan</title>
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'dark');
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 
 <body>

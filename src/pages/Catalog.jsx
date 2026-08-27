@@ -117,10 +117,7 @@ const Catalog = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-600/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-medium mb-6">
-                            <Car className="w-4 h-4" />
-                            {t('catalog.badge')}
-                        </div>
+
                         <h2 className="text-3xl sm:text-5xl font-bold mb-4 leading-tight">
                             {t('catalog.heroTitle')}
                         </h2>
@@ -298,7 +295,7 @@ const Catalog = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
                                 </div>
-                                        <div>
+                                <div>
                                     <p className="text-theme-primary font-semibold text-sm">{t('catalog.address')}</p>
                                     <p className="text-theme-secondary text-sm">35°33'57.2"N 5°22'29.4"W</p>
                                 </div>

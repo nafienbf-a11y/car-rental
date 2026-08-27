@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Plus, Mail, Phone, Edit2, Trash2, MapPin, Eye } from 'lucide-react';
+import { Users, Plus, Mail, Phone, Edit2, Trash2, MapPin, Eye, Search } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useNotification } from '../context/NotificationContext';
@@ -134,8 +134,8 @@ const Clients = () => {
         if (itemsPerPage === 999999 && sortedClients.length === 0) return null;
 
         return (
-            <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-zinc-900/30 gap-4 border-b border-zinc-800">
-                <span className="text-zinc-500 text-xs font-bold">
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-theme-subcard gap-4 border-b border-theme">
+                <span className="text-theme-secondary text-xs font-bold">
                     {t('common.showingEntries', { 
                         start: sortedClients.length === 0 ? 0 : ((currentPage - 1) * itemsPerPage) + 1, 
                         end: Math.min(currentPage * itemsPerPage, sortedClients.length), 
@@ -151,7 +151,7 @@ const Clients = () => {
                     >
                         {t('common.previous')}
                     </Button>
-                    <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-theme-primary text-xs font-bold shadow-inner">
+                    <span className="flex items-center justify-center px-4 py-1 bg-theme-input border border-theme rounded-lg text-theme-primary text-xs font-bold shadow-inner">
                         {currentPage} / {totalPages || 1}
                     </span>
                     <Button 
@@ -169,7 +169,6 @@ const Clients = () => {
 
     return (
         <div className="space-y-6">
-            {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-extrabold text-theme-primary tracking-tight mb-1">{t('clients.title')}</h1>
@@ -180,39 +179,38 @@ const Clients = () => {
                 </Button>
             </div>
 
-            {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+                <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center">
                             <Users className="w-6 h-6 text-brand-blue" />
                         </div>
                         <div>
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('clients.totalClients')}</p>
+                            <p className="text-[10px] text-theme-secondary uppercase tracking-widest font-bold">{t('clients.totalClients')}</p>
                             <p className="text-2xl font-extrabold text-theme-primary">{clients.length}</p>
                         </div>
                     </div>
                 </div>
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+                <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center">
                             <Mail className="w-6 h-6 text-brand-blue" />
                         </div>
                         <div>
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('clients.activeBookings')}</p>
+                            <p className="text-[10px] text-theme-secondary uppercase tracking-widest font-bold">{t('clients.activeBookings')}</p>
                             <p className="text-2xl font-extrabold text-theme-primary">
                                 {bookings.filter(b => b.status === 'Active').length}
                             </p>
                         </div>
                     </div>
                 </div>
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+                <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center">
                             <Phone className="w-6 h-6 text-brand-blue" />
                         </div>
                         <div>
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('clients.newThisMonth')}</p>
+                            <p className="text-[10px] text-theme-secondary uppercase tracking-widest font-bold">{t('clients.newThisMonth')}</p>
                             <p className="text-2xl font-extrabold text-theme-primary">
                                 {clients.filter(c => {
                                     const created = new Date(c.createdAt);
@@ -234,12 +232,12 @@ const Clients = () => {
                         placeholder={t('clients.searchPlaceholder')}
                     />
                 </div>
-                <div className="flex items-center gap-2 bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5 self-end sm:self-auto">
-                    <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2">{t('common.showLabel')}</span>
+                <div className="flex items-center gap-2 bg-theme-card border border-theme rounded-2xl p-1.5 self-end sm:self-auto">
+                    <span className="text-theme-secondary text-[10px] font-bold uppercase tracking-widest pl-2">{t('common.showLabel')}</span>
                     <select 
                         value={itemsPerPage} 
                         onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                        className="bg-zinc-900 border border-zinc-800 text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
+                        className="bg-theme-input border border-theme text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
                     >
                         <option value={10}>{t('common.rowsCount', { count: 10 })}</option>
                         <option value={20}>{t('common.rowsCount', { count: 20 })}</option>
@@ -250,16 +248,16 @@ const Clients = () => {
             </div>
 
             {/* Clients Table */}
-            <div className="bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
+            <div className="bg-theme-card border border-theme rounded-2xl overflow-hidden shadow-2xl">
                 {renderPagination()}
                 <div className="p-6 pt-2">
                     {sortedClients.length === 0 ? (
                         <div className="text-center py-12">
-                            <Users className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
+                            <Users className="w-16 h-16 text-theme-tertiary mx-auto mb-4" />
                             <h3 className="text-xl font-bold text-theme-primary mb-2">
                                 {searchTerm ? t('clients.noClientsFound') : t('clients.noClientsYet')}
                             </h3>
-                            <p className="text-zinc-500 mb-6">
+                            <p className="text-theme-secondary mb-6">
                                 {searchTerm ? t('clients.adjustSearch') : t('clients.startAdding')}
                             </p>
                             {!searchTerm && (
@@ -272,21 +270,21 @@ const Clients = () => {
                         <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead>
-                                    <tr className="border-b border-zinc-800">
+                                    <tr className="border-b border-theme bg-theme-subcard">
                                         <SortableHeader label={t('clients.table.client')} sortKey="name" />
                                         <SortableHeader label={t('clients.table.contact')} sortKey="email" />
                                         <SortableHeader label={t('clients.table.license')} sortKey="licenseNumber" />
                                         <SortableHeader label={t('clients.table.bookings')} sortKey="bookingsCount" />
-                                        <th className="text-right rtl:text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                        <th className="text-right rtl:text-left py-4 px-4 text-[10px] font-bold text-theme-secondary uppercase tracking-widest">
                                             {t('clients.table.actions')}
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="divide-y divide-theme">
                                     {(paginatedClients || []).map((client) => {
                                         if (!client) return null;
                                         return (
-                                            <tr key={client.id || Math.random()} className="border-b border-zinc-800 hover:bg-zinc-900/30 transition-colors">
+                                            <tr key={client.id || Math.random()} className="border-b border-theme hover:bg-theme-input/40 transition-colors">
                                                 <td className="py-4 px-4 text-left rtl:text-right">
                                                     <div>
                                                         <p className="font-bold text-theme-primary">{client.name || t('clients.unknown')}</p>

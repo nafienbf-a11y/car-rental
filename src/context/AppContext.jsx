@@ -33,7 +33,7 @@ export const AppProvider = ({ children }) => {
         const saved = localStorage.getItem('theme');
         if (saved) return saved;
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        return prefersDark ? 'dark' : 'dark';
+        return prefersDark ? 'dark' : 'light';
     });
 
     useEffect(() => {
@@ -45,6 +45,17 @@ export const AppProvider = ({ children }) => {
         }
         localStorage.setItem('theme', theme);
     }, [theme]);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const handleSystemThemeChange = (e) => {
+            if (!localStorage.getItem('theme')) {
+                setThemeState(e.matches ? 'dark' : 'light');
+            }
+        };
+        mediaQuery.addEventListener('change', handleSystemThemeChange);
+        return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
+    }, []);
 
     const toggleTheme = () => {
         setThemeState(prev => prev === 'dark' ? 'light' : 'dark');

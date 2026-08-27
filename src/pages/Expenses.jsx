@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DollarSign, Wrench, Plus, Edit2, Trash2 } from 'lucide-react';
+import { DollarSign, Wrench, Plus, Edit2, Trash2, TrendingUp } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/common/Button';
@@ -120,8 +120,8 @@ const Expenses = () => {
         if (itemsPerPage === 999999 && sortedExpenses.length === 0) return null;
 
         return (
-            <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-zinc-900/30 gap-4 border-b border-zinc-800">
-                <span className="text-zinc-500 text-xs font-bold">
+            <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-theme-subcard gap-4 border-b border-theme">
+                <span className="text-theme-secondary text-xs font-bold">
                     {t('common.showingEntries', { 
                         start: sortedExpenses.length === 0 ? 0 : ((currentPage - 1) * itemsPerPage) + 1, 
                         end: Math.min(currentPage * itemsPerPage, sortedExpenses.length), 
@@ -137,7 +137,7 @@ const Expenses = () => {
                     >
                         {t('common.previous')}
                     </Button>
-                    <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-theme-primary text-xs font-bold shadow-inner">
+                    <span className="flex items-center justify-center px-4 py-1 bg-theme-input border border-theme rounded-lg text-theme-primary text-xs font-bold shadow-inner">
                         {currentPage} / {totalPages || 1}
                     </span>
                     <Button 
@@ -161,37 +161,32 @@ const Expenses = () => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-extrabold text-theme-primary tracking-tight mb-1">{t('expenses.title')}</h1>
-                    <p className="text-zinc-500 font-medium tracking-tight">{t('expenses.subtitle')}</p>
+                    <p className="text-theme-secondary font-medium tracking-tight">{t('expenses.subtitle')}</p>
                 </div>
                 <Button
                     variant="primary"
                     icon={Plus}
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => { setEditingExpense(null); setIsModalOpen(true); }}
                 >
                     {t('expenses.addExpense')}
                 </Button>
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-3 mb-2">
-                        <DollarSign className="w-5 h-5 text-brand-red" />
-                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('expenses.totalExpenses')}</p>
+                        <TrendingUp className="w-5 h-5 text-brand-red" />
+                        <p className="text-theme-secondary text-[10px] uppercase tracking-widest font-bold">{t('expenses.totalExpenses')}</p>
                     </div>
-                    <p className="text-3xl font-extrabold text-theme-primary tracking-tight">{formatCurrency(totalExpenses)}</p>
+                    <p className="text-3xl font-extrabold text-theme-primary tracking-tight">
+                        {formatCurrency(totalExpenses)}
+                    </p>
                 </div>
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
-                    <div className="flex items-center gap-3 mb-2">
-                        <Wrench className="w-5 h-5 text-zinc-400" />
-                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('expenses.maintenance')}</p>
-                    </div>
-                    <p className="text-3xl font-extrabold text-theme-primary tracking-tight">{expenses.length}</p>
-                </div>
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl">
+                <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl">
                     <div className="flex items-center gap-3 mb-2">
                         <DollarSign className="w-5 h-5 text-brand-blue" />
-                        <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">{t('expenses.avgCost', 'Avg Cost')}</p>
+                        <p className="text-theme-secondary text-[10px] uppercase tracking-widest font-bold">{t('expenses.avgCost', 'Avg Cost')}</p>
                     </div>
                     <p className="text-3xl font-extrabold text-theme-primary tracking-tight">
                         {formatCurrency(totalExpenses / expenses.length || 0)}
@@ -201,12 +196,12 @@ const Expenses = () => {
 
             {/* Controls Row */}
             <div className="flex justify-end mb-4">
-                <div className="flex items-center gap-2 bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5">
-                    <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2">{t('common.showLabel')}</span>
+                <div className="flex items-center gap-2 bg-theme-card border border-theme rounded-2xl p-1.5">
+                    <span className="text-theme-secondary text-[10px] font-bold uppercase tracking-widest pl-2">{t('common.showLabel')}</span>
                     <select 
                         value={itemsPerPage} 
                         onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                        className="bg-zinc-900 border border-zinc-800 text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
+                        className="bg-theme-input border border-theme text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
                     >
                         <option value={10}>{t('common.rowsCount', { count: 10 })}</option>
                         <option value={20}>{t('common.rowsCount', { count: 20 })}</option>
@@ -217,39 +212,39 @@ const Expenses = () => {
             </div>
 
             {/* Expenses Table */}
-            <div className="bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
+            <div className="bg-theme-card border border-theme rounded-2xl overflow-hidden shadow-2xl">
                 {renderPagination()}
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="border-b border-zinc-800">
+                            <tr className="border-b border-theme">
                                 <SortableHeader label={t('expenses.table.date')} sortKey="date" />
                                 <SortableHeader label={t('expenses.table.vehicle')} sortKey="vehicleId" />
                                 <SortableHeader label={t('expenses.table.category')} sortKey="category" />
                                 <SortableHeader label={t('expenses.table.description')} sortKey="description" />
                                 <SortableHeader label={t('expenses.table.amount')} sortKey="amount" />
-                                <th className="text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('expenses.table.actions')}</th>
+                                <th className="text-left p-5 text-[10px] font-black text-theme-secondary uppercase tracking-widest">{t('expenses.table.actions')}</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-zinc-900">
+                        <tbody className="divide-y divide-theme">
                             {paginatedExpenses.map((expense) => (
                                 <tr
                                     key={expense.id}
-                                    className="hover:bg-zinc-900/50 transition-colors"
+                                    className="hover:bg-theme-input/50 transition-colors"
                                 >
                                     <td className="p-5">
-                                        <span className="text-zinc-400 font-bold text-xs">{formatDate(expense.date)}</span>
+                                        <span className="text-theme-secondary font-bold text-xs">{formatDate(expense.date)}</span>
                                     </td>
                                     <td className="p-5">
                                         <span className="text-theme-primary font-bold text-sm">{getVehicleName(expense.vehicleId)}</span>
                                     </td>
                                     <td className="p-5">
-                                        <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest bg-zinc-900 text-zinc-400 border border-zinc-800 ${getCategoryColor(expense.category)}`}>
+                                        <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest bg-theme-input text-theme-secondary border border-theme ${getCategoryColor(expense.category)}`}>
                                             {expense.category}
                                         </span>
                                     </td>
                                     <td className="p-5">
-                                        <span className="text-zinc-400 text-sm font-medium">{expense.description}</span>
+                                        <span className="text-theme-secondary text-sm font-medium">{expense.description}</span>
                                     </td>
                                     <td className="p-5">
                                         <span className="text-brand-red font-black text-sm">{formatCurrency(expense.amount)}</span>
