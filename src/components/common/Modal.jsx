@@ -46,14 +46,14 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
                             transition={{ type: 'spring', duration: 0.5 }}
-                            className={`bg-zinc-950 rounded-2xl border border-zinc-800 shadow-2xl w-full ${sizes[size]} max-h-[90vh] overflow-hidden`}
+                            className={`bg-theme-card text-theme-primary rounded-2xl border border-theme shadow-2xl w-full ${sizes[size]} max-h-[90vh] overflow-hidden`}
                         >
                             {/* Header */}
-                            <div className="flex items-center justify-between p-6 border-b border-zinc-800">
+                            <div className="flex items-center justify-between p-6 border-b border-theme">
                                 <h2 className="text-2xl font-extrabold text-theme-primary tracking-tight">{title}</h2>
                                 <button
                                     onClick={onClose}
-                                    className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg transition-colors"
+                                    className="p-2 hover:bg-theme-input rounded-lg transition-colors"
                                 >
                                     <X className="w-5 h-5 text-zinc-500 hover:text-theme-primary transition-colors" />
                                 </button>

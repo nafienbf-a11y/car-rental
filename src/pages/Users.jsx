@@ -128,39 +128,39 @@ const Users = () => {
                 </div>
             </div>
 
-            <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl overflow-hidden">
+            <div className="bg-theme-card border border-theme rounded-2xl p-6 shadow-2xl overflow-hidden">
                 {loading ? (
-                    <div className="text-center py-12 text-zinc-500">Loading...</div>
+                    <div className="text-center py-12 text-theme-secondary">Loading...</div>
                 ) : filteredUsers.length === 0 ? (
                     <div className="text-center py-12">
-                        <Shield className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
+                        <Shield className="w-16 h-16 text-theme-tertiary mx-auto mb-4" />
                         <h3 className="text-xl font-bold text-theme-primary mb-2">{t('users.noUsers', 'No users found')}</h3>
-                        <p className="text-zinc-500 mb-6">{t('users.noUsersMatch', 'No users match your criteria.')}</p>
+                        <p className="text-theme-secondary mb-6">{t('users.noUsersMatch', 'No users match your criteria.')}</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
-                                <tr className="border-b border-zinc-800">
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('users.table.name')}</th>
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('users.table.username')}</th>
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('users.table.role')}</th>
-                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('users.table.status')}</th>
-                                    <th className="text-right py-4 px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{t('users.table.actions')}</th>
+                                <tr className="border-b border-theme bg-theme-subcard">
+                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-theme-secondary uppercase tracking-widest">{t('users.table.name')}</th>
+                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-theme-secondary uppercase tracking-widest">{t('users.table.username')}</th>
+                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-theme-secondary uppercase tracking-widest">{t('users.table.role')}</th>
+                                    <th className="text-left py-4 px-4 text-[10px] font-bold text-theme-secondary uppercase tracking-widest">{t('users.table.status')}</th>
+                                    <th className="text-right py-4 px-4 text-[10px] font-bold text-theme-secondary uppercase tracking-widest">{t('users.table.actions')}</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="divide-y divide-theme">
                                 {filteredUsers.map((u) => (
-                                    <tr key={u.id} className="border-b border-zinc-800 hover:bg-zinc-900/30 transition-colors">
+                                    <tr key={u.id} className="border-b border-theme hover:bg-theme-input/40 transition-colors">
                                         <td className="py-4 px-4 font-bold text-theme-primary">{u.name || '-'}</td>
-                                        <td className="py-4 px-4 text-zinc-300 font-mono text-sm">{u.username}</td>
+                                        <td className="py-4 px-4 text-theme-secondary font-mono text-sm">{u.username}</td>
                                         <td className="py-4 px-4">
                                             <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-widest ${u.role === 'admin' ? 'bg-purple-500/10 text-purple-400' : 'bg-blue-500/10 text-blue-400'}`}>
                                                 {u.role}
                                             </span>
                                         </td>
                                         <td className="py-4 px-4">
-                                            <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-widest ${u.is_active ? 'bg-emerald-500/10 text-emerald-400' : 'bg-zinc-800 text-zinc-400'}`}>
+                                            <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-widest ${u.is_active ? 'bg-emerald-500/10 text-emerald-400' : 'bg-theme-input text-theme-tertiary'}`}>
                                                 {u.is_active ? 'Online' : 'Offline'}
                                             </span>
                                         </td>

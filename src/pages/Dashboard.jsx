@@ -194,7 +194,7 @@ const Dashboard = () => {
                 {recentActivities.length > 0 ? (
                     <div className="space-y-3">
                         {recentActivities.slice(0, 5).map((activity) => (
-                            <div key={activity.id} className="flex items-center gap-4 p-4 bg-zinc-50 dark:bg-zinc-50 dark:bg-zinc-800/50 border border-theme rounded-xl hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors">
+                            <div key={activity.id} className="flex items-center gap-4 p-4 bg-theme-subcard border border-theme rounded-xl hover:border-brand-blue/40 transition-colors">
                                 <div className={`w-2 h-2 rounded-full ${activity.type === 'vehicle_new' ? 'bg-purple-500' :
                                         activity.type === 'client_new' ? 'bg-emerald-500' :
                                             activity.type === 'booking_new' ? 'bg-brand-blue' :

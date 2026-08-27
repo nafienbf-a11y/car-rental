@@ -28,17 +28,17 @@ const Toast = () => {
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 50 }}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl border backdrop-blur-md shadow-2xl min-w-[300px] ${bgColors[notification.type] || bgColors.info} bg-zinc-950`}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl border backdrop-blur-md shadow-2xl min-w-[300px] ${bgColors[notification.type] || bgColors.info} bg-theme-card`}
                     >
                         {icons[notification.type] || icons.info}
-                        <p className="flex-1 text-sm font-medium text-white">
+                        <p className="flex-1 text-sm font-medium text-theme-primary">
                             {notification.message}
                         </p>
                         <button
                             onClick={hideNotification}
-                            className="p-1 hover:bg-white/10 rounded-lg transition-colors"
+                            className="p-1 hover:bg-theme-input rounded-lg transition-colors"
                         >
-                            <X className="w-4 h-4 text-zinc-400" />
+                            <X className="w-4 h-4 text-theme-secondary" />
                         </button>
                     </motion.div>
                 </div>

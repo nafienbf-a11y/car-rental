@@ -49,7 +49,7 @@ const History = () => {
             case 'DELETE': return 'bg-red-500/10 text-red-500 border-red-500/20';
             case 'CANCEL': return 'bg-red-500/10 text-red-500 border-red-500/20';
             case 'TERMINATE': return 'bg-orange-500/10 text-orange-500 border-orange-500/20';
-            default: return 'bg-zinc-500/10 text-theme-secondary border-zinc-500/20';
+            default: return 'bg-theme-input text-theme-secondary border-theme';
         }
     };
 
@@ -85,23 +85,23 @@ const History = () => {
             </div>
 
             {/* Audit Table */}
-            <div className="bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
+            <div className="bg-theme-card border border-theme rounded-2xl overflow-hidden shadow-2xl">
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="border-b border-zinc-800 bg-zinc-950">
-                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.timestamp')}</th>
-                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.action')}</th>
-                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.entity')}</th>
-                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.details')}</th>
-                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('history.table.performedBy')}</th>
+                            <tr className="border-b border-theme bg-theme-subcard">
+                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-theme-secondary uppercase tracking-widest">{t('history.table.timestamp')}</th>
+                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-theme-secondary uppercase tracking-widest">{t('history.table.action')}</th>
+                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-theme-secondary uppercase tracking-widest">{t('history.table.entity')}</th>
+                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-theme-secondary uppercase tracking-widest">{t('history.table.details')}</th>
+                                <th className="text-left rtl:text-right p-5 text-[10px] font-black text-theme-secondary uppercase tracking-widest">{t('history.table.performedBy')}</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-zinc-800">
+                        <tbody className="divide-y divide-theme">
                             {paginatedLogs.map((log) => (
-                                <tr key={log.id} className="hover:bg-zinc-900/30 transition-colors">
+                                <tr key={log.id} className="hover:bg-theme-input/40 transition-colors">
                                     <td className="p-5">
-                                        <span className="text-zinc-400 text-xs font-bold">{formatDate(log.created_at)}</span>
+                                        <span className="text-theme-secondary text-xs font-bold">{formatDate(log.created_at)}</span>
                                     </td>
                                     <td className="p-5">
                                         <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${getActionBadgeClass(log.action_type)}`}>
@@ -115,14 +115,14 @@ const History = () => {
                                         </div>
                                     </td>
                                     <td className="p-5 text-left rtl:text-right">
-                                        <p className="text-zinc-400 text-sm max-w-md line-clamp-2">{log.details}</p>
+                                        <p className="text-theme-secondary text-sm max-w-md line-clamp-2">{log.details}</p>
                                     </td>
                                     <td className="p-5">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-[10px] font-bold text-zinc-400">
+                                            <div className="w-6 h-6 rounded-full bg-theme-input border border-theme flex items-center justify-center text-[10px] font-bold text-theme-secondary">
                                                 {log.performed_by?.charAt(0)}
                                             </div>
-                                            <span className="text-zinc-400 text-xs font-bold">{log.performed_by}</span>
+                                            <span className="text-theme-secondary text-xs font-bold">{log.performed_by}</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -133,13 +133,13 @@ const History = () => {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="p-4 border-t border-zinc-800 flex items-center justify-between bg-zinc-950">
+                    <div className="p-4 border-t border-theme flex items-center justify-between bg-theme-subcard">
                         <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                             disabled={currentPage === 1}
-                            className="text-[10px] uppercase tracking-widest text-zinc-400 hover:text-theme-primary"
+                            className="text-[10px] uppercase tracking-widest text-theme-secondary hover:text-theme-primary"
                         >
                             {t('common.previous')}
                         </Button>
@@ -150,8 +150,8 @@ const History = () => {
                                     key={page}
                                     onClick={() => setCurrentPage(page)}
                                     className={`w-8 h-8 rounded-lg text-xs font-bold transition-all border ${currentPage === page
-                                        ? 'bg-white text-black border-white dark:bg-zinc-50 dark:text-zinc-950 dark:border-zinc-50'
-                                        : 'text-zinc-500 border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-theme-primary'
+                                        ? 'bg-brand-blue text-white border-brand-blue shadow-lg'
+                                        : 'text-theme-secondary border-theme hover:bg-theme-input hover:text-theme-primary'
                                         }`}
                                 >
                                     {page}

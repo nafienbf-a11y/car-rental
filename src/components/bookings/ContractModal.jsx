@@ -262,13 +262,13 @@ const ContractModal = ({ isOpen, onClose, booking }) => {
             ) : (
                 <div className="space-y-6">
                     {/* Top Status & Contract Badge */}
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div className="bg-theme-subcard border border-theme rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                         <div className="flex items-center space-x-3 rtl:space-x-reverse">
                             <div className={`p-3 rounded-xl border ${isSigned ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-amber-500/10 border-amber-500/20 text-amber-400'}`}>
                                 <FileText className="w-6 h-6" />
                             </div>
                             <div>
-                                <p className="text-xs font-mono font-bold text-zinc-400">
+                                <p className="text-xs font-mono font-bold text-theme-secondary">
                                     {t('contract.contractNumber', { number: contract?.contractNumber || '---' })}
                                 </p>
                                 <div className="flex items-center space-x-2 rtl:space-x-reverse mt-0.5">
@@ -289,7 +289,7 @@ const ContractModal = ({ isOpen, onClose, booking }) => {
                                 type="button"
                                 onClick={handleRefresh}
                                 disabled={isRefreshing}
-                                className="w-full sm:w-auto px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold text-xs rounded-xl transition-colors flex items-center justify-center space-x-2 rtl:space-x-reverse disabled:opacity-50"
+                                className="w-full sm:w-auto px-4 py-2 bg-theme-input hover:bg-theme-border text-theme-primary font-semibold text-xs rounded-xl transition-colors flex items-center justify-center space-x-2 rtl:space-x-reverse disabled:opacity-50 border border-theme"
                             >
                                 <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                                 <span>{t('contract.refresh')}</span>
@@ -307,29 +307,29 @@ const ContractModal = ({ isOpen, onClose, booking }) => {
 
                     {/* Summary Info Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                        <div className="bg-zinc-900/60 p-4 rounded-xl border border-zinc-800 space-y-2">
-                            <p className="text-zinc-500 font-bold uppercase tracking-wider text-[10px]">{t('contract.clientDetails')}</p>
-                            <p className="font-bold text-white text-sm">{client.name || 'N/A'}</p>
-                            <p className="text-zinc-400">{t('contract.phone')}: {client.phone || 'N/A'}</p>
-                            <p className="text-zinc-400">{t('contract.cin')}: {client.cinPassport || client.cin_passport || 'N/A'}</p>
+                        <div className="bg-theme-subcard p-4 rounded-xl border border-theme space-y-2">
+                            <p className="text-theme-tertiary font-bold uppercase tracking-wider text-[10px]">{t('contract.clientDetails')}</p>
+                            <p className="font-bold text-theme-primary text-sm">{client.name || 'N/A'}</p>
+                            <p className="text-theme-secondary">{t('contract.phone')}: {client.phone || 'N/A'}</p>
+                            <p className="text-theme-secondary">{t('contract.cin')}: {client.cinPassport || client.cin_passport || 'N/A'}</p>
                         </div>
 
-                        <div className="bg-zinc-900/60 p-4 rounded-xl border border-zinc-800 space-y-2">
-                            <p className="text-zinc-500 font-bold uppercase tracking-wider text-[10px]">{t('contract.vehicleDetails')}</p>
-                            <p className="font-bold text-white text-sm">{vehicle.brand} {vehicle.model}</p>
-                            <p className="text-zinc-400">{t('contract.plate')}: {vehicle.plate}</p>
-                            <p className="text-zinc-400">{t('contract.rates')}: ${vehicle.pricePerDay || 0}/{t('catalog.day')} • {t('contract.total')}: ${booking.totalCost || 0}</p>
+                        <div className="bg-theme-subcard p-4 rounded-xl border border-theme space-y-2">
+                            <p className="text-theme-tertiary font-bold uppercase tracking-wider text-[10px]">{t('contract.vehicleDetails')}</p>
+                            <p className="font-bold text-theme-primary text-sm">{vehicle.brand} {vehicle.model}</p>
+                            <p className="text-theme-secondary">{t('contract.plate')}: {vehicle.plate}</p>
+                            <p className="text-theme-secondary">{t('contract.rates')}: ${vehicle.pricePerDay || 0}/{t('catalog.day')} • {t('contract.total')}: ${booking.totalCost || 0}</p>
                         </div>
                     </div>
 
                     {/* Signature Status & Link Sharing Section */}
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-4">
-                        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-2">
+                    <div className="bg-theme-subcard border border-theme rounded-2xl p-5 space-y-4">
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-theme-primary flex items-center gap-2">
                             <ShieldCheck className="w-4 h-4 text-blue-400" />
                             {t('contract.clientLinkTitle')}
                         </h3>
 
-                        <p className="text-xs text-zinc-400">
+                        <p className="text-xs text-theme-secondary">
                             {t('contract.clientLinkDesc')}
                         </p>
 
@@ -339,12 +339,12 @@ const ContractModal = ({ isOpen, onClose, booking }) => {
                                 type="text"
                                 readOnly
                                 value={signUrl}
-                                className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs font-mono text-zinc-300 focus:outline-none"
+                                className="flex-1 bg-theme-input border border-theme rounded-xl px-3 py-2 text-xs font-mono text-theme-primary focus:outline-none"
                             />
                             <button
                                 type="button"
                                 onClick={handleCopyLink}
-                                className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-medium text-xs rounded-xl transition-colors flex items-center space-x-1.5 rtl:space-x-reverse"
+                                className="px-3 py-2 bg-theme-input hover:bg-theme-border text-theme-primary border border-theme font-medium text-xs rounded-xl transition-colors flex items-center space-x-1.5 rtl:space-x-reverse"
                             >
                                 <Copy className="w-3.5 h-3.5" />
                                 <span>{copied ? t('contract.copied') : t('contract.copy')}</span>
@@ -353,7 +353,7 @@ const ContractModal = ({ isOpen, onClose, booking }) => {
                                 href={signUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-medium text-xs rounded-xl transition-colors flex items-center space-x-1.5 rtl:space-x-reverse"
+                                className="px-3 py-2 bg-theme-input hover:bg-theme-border text-theme-primary border border-theme font-medium text-xs rounded-xl transition-colors flex items-center space-x-1.5 rtl:space-x-reverse"
                             >
                                 <ExternalLink className="w-3.5 h-3.5" />
                                 <span>{t('contract.open')}</span>
@@ -374,9 +374,9 @@ const ContractModal = ({ isOpen, onClose, booking }) => {
                     </div>
 
                     {/* Admin / Lessor Stamp & Signature Section */}
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-4">
-                        <div className="flex items-center justify-between border-b border-zinc-800/50 pb-3">
-                            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300">
+                    <div className="bg-theme-subcard border border-theme rounded-2xl p-5 space-y-4">
+                        <div className="flex items-center justify-between border-b border-theme pb-3">
+                            <h3 className="text-xs font-bold uppercase tracking-wider text-theme-primary">
                                 {t('contract.lessorSectionTitle')}
                             </h3>
                             {isConfigChanged && (
@@ -389,7 +389,7 @@ const ContractModal = ({ isOpen, onClose, booking }) => {
                                 </button>
                             )}
                         </div>
-                        <p className="text-[10px] text-zinc-500">
+                        <p className="text-[10px] text-theme-secondary">
                             {t('contract.lessorDesc')}
                         </p>
                         
@@ -397,19 +397,19 @@ const ContractModal = ({ isOpen, onClose, booking }) => {
                             {/* Stamp Upload */}
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <p className="text-[10px] font-bold text-zinc-500 uppercase">{t('contract.agencyStamp')}</p>
+                                    <p className="text-[10px] font-bold text-theme-tertiary uppercase">{t('contract.agencyStamp')}</p>
                                     {tempAdminStamp && (
                                         <button onClick={handleClearStamp} className="text-[10px] text-red-400 hover:text-red-300">{t('contract.clear')}</button>
                                     )}
                                 </div>
                                 {tempAdminStamp ? (
-                                    <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-3 flex justify-center h-24">
-                                        <img src={tempAdminStamp} alt="Admin Stamp" className="max-h-full object-contain filter invert" />
+                                    <div className="bg-theme-input border border-theme rounded-xl p-3 flex justify-center h-24">
+                                        <img src={tempAdminStamp} alt="Admin Stamp" className="max-h-full object-contain filter dark:invert" />
                                     </div>
                                 ) : (
                                     <div className="relative h-24">
                                         <input type="file" accept="image/png, image/jpeg" onChange={handleStampUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
-                                        <div className="h-full bg-zinc-950 border border-dashed border-zinc-700 hover:border-blue-500/50 rounded-xl p-4 flex flex-col items-center justify-center transition-colors">
+                                        <div className="h-full bg-theme-input border border-dashed border-theme hover:border-blue-500/50 rounded-xl p-4 flex flex-col items-center justify-center transition-colors">
                                             <span className="text-[10px] text-blue-400 font-medium">{t('contract.uploadStamp')}</span>
                                         </div>
                                     </div>
@@ -419,18 +419,18 @@ const ContractModal = ({ isOpen, onClose, booking }) => {
                             {/* Signature Draw Pad */}
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <p className="text-[10px] font-bold text-zinc-500 uppercase">{t('contract.adminSignature')}</p>
+                                    <p className="text-[10px] font-bold text-theme-tertiary uppercase">{t('contract.adminSignature')}</p>
                                     {tempAdminSignature && (
                                         <button onClick={() => { handleClearSignature(); setHasDrawnAdmin(false); }} className="text-[10px] text-red-400 hover:text-red-300">{t('contract.clear')}</button>
                                     )}
                                 </div>
                                 {tempAdminSignature ? (
-                                    <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-3 flex justify-center h-24">
-                                        <img src={tempAdminSignature} alt="Admin Signature" className="max-h-full object-contain filter invert" />
+                                    <div className="bg-theme-input border border-theme rounded-xl p-3 flex justify-center h-24">
+                                        <img src={tempAdminSignature} alt="Admin Signature" className="max-h-full object-contain filter dark:invert" />
                                     </div>
                                 ) : (
                                     <div 
-                                        className="relative h-24 bg-zinc-950 border border-dashed border-zinc-700 hover:border-blue-500/50 rounded-xl overflow-hidden touch-none transition-colors"
+                                        className="relative h-24 bg-theme-input border border-dashed border-theme hover:border-blue-500/50 rounded-xl overflow-hidden touch-none transition-colors"
                                         onMouseLeave={stopDrawingAdmin}
                                         onMouseUp={stopDrawingAdmin}
                                         onTouchEnd={stopDrawingAdmin}
@@ -456,19 +456,19 @@ const ContractModal = ({ isOpen, onClose, booking }) => {
 
                     {/* Signature Preview Box if signed */}
                     {isSigned && (
-                        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 space-y-2">
-                            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                        <div className="bg-theme-subcard border border-theme rounded-2xl p-4 space-y-2">
+                            <p className="text-[10px] font-bold text-theme-tertiary uppercase tracking-widest">
                                 {t('contract.clientSignatureImage')}
                             </p>
-                            <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-3 flex flex-col items-center justify-center">
+                            <div className="bg-theme-input border border-theme rounded-xl p-3 flex flex-col items-center justify-center">
                                 {contract.signatureData ? (
                                     <img
                                         src={contract.signatureData}
                                         alt="Client Signature"
-                                        className="max-h-20 object-contain filter invert"
+                                        className="max-h-20 object-contain filter dark:invert"
                                     />
                                 ) : (
-                                    <p className="text-xs text-zinc-500 italic">{t('contract.verifiedDigitalSignature')}</p>
+                                    <p className="text-xs text-theme-tertiary italic">{t('contract.verifiedDigitalSignature')}</p>
                                 )}
                                 {contract.signedAt && (
                                     <p className="text-[10px] text-emerald-400 mt-2 font-semibold">

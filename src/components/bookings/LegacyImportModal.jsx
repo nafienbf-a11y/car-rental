@@ -246,21 +246,21 @@ const LegacyImportModal = ({ isOpen, onClose }) => {
             <div className="space-y-6">
                 {!success ? (
                     <>
-                        <div className="bg-zinc-900/50 p-6 rounded-xl border border-zinc-800 space-y-4">
-                            <p className="text-zinc-400 text-sm">
+                        <div className="bg-theme-subcard p-6 rounded-xl border border-theme space-y-4">
+                            <p className="text-theme-secondary text-sm">
                                 Upload your legacy Excel or CSV file. We will extract unique Clients and Vehicles, 
                                 and recreate all past bookings. The ignored columns (payee, duration) will be skipped.
                             </p>
                             
                             <div className="flex flex-col gap-2">
-                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                <label className="block text-[10px] font-bold text-theme-secondary uppercase tracking-widest">
                                     Select File (.csv, .xlsx)
                                 </label>
                                 <input
                                     type="file"
                                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                     onChange={handleFileChange}
-                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-theme-primary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-brand-blue/10 file:text-brand-blue hover:file:bg-brand-blue/20 transition-all cursor-pointer"
+                                    className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-brand-blue/10 file:text-brand-blue hover:file:bg-brand-blue/20 transition-all cursor-pointer"
                                 />
                             </div>
                         </div>
@@ -273,7 +273,7 @@ const LegacyImportModal = ({ isOpen, onClose }) => {
                         )}
 
                         {logs.length > 0 && (
-                            <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 h-48 overflow-y-auto font-mono text-xs text-zinc-400 space-y-1">
+                            <div className="bg-theme-subcard p-4 rounded-xl border border-theme h-48 overflow-y-auto font-mono text-xs text-theme-secondary space-y-1">
                                 {logs.map((log, i) => (
                                     <div key={i}>{'>'} {log}</div>
                                 ))}
@@ -304,24 +304,24 @@ const LegacyImportModal = ({ isOpen, onClose }) => {
                                 <p className="text-emerald-400/80 mt-2">All data has been properly mapped and imported.</p>
                             </div>
                             
-                             <div className="grid grid-cols-3 gap-4 w-full mt-6 bg-zinc-950 p-4 rounded-xl">
+                             <div className="grid grid-cols-3 gap-4 w-full mt-6 bg-theme-subcard p-4 rounded-xl border border-theme">
                                 <div>
                                     <p className="text-3xl font-black text-theme-primary">{stats?.clients}</p>
-                                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Clients</p>
+                                    <p className="text-[10px] text-theme-secondary font-bold uppercase tracking-widest mt-1">Clients</p>
                                 </div>
                                 <div>
                                     <p className="text-3xl font-black text-theme-primary">{stats?.vehicles}</p>
-                                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Cars</p>
+                                    <p className="text-[10px] text-theme-secondary font-bold uppercase tracking-widest mt-1">Cars</p>
                                 </div>
                                 <div>
                                     <p className="text-3xl font-black text-theme-primary">{stats?.bookings}</p>
-                                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Bookings</p>
+                                    <p className="text-[10px] text-theme-secondary font-bold uppercase tracking-widest mt-1">Bookings</p>
                                 </div>
                             </div>
                         </div>
 
                         {logs.length > 0 && (
-                            <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 h-48 overflow-y-auto font-mono text-xs text-zinc-400 space-y-1">
+                            <div className="bg-theme-subcard p-4 rounded-xl border border-theme h-48 overflow-y-auto font-mono text-xs text-theme-secondary space-y-1">
                                 {logs.map((log, i) => (
                                     <div key={i}>{'>'} {log}</div>
                                 ))}

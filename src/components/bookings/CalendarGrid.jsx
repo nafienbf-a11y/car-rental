@@ -49,7 +49,7 @@ const CalendarGrid = ({
     });
 
     return (
-        <div className={`bg-zinc-950 border border-zinc-800 rounded-xl p-4 ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
+        <div className={`bg-theme-card border border-theme rounded-xl p-4 ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <button
@@ -61,7 +61,7 @@ const CalendarGrid = ({
                             (currentDate.getFullYear() === minMonthDate.getFullYear() && currentDate.getMonth() <= minMonthDate.getMonth());
                     })()} // Prevent going back too far (allow 30 days past)
                     type="button"
-                    className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg text-zinc-400 hover:text-theme-primary transition-colors disabled:opacity-30"
+                    className="p-1 hover:bg-theme-input rounded-lg text-theme-secondary hover:text-theme-primary transition-colors disabled:opacity-30"
                 >
                     <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -71,7 +71,7 @@ const CalendarGrid = ({
                 <button
                     onClick={handleNextMonth}
                     type="button"
-                    className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg text-zinc-400 hover:text-theme-primary transition-colors"
+                    className="p-1 hover:bg-theme-input rounded-lg text-theme-secondary hover:text-theme-primary transition-colors"
                 >
                     <ChevronRight className="w-5 h-5" />
                 </button>
@@ -80,7 +80,7 @@ const CalendarGrid = ({
             {/* Days Header */}
             <div className="grid grid-cols-7 mb-2">
                 {weekDays.map(day => (
-                    <div key={day} className="text-center text-[10px] font-bold text-zinc-500 uppercase">
+                    <div key={day} className="text-center text-[10px] font-bold text-theme-secondary uppercase">
                         {day}
                     </div>
                 ))}
@@ -105,7 +105,7 @@ const CalendarGrid = ({
 
                     if (isTooFarPast) {
                         return (
-                            <div key={day} className="aspect-square flex items-center justify-center rounded-lg text-xs font-medium text-zinc-700 cursor-not-allowed bg-zinc-950/50">
+                            <div key={day} className="aspect-square flex items-center justify-center rounded-lg text-xs font-medium text-theme-tertiary cursor-not-allowed bg-theme-input/20">
                                 {day}
                             </div>
                         );
@@ -116,7 +116,7 @@ const CalendarGrid = ({
                             key={day}
                             type="button"
                             onClick={() => onDateClick(date)}
-                            className={`aspect-square flex items-center justify-center rounded-lg text-xs font-bold transition-all duration-200 ${statusClass} ${isToday ? 'border border-zinc-600' : ''}`}
+                            className={`aspect-square flex items-center justify-center rounded-lg text-xs font-bold transition-all duration-200 ${statusClass} ${isToday ? 'ring-2 ring-brand-blue' : ''}`}
                         >
                             {day}
                         </button>
@@ -127,16 +127,16 @@ const CalendarGrid = ({
             {/* Legend */}
             <div className="flex gap-4 mt-6 justify-center">
                 <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded bg-zinc-800 border border-zinc-700"></div>
-                    <span className="text-[10px] text-zinc-500 uppercase font-bold">{t('modals.calendar.available')}</span>
+                    <div className="w-3 h-3 rounded bg-theme-subcard border border-theme"></div>
+                    <span className="text-[10px] text-theme-secondary uppercase font-bold">{t('modals.calendar.available')}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded bg-zinc-900 border border-zinc-800 bg-[linear-gradient(45deg,transparent_45%,#ef4444_45%,#ef4444_55%,transparent_55%)] bg-[length:6px_6px]"></div>
-                    <span className="text-[10px] text-zinc-500 uppercase font-bold">{t('modals.calendar.booked')}</span>
+                    <div className="w-3 h-3 rounded bg-red-500/10 border border-red-500/20 bg-[linear-gradient(45deg,transparent_45%,#ef4444_45%,#ef4444_55%,transparent_55%)] bg-[length:6px_6px]"></div>
+                    <span className="text-[10px] text-theme-secondary uppercase font-bold">{t('modals.calendar.booked')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded bg-brand-blue"></div>
-                    <span className="text-[10px] text-zinc-500 uppercase font-bold">{t('modals.calendar.selected')}</span>
+                    <span className="text-[10px] text-theme-secondary uppercase font-bold">{t('modals.calendar.selected')}</span>
                 </div>
             </div>
         </div>

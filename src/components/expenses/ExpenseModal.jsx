@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useLanguage } from '../../context/LanguageContext';
 import Button from '../common/Button';
+import Modal from '../common/Modal';
 import { generateId } from '../../utils/helpers';
 
 import { useNotification } from '../../context/NotificationContext';
@@ -83,139 +84,118 @@ const ExpenseModal = ({ isOpen, onClose, expense = null }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            {/* Backdrop */}
-            <div
-                className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-                onClick={onClose}
-            />
-
-            {/* Modal */}
-            <div className="relative bg-zinc-950 rounded-2xl shadow-2xl border border-zinc-800 w-full max-w-md max-h-[90vh] overflow-y-auto">
-                {/* Header */}
-                <div className="sticky top-0 bg-zinc-950 border-b border-zinc-800 p-6 flex items-center justify-between z-10">
-                    <div>
-                        <h2 className="text-2xl font-extrabold text-theme-primary tracking-tight">
-                            {expense ? t('modals.expense.titleEdit') : t('modals.expense.titleAdd')}
-                        </h2>
-                        <p className="text-sm text-zinc-500 mt-1">{t('modals.expense.subtitle')}</p>
-                    </div>
-                    <button
-                        onClick={onClose}
-                        className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg transition-colors"
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            title={expense ? t('modals.expense.titleEdit') : t('modals.expense.titleAdd')}
+            size="md"
+        >
+            <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Type */}
+                <div>
+                    <label className="block text-xs font-bold text-theme-secondary mb-2 uppercase tracking-wider">
+                        {t('modals.expense.type')} *
+                    </label>
+                    <select
+                        value={formData.type}
+                        onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                        className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-transparent cursor-pointer"
+                        required
                     >
-                        <X className="w-5 h-5 text-zinc-500 hover:text-theme-primary" />
-                    </button>
+                        {expenseTypes.map(type => (
+                            <option key={type.id} value={type.id}>
+                                {t(`expenses.types.${type.id}`) || type.id}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
-                {/* Form */}
-                <form onSubmit={handleSubmit} className="p-6 space-y-5">
-                    {/* Type */}
+                {/* Vehicle - only show if type needs it */}
+                {isVehicleRequired && (
                     <div>
-                        <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
-                            {t('modals.expense.type')} *
+                        <label className="block text-xs font-bold text-theme-secondary mb-2 uppercase tracking-wider">
+                            {t('modals.expense.vehicle')} *
                         </label>
                         <select
-                            value={formData.type}
-                            onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent cursor-pointer"
-                            required
+                            value={formData.vehicleId}
+                            onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
+                            className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-transparent cursor-pointer"
+                            required={isVehicleRequired}
                         >
-                            {expenseTypes.map(type => (
-                                <option key={type.id} value={type.id}>
-                                    {t(`expenses.types.${type.id}`) || type.id}
+                            <option value="">{t('modals.expense.selectVehicle')}</option>
+                            {vehicles.filter(v => v.status !== 'Deleted').map(vehicle => (
+                                <option key={vehicle.id} value={vehicle.id}>
+                                    {vehicle.brand} {vehicle.model} ({vehicle.plate})
                                 </option>
                             ))}
                         </select>
                     </div>
+                )}
 
-                    {/* Vehicle - only show if type needs it */}
-                    {isVehicleRequired && (
-                        <div>
-                            <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
-                                {t('modals.expense.vehicle')} *
-                            </label>
-                            <select
-                                value={formData.vehicleId}
-                                onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
-                                className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent cursor-pointer"
-                                required={isVehicleRequired}
-                            >
-                                <option value="">{t('modals.expense.selectVehicle')}</option>
-                                {vehicles.filter(v => v.status !== 'Deleted').map(vehicle => (
-                                    <option key={vehicle.id} value={vehicle.id}>
-                                        {vehicle.brand} {vehicle.model} ({vehicle.plate})
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
+                {/* Cost */}
+                <div>
+                    <label className="block text-xs font-bold text-theme-secondary mb-2 uppercase tracking-wider">
+                        {t('modals.expense.cost')} *
+                    </label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        value={formData.cost}
+                        onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
+                        className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-transparent"
+                        placeholder={t('modals.expense.placeholderCost')}
+                        required
+                    />
+                </div>
 
-                    {/* Cost */}
-                    <div>
-                        <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
-                            {t('modals.expense.cost')} *
-                        </label>
-                        <input
-                            type="number"
-                            step="0.01"
-                            value={formData.cost}
-                            onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
-                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
-                            placeholder={t('modals.expense.placeholderCost')}
-                            required
-                        />
-                    </div>
+                {/* Date */}
+                <div>
+                    <label className="block text-xs font-bold text-theme-secondary mb-2 uppercase tracking-wider">
+                        {t('modals.expense.date')} *
+                    </label>
+                    <input
+                        type="date"
+                        value={formData.date}
+                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                        className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-transparent"
+                        required
+                    />
+                </div>
 
-                    {/* Date */}
-                    <div>
-                        <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
-                            {t('modals.expense.date')} *
-                        </label>
-                        <input
-                            type="date"
-                            value={formData.date}
-                            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent"
-                            required
-                        />
-                    </div>
+                {/* Description */}
+                <div>
+                    <label className="block text-xs font-bold text-theme-secondary mb-2 uppercase tracking-wider">
+                        {t('modals.expense.description')}
+                    </label>
+                    <textarea
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        className="w-full px-4 py-3 bg-theme-input border border-theme rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-transparent resize-none"
+                        rows="3"
+                        placeholder={t('modals.expense.placeholderDesc')}
+                    />
+                </div>
 
-                    {/* Description */}
-                    <div>
-                        <label className="block text-sm font-bold text-zinc-400 mb-2 uppercase tracking-wider">
-                            {t('modals.expense.description')}
-                        </label>
-                        <textarea
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-theme-primary focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent resize-none"
-                            rows="3"
-                            placeholder={t('modals.expense.placeholderDesc')}
-                        />
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex gap-3 pt-4">
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={onClose}
-                            className="flex-1"
-                        >
-                            {t('modals.common.cancel')}
-                        </Button>
-                        <Button
-                            type="submit"
-                            variant="primary"
-                            className="flex-1"
-                        >
-                            {expense ? t('modals.expense.submitUpdate') : t('modals.expense.submitAdd')}
-                        </Button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                {/* Actions */}
+                <div className="flex gap-3 pt-4 border-t border-theme">
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={onClose}
+                        className="flex-1"
+                    >
+                        {t('modals.common.cancel')}
+                    </Button>
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        className="flex-1"
+                    >
+                        {expense ? t('modals.expense.submitUpdate') : t('modals.expense.submitAdd')}
+                    </Button>
+                </div>
+            </form>
+        </Modal>
     );
 };
 

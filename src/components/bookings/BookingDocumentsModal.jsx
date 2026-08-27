@@ -18,8 +18,8 @@ const BookingDocumentsModal = ({ isOpen, onClose, booking }) => {
                     {documents.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {documents.map((doc) => (
-                                <div key={doc.id} className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-                                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3">
+                                <div key={doc.id} className="bg-theme-subcard p-4 rounded-xl border border-theme">
+                                    <p className="text-[10px] font-bold text-theme-secondary uppercase tracking-widest mb-3">
                                         {doc.name || 'Untitled Document'}
                                     </p>
                                     <div
@@ -29,7 +29,7 @@ const BookingDocumentsModal = ({ isOpen, onClose, booking }) => {
                                         <img
                                             src={doc.data}
                                             alt={doc.name}
-                                            className="w-full h-48 object-cover rounded-lg border border-zinc-700 hover:opacity-90 transition-opacity"
+                                            className="w-full h-48 object-cover rounded-lg border border-theme hover:opacity-90 transition-opacity"
                                         />
                                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 rounded-lg transition-colors flex items-center justify-center">
                                             <span className="text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
@@ -38,7 +38,7 @@ const BookingDocumentsModal = ({ isOpen, onClose, booking }) => {
                                         </div>
                                     </div>
                                     {doc.addedAt && (
-                                        <p className="text-[10px] text-zinc-600 mt-2">
+                                        <p className="text-[10px] text-theme-tertiary mt-2">
                                             Added: {new Date(doc.addedAt).toLocaleDateString()}
                                         </p>
                                     )}
@@ -46,9 +46,9 @@ const BookingDocumentsModal = ({ isOpen, onClose, booking }) => {
                             ))}
                         </div>
                     ) : (
-                        <div className="border border-zinc-800 border-dashed rounded-xl p-10 text-center">
-                            <FileText className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
-                            <p className="text-zinc-600 text-sm font-medium">No documents attached to this booking</p>
+                        <div className="border border-theme border-dashed rounded-xl p-10 text-center">
+                            <FileText className="w-12 h-12 text-theme-tertiary mx-auto mb-3" />
+                            <p className="text-theme-secondary text-sm font-medium">No documents attached to this booking</p>
                         </div>
                     )}
                 </div>

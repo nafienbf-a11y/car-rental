@@ -17,11 +17,11 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ y: -8, scale: 1.02 }}
             transition={{ duration: 0.3 }}
-            className="bg-zinc-950 rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl hover:border-zinc-700 transition-all duration-300 group"
+            className="bg-theme-card rounded-2xl overflow-hidden border border-theme shadow-2xl hover:border-brand-blue/40 transition-all duration-300 group"
         >
             {/* Vehicle Image */}
             {vehicle.image && (
-                <div className="relative h-48 overflow-hidden bg-zinc-900 font-bold">
+                <div className="relative h-48 overflow-hidden bg-theme-subcard font-bold">
                     <img
                         src={vehicle.image}
                         alt={`${vehicle.brand} ${vehicle.model}`}
@@ -31,7 +31,7 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
 
                     {/* Status Badge */}
                     <div className="absolute top-4 right-4">
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${vehicle.status === 'Available' ? 'bg-white text-black border-white' :
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${vehicle.status === 'Available' ? 'bg-emerald-500 text-white border-emerald-400' :
                             vehicle.status === 'Rented' ? 'bg-brand-blue text-white border-brand-blue' :
                                 'bg-brand-red text-white border-brand-red'
                             }`}>
@@ -41,16 +41,16 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
 
                     {/* Price Tag */}
                     <div className="absolute bottom-4 left-4">
-                        <div className="bg-white px-4 py-1.5 rounded-lg shadow-xl cursor-default">
-                            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-tighter leading-none">{t('fleet.dailyRate')}</p>
-                            <p className="text-xl font-black text-black leading-none mt-0.5">{formatCurrency(vehicle.pricePerDay)}</p>
+                        <div className="bg-theme-card border border-theme px-4 py-1.5 rounded-lg shadow-xl cursor-default">
+                            <p className="text-[10px] text-theme-tertiary font-black uppercase tracking-tighter leading-none">{t('fleet.dailyRate')}</p>
+                            <p className="text-xl font-black text-theme-primary leading-none mt-0.5">{formatCurrency(vehicle.pricePerDay)}</p>
                         </div>
                     </div>
                 </div>
             )}
 
             {!vehicle.image && (
-                 <div className="h-4 bg-zinc-900" /> /* Small spacing if no image */
+                 <div className="h-4 bg-theme-subcard" /> /* Small spacing if no image */
             )}
 
             {/* Vehicle Details */}
@@ -59,24 +59,24 @@ const VehicleCard = ({ vehicle, onMaintenance, onAvailable, onEdit, onDelete }) 
                     <h3 className="text-xl font-extrabold text-theme-primary mb-1 tracking-tight">
                         {vehicle.brand} {vehicle.model}
                     </h3>
-                    <p className="text-xs text-zinc-500 font-bold tracking-widest uppercase">{vehicle.plate} • {vehicle.year}</p>
+                    <p className="text-xs text-theme-secondary font-bold tracking-widest uppercase">{vehicle.plate} • {vehicle.year}</p>
                 </div>
 
                 {/* Specs Grid */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="flex items-center gap-2 text-zinc-400">
+                    <div className="flex items-center gap-2 text-theme-secondary">
                         <Users className="w-4 h-4 text-theme-primary" />
                         <span className="text-xs font-bold uppercase tracking-wide">{vehicle.seats} {t('modals.addVehicle.seats')}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-zinc-400">
+                    <div className="flex items-center gap-2 text-theme-secondary">
                         <Fuel className="w-4 h-4 text-theme-primary" />
                         <span className="text-xs font-bold uppercase tracking-wide">{vehicle.fuel}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-zinc-400">
+                    <div className="flex items-center gap-2 text-theme-secondary">
                         <Gauge className="w-4 h-4 text-theme-primary" />
                         <span className="text-xs font-bold uppercase tracking-wide">{vehicle.mileage.toLocaleString()} km</span>
                     </div>
-                    <div className="flex items-center gap-2 text-zinc-400">
+                    <div className="flex items-center gap-2 text-theme-secondary">
                         <span className="text-lg opacity-80">{getTransmissionIcon()}</span>
                         <span className="text-xs font-bold uppercase tracking-wide">{vehicle.transmission}</span>
                     </div>

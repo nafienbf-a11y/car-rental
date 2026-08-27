@@ -207,8 +207,8 @@ const Bookings = () => {
         if (itemsPerPage === 999999 && filteredBookings.length === 0) return null;
 
         return (
-            <div className="flex flex-col sm:flex-row items-center justify-between p-5 bg-zinc-900/30 gap-4">
-                <span className="text-zinc-500 text-xs font-bold">
+            <div className="flex flex-col sm:flex-row items-center justify-between p-5 bg-theme-subcard gap-4 border-t border-theme">
+                <span className="text-theme-secondary text-xs font-bold">
                     {t('common.showingEntries', { 
                         start: filteredBookings.length === 0 ? 0 : ((currentPage - 1) * itemsPerPage) + 1, 
                         end: Math.min(currentPage * itemsPerPage, filteredBookings.length), 
@@ -224,7 +224,7 @@ const Bookings = () => {
                     >
                         {t('common.previous')}
                     </Button>
-                    <span className="flex items-center justify-center px-4 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-theme-primary text-xs font-bold shadow-inner">
+                    <span className="flex items-center justify-center px-4 py-1 bg-theme-input border border-theme rounded-lg text-theme-primary text-xs font-bold shadow-inner">
                         {currentPage} / {totalPages || 1}
                     </span>
                     <Button 
@@ -248,7 +248,7 @@ const Bookings = () => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-extrabold text-theme-primary tracking-tight mb-1">{t('bookings.title')}</h1>
-                    <p className="text-zinc-500 font-medium tracking-tight">{t('bookings.subtitle')}</p>
+                    <p className="text-theme-secondary font-medium tracking-tight">{t('bookings.subtitle')}</p>
                 </div>
                 <div className="flex gap-2">
                     <Button
@@ -271,7 +271,7 @@ const Bookings = () => {
             {/* Filters Row */}
             <div className="flex flex-col gap-4 mb-4">
                 {/* Status Filter Tabs */}
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5 inline-flex gap-1.5 overflow-x-auto max-w-full">
+                <div className="bg-theme-card border border-theme rounded-2xl p-1.5 inline-flex gap-1.5 overflow-x-auto max-w-full">
                     {statusFilters.map((status) => {
                         const count = status === 'All'
                             ? dateFilteredBookings.length
@@ -283,12 +283,12 @@ const Bookings = () => {
                                 key={status}
                                 onClick={() => { setStatusFilter(status); setCurrentPage(1); }}
                             className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 whitespace-nowrap ${statusFilter === status
-                                ? 'bg-white text-black dark:bg-zinc-50 dark:text-zinc-950 shadow-lg'
-                                : 'text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-theme-primary'
+                                ? 'bg-brand-blue text-white shadow-lg'
+                                : 'text-theme-secondary hover:bg-theme-input hover:text-theme-primary'
                                 }`}
                         >
                             <span>{status === 'toTerminate' ? t('bookings.toTerminate') || 'To Terminate' : t(`bookings.${status.toLowerCase()}`)}</span>
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] ${statusFilter === status ? 'bg-zinc-100 text-black' : 'bg-zinc-900 text-zinc-500'}`}>
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] ${statusFilter === status ? 'bg-white/20 text-white' : 'bg-theme-input text-theme-secondary'}`}>
                                 {count}
                             </span>
                         </button>
@@ -299,25 +299,25 @@ const Bookings = () => {
                 {/* Date Range & Rows Per Page */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
                     {/* Date Range Picker */}
-                    <div className="flex items-center gap-2 bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5 w-full sm:w-auto overflow-x-auto">
-                        <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2 whitespace-nowrap">{t('common.filterDates')}</span>
+                    <div className="flex items-center gap-2 bg-theme-card border border-theme rounded-2xl p-1.5 w-full sm:w-auto overflow-x-auto">
+                        <span className="text-theme-secondary text-[10px] font-bold uppercase tracking-widest pl-2 whitespace-nowrap">{t('common.filterDates')}</span>
                         <input 
                             type="date" 
                             value={startDateFilter}
                             onChange={e => { setStartDateFilter(e.target.value); setCurrentPage(1); }}
-                            className="bg-zinc-900 border border-zinc-800 text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue"
+                            className="bg-theme-input border border-theme text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue"
                         />
-                        <span className="text-zinc-500 text-xs font-bold">-</span>
+                        <span className="text-theme-secondary text-xs font-bold">-</span>
                         <input 
                             type="date" 
                             value={endDateFilter}
                             onChange={e => { setEndDateFilter(e.target.value); setCurrentPage(1); }}
-                            className="bg-zinc-900 border border-zinc-800 text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue"
+                            className="bg-theme-input border border-theme text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue"
                         />
                         {(startDateFilter || endDateFilter) && (
                             <button 
                                 onClick={() => { setStartDateFilter(''); setEndDateFilter(''); setCurrentPage(1); }}
-                                className="text-zinc-500 hover:text-theme-primary px-3 py-1.5 text-xs font-bold bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors"
+                                className="text-theme-secondary hover:text-theme-primary px-3 py-1.5 text-xs font-bold bg-theme-input hover:bg-theme-border rounded-xl transition-colors"
                             >
                                 {t('common.clear')}
                             </button>
@@ -325,12 +325,12 @@ const Bookings = () => {
                     </div>
                     
                     {/* Rows per page selector */}
-                    <div className="flex items-center gap-2 bg-zinc-950 border border-zinc-800 rounded-2xl p-1.5">
-                        <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest pl-2">{t('common.showLabel')}</span>
+                    <div className="flex items-center gap-2 bg-theme-card border border-theme rounded-2xl p-1.5">
+                        <span className="text-theme-secondary text-[10px] font-bold uppercase tracking-widest pl-2">{t('common.showLabel')}</span>
                         <select 
                             value={itemsPerPage} 
                             onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                            className="bg-zinc-900 border border-zinc-800 text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
+                            className="bg-theme-input border border-theme text-theme-primary rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-brand-blue cursor-pointer"
                         >
                             <option value={10}>{t('common.rowsCount', { count: 10 })}</option>
                             <option value={20}>{t('common.rowsCount', { count: 20 })}</option>
@@ -342,33 +342,33 @@ const Bookings = () => {
             </div>
 
             {/* Bookings Table */}
-            <div className="bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
-                <div className="border-b border-zinc-800">
+            <div className="bg-theme-card border border-theme rounded-2xl overflow-hidden shadow-2xl">
+                <div className="border-b border-theme">
                     {renderPagination()}
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                         <thead>
-                            <tr className="border-b border-zinc-800">
+                            <tr className="border-b border-theme bg-theme-subcard">
                                 <SortableHeader label={t('bookings.table.vehicle')} sortKey="vehicleId" />
                                 <SortableHeader label={t('bookings.table.customer')} sortKey="clientId" />
                                 <SortableHeader label={t('bookings.table.dates')} sortKey="startDate" />
                                 <SortableHeader label={t('bookings.table.status')} sortKey="status" />
                                 <SortableHeader label={t('bookings.table.total')} sortKey="totalCost" />
-                                <th className="text-right rtl:text-left p-5 text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t('clients.table.actions') || 'Actions'}</th>
+                                <th className="text-right rtl:text-left p-5 text-[10px] font-black text-theme-secondary uppercase tracking-widest">{t('clients.table.actions') || 'Actions'}</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-zinc-800">
+                        <tbody className="divide-y divide-theme">
                             {paginatedBookings.length === 0 ? (
                                 <tr>
-                                    <td colSpan="6" className="p-8 text-center text-zinc-500 text-sm font-bold">
+                                    <td colSpan="6" className="p-8 text-center text-theme-secondary text-sm font-bold">
                                         No bookings found matching your filters.
                                     </td>
                                 </tr>
                             ) : paginatedBookings.map((booking) => (
                                 <tr
                                     key={booking.id}
-                                    className="hover:bg-zinc-100 dark:hover:bg-zinc-900/50 transition-colors group"
+                                    className="hover:bg-theme-input/40 transition-colors group"
                                 >
                                     <td className="p-5 text-left rtl:text-right">
                                         <button onClick={() => handleCarClick(booking.vehicleId)} className="text-theme-primary hover:underline font-bold text-sm text-left rtl:text-right transition-colors">
@@ -484,7 +484,7 @@ const Bookings = () => {
                 </div>
                 
                 {/* Pagination Controls */}
-                <div className="border-t border-zinc-800">
+                <div className="border-t border-theme">
                     {renderPagination()}
                 </div>
             </div>
