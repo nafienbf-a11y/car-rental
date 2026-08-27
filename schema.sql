@@ -111,5 +111,24 @@ create table if not exists public.audit_logs (
   created_at timestamp with time zone default now()
 );
 
+-- Create Contracts Table
+create table if not exists public.contracts (
+  id uuid not null default gen_random_uuid(),
+  created_at timestamp with time zone not null default now(),
+  booking_id uuid not null references public.bookings(id) on delete cascade,
+  client_id uuid not null references public.clients(id) on delete cascade,
+  vehicle_id uuid not null references public.vehicles(id) on delete cascade,
+  status text not null default 'Pending Signature', -- 'Pending Signature', 'Signed', 'Cancelled'
+  signature_token text not null unique,
+  signature_data text, -- Base64 PNG string of the drawn signature
+  signed_at timestamp with time zone,
+  pdf_url text, -- Optional stored URL or generated data
+  contract_number text not null unique,
+  snapshot_data jsonb, -- Frozen snapshot of client, vehicle, and reservation details at creation
+  terms text,
+  constraint contracts_pkey primary key (id)
+);
+
 -- Enable Realtime
-alter publication supabase_realtime add table vehicles, bookings, clients, expenses, app_users, visitor_stats, audit_logs;
+alter publication supabase_realtime add table vehicles, bookings, clients, expenses, app_users, visitor_stats, audit_logs, contracts;
+
