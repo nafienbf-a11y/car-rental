@@ -20,6 +20,7 @@ import NotFound from './pages/NotFound';
 import Users from './pages/Users';
 import History from './pages/History';
 import Reports from './pages/Reports';
+import PublicSignContract from './pages/PublicSignContract';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function AppContent() {
               <Route path="/" element={<Catalog />} />
               <Route path="/catalog" element={<Catalog />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/contract/sign/:token" element={<PublicSignContract />} />
 
               {/* Protected Admin Routes */}
               <Route element={<ProtectedRoute />}>

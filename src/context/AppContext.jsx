@@ -18,6 +18,7 @@ export const AppProvider = ({ children }) => {
     const [bookings, setBookings] = useState([]);
     const [expenses, setExpenses] = useState([]);
     const [clients, setClients] = useState([]);
+    const [contracts, setContracts] = useState([]);
     const [auditLogs, setAuditLogs] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -31,9 +32,8 @@ export const AppProvider = ({ children }) => {
     const [theme, setThemeState] = useState(() => {
         const saved = localStorage.getItem('theme');
         if (saved) return saved;
-        // Fallback to system preference, but default to dark if not set
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        return prefersDark ? 'dark' : 'dark'; // defaulting to dark theme as base
+        return prefersDark ? 'dark' : 'dark';
     });
 
     useEffect(() => {
@@ -55,12 +55,13 @@ export const AppProvider = ({ children }) => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [vParams, bParams, cParams, eParams, aParams] = await Promise.all([
+                const [vParams, bParams, cParams, eParams, aParams, ctrParams] = await Promise.all([
                     supabase.from('vehicles').select('*').order('created_at'),
                     supabase.from('bookings').select('*').order('created_at'),
                     supabase.from('clients').select('*').order('created_at'),
                     supabase.from('expenses').select('*').order('created_at'),
-                    supabase.from('audit_logs').select('*').order('created_at', { ascending: false })
+                    supabase.from('audit_logs').select('*').order('created_at', { ascending: false }),
+                    supabase.from('contracts').select('*').order('created_at', { ascending: false })
                 ]);
 
                 if (vParams.data) setVehicles(vParams.data.map(mapVehicleFromDB));
@@ -68,8 +69,8 @@ export const AppProvider = ({ children }) => {
                 if (cParams.data) setClients(cParams.data.map(mapClientFromDB));
                 if (eParams.data) setExpenses(eParams.data.map(mapExpenseFromDB));
                 if (aParams.data) setAuditLogs(aParams.data);
+                if (ctrParams.data) setContracts(ctrParams.data.map(mapContractFromDB));
 
-                // Fetch today's visitors
                 const today = new Date().toISOString().split('T')[0];
                 const { data: vData } = await supabase
                     .from('visitor_stats')
@@ -85,6 +86,24 @@ export const AppProvider = ({ children }) => {
             }
         };
         fetchData();
+
+        // Subscribe to Realtime Contract Updates
+        const channel = supabase
+            .channel('contracts_realtime')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'contracts' }, payload => {
+                if (payload.eventType === 'INSERT') {
+                    setContracts(prev => [mapContractFromDB(payload.new), ...prev.filter(c => c.id !== payload.new.id)]);
+                } else if (payload.eventType === 'UPDATE') {
+                    setContracts(prev => prev.map(c => c.id === payload.new.id ? mapContractFromDB(payload.new) : c));
+                } else if (payload.eventType === 'DELETE') {
+                    setContracts(prev => prev.filter(c => c.id !== payload.old.id));
+                }
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     const incrementVisitors = async () => {
@@ -208,6 +227,42 @@ export const AppProvider = ({ children }) => {
         date: e.date, category: e.category, amount: e.amount, description: e.description, vehicle_id: e.vehicleId
     });
 
+    const mapContractFromDB = (c) => ({
+        id: c.id,
+        createdAt: c.created_at,
+        bookingId: c.booking_id,
+        clientId: c.client_id,
+        vehicleId: c.vehicle_id,
+        status: c.status,
+        signatureToken: c.signature_token,
+        signatureData: c.signature_data,
+        signedAt: c.signed_at,
+        pdfUrl: c.pdf_url,
+        contractNumber: c.contract_number,
+        snapshotData: c.snapshot_data,
+        terms: c.terms
+    });
+
+    const mapContractToDB = (c) => {
+        const payload = {
+            booking_id: c.bookingId,
+            client_id: c.clientId,
+            vehicle_id: c.vehicleId,
+            status: c.status || 'Pending Signature',
+            signature_token: c.signatureToken,
+            signature_data: c.signatureData,
+            signed_at: c.signedAt,
+            pdf_url: c.pdfUrl,
+            contract_number: c.contractNumber,
+            snapshot_data: c.snapshotData,
+            terms: c.terms
+        };
+        Object.keys(payload).forEach(key => {
+            if (payload[key] === undefined) delete payload[key];
+        });
+        return payload;
+    };
+
     // --- OPERATIONS ---
     const addVehicle = async (vehicle) => {
         const { data, error } = await supabase.from('vehicles').insert([mapVehicleToDB(vehicle)]).select().single();
@@ -248,7 +303,6 @@ export const AppProvider = ({ children }) => {
 
         const v = vehicles.find(item => item.id === id);
         
-        // Soft Delete: change status to 'Deleted' to preserve historical data
         const { error } = await supabase.from('vehicles').update({ status: 'Deleted' }).eq('id', id);
         
         if (error) {
@@ -257,7 +311,6 @@ export const AppProvider = ({ children }) => {
         }
 
         setVehicles(prev => prev.map(item => item.id === id ? { ...item, status: 'Deleted' } : item));
-        
         logAction('DELETE', 'VEHICLE', id, `Soft deleted vehicle ${v?.brand} ${v?.model} (${v?.plate})`);
     };
 
@@ -375,12 +428,10 @@ export const AppProvider = ({ children }) => {
     const deleteExpense = async (id) => {
         const e = expenses.find(item => item.id === id);
         const { error } = await supabase.from('expenses').delete().eq('id', id);
-        
         if (error) {
             console.error("Error deleting expense:", error);
             throw new Error("Failed to delete expense.");
         }
-        
         setExpenses(prev => prev.filter(item => item.id !== id));
         logAction('DELETE', 'EXPENSE', id, `Deleted expense: ${e?.category}`);
     };
@@ -414,8 +465,127 @@ export const AppProvider = ({ children }) => {
             .reduce((sum, b) => sum + (b.totalCost || 0), 0),
     };
 
+    // --- CONTRACT OPERATIONS ---
+    const getContractByBookingId = (bookingId) => {
+        return contracts.find(c => c.bookingId === bookingId);
+    };
+
+    const createContract = async (bookingId) => {
+        const existing = getContractByBookingId(bookingId);
+        if (existing) return existing;
+
+        const booking = bookings.find(b => b.id === bookingId);
+        if (!booking) throw new Error("Booking not found");
+
+        const client = clients.find(c => c.id === booking.clientId);
+        const vehicle = vehicles.find(v => v.id === booking.vehicleId);
+
+        const contractNumber = `CNT-${Math.floor(100000 + Math.random() * 900000)}`;
+        const signatureToken = typeof crypto !== 'undefined' && crypto.randomUUID 
+            ? crypto.randomUUID() 
+            : `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+        const adminStamp = typeof window !== 'undefined' ? localStorage.getItem('admin_stamp_base64') : null;
+        const adminSignature = typeof window !== 'undefined' ? localStorage.getItem('admin_signature_base64') : null;
+
+        const newContractPayload = {
+            bookingId: booking.id,
+            clientId: booking.clientId,
+            vehicleId: booking.vehicleId,
+            status: 'Pending Signature',
+            signatureToken: signatureToken,
+            contractNumber: contractNumber,
+            snapshotData: {
+                booking,
+                client,
+                vehicle,
+                adminStamp,
+                adminSignature,
+                createdAt: new Date().toISOString()
+            }
+        };
+
+        const { data, error } = await supabase
+            .from('contracts')
+            .insert([mapContractToDB(newContractPayload)])
+            .select()
+            .single();
+
+        if (error) {
+            console.error("Error creating contract:", error);
+            throw error;
+        }
+
+        const createdContract = mapContractFromDB(data);
+        setContracts(prev => [createdContract, ...prev]);
+        logAction('CREATE', 'CONTRACT', createdContract.id, `Generated contract ${contractNumber} for booking`);
+        return createdContract;
+    };
+
+    const getContractByToken = async (token) => {
+        // First check local state
+        const local = contracts.find(c => c.signatureToken === token);
+        if (local) return local;
+
+        // Fetch directly from DB for public client page
+        const { data, error } = await supabase
+            .from('contracts')
+            .select('*')
+            .eq('signature_token', token)
+            .single();
+
+        if (error || !data) return null;
+        return mapContractFromDB(data);
+    };
+
+    const signContractByToken = async (token, signatureData) => {
+        const contract = await getContractByToken(token);
+        if (!contract) throw new Error("Contract not found");
+        if (contract.status === 'Signed') throw new Error("This contract has already been signed.");
+
+        const signedAt = new Date().toISOString();
+        const { data, error } = await supabase
+            .from('contracts')
+            .update({
+                signature_data: signatureData,
+                signed_at: signedAt,
+                status: 'Signed'
+            })
+            .eq('signature_token', token)
+            .select()
+            .single();
+
+        if (error) {
+            console.error("Error signing contract:", error);
+            throw error;
+        }
+
+        const updatedContract = mapContractFromDB(data);
+        setContracts(prev => prev.map(c => c.id === updatedContract.id ? updatedContract : c));
+        logAction('UPDATE', 'CONTRACT', updatedContract.id, `Contract ${updatedContract.contractNumber} digitally signed by client`);
+        return updatedContract;
+    };
+
+    const updateContract = async (id, updates) => {
+        const { data, error } = await supabase
+            .from('contracts')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+            
+        if (error) {
+            console.error("Error updating contract:", error);
+            throw error;
+        }
+        
+        const updatedContract = mapContractFromDB(data);
+        setContracts(prev => prev.map(c => c.id === updatedContract.id ? updatedContract : c));
+        return updatedContract;
+    };
+
     const value = {
-        vehicles, bookings, expenses, clients, auditLogs, loading,
+        vehicles, bookings, expenses, clients, contracts, auditLogs, loading,
         searchTerm, setSearchTerm, visitorCount, incrementVisitors,
         isAddVehicleModalOpen, setIsAddVehicleModalOpen,
         isNewBookingModalOpen, setIsNewBookingModalOpen,
@@ -424,6 +594,7 @@ export const AppProvider = ({ children }) => {
         addBooking, updateBooking, deleteBooking, cancelBooking,
         addClient, updateClient, deleteClient,
         addExpense, updateExpense, deleteExpense,
+        getContractByBookingId, createContract, getContractByToken, signContractByToken, updateContract,
         migrateVehicles, stats, theme, toggleTheme
     };
 

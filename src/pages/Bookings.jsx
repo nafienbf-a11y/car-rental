@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, User, DollarSign, Plus, FileText, Upload } from 'lucide-react';
+import { Calendar, User, DollarSign, Plus, FileText, Upload, PenTool } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/common/Button';
@@ -9,12 +9,13 @@ import ClientDetailModal from '../components/clients/ClientDetailModal';
 import VehicleDetailModal from '../components/fleet/VehicleDetailModal';
 import BookingDocumentsModal from '../components/bookings/BookingDocumentsModal';
 import LegacyImportModal from '../components/bookings/LegacyImportModal';
+import ContractModal from '../components/bookings/ContractModal';
 import { formatDate, formatCurrency, getStatusBadgeClass } from '../utils/helpers';
 
 import { useNotification } from '../context/NotificationContext';
 
 const Bookings = () => {
-    const { bookings, vehicles, clients, addBooking, updateBooking, cancelBooking, updateVehicle, setIsNewBookingModalOpen, isNewBookingModalOpen } = useApp();
+    const { bookings, vehicles, clients, getContractByBookingId, addBooking, updateBooking, cancelBooking, updateVehicle, setIsNewBookingModalOpen, isNewBookingModalOpen } = useApp();
     const { showNotification, confirmAction } = useNotification();
     const { t } = useLanguage();
     const [statusFilter, setStatusFilter] = useState('All');
@@ -34,6 +35,8 @@ const Bookings = () => {
     const [docsBooking, setDocsBooking] = useState(null);
     const [isDocsModalOpen, setIsDocsModalOpen] = useState(false);
     const [isLegacyImportModalOpen, setIsLegacyImportModalOpen] = useState(false);
+    const [contractBooking, setContractBooking] = useState(null);
+    const [isContractModalOpen, setIsContractModalOpen] = useState(false);
 
     const handleCarClick = (vehicleId) => {
         const vehicle = vehicles.find(v => v.id === vehicleId);
@@ -429,6 +432,31 @@ const Bookings = () => {
                                                     <FileText className="w-4 h-4" />
                                                 </button>
                                             )}
+
+                                            {/* Contract Button */}
+                                            {(() => {
+                                                const contract = getContractByBookingId(booking.id);
+                                                const isSigned = contract?.status === 'Signed';
+                                                return (
+                                                    <button
+                                                        onClick={() => { setContractBooking(booking); setIsContractModalOpen(true); }}
+                                                        className={`p-2 rounded-lg transition-colors flex items-center gap-1.5 text-xs font-bold ${
+                                                            isSigned 
+                                                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20' 
+                                                                : contract 
+                                                                    ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20'
+                                                                    : 'bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20'
+                                                        }`}
+                                                        title={isSigned ? t('contract.viewContract') : contract ? t('contract.manageContract') : t('contract.generateContract')}
+                                                    >
+                                                        <PenTool className="w-3.5 h-3.5" />
+                                                        <span className="hidden lg:inline">
+                                                            {isSigned ? t('contract.signedLabel') : contract ? t('contract.contractLabel') : t('contract.generateContract')}
+                                                        </span>
+                                                    </button>
+                                                );
+                                            })()}
+
                                             {isReadyToTerminate(booking) && (
                                                 <Button
                                                     variant="secondary"
@@ -506,6 +534,12 @@ const Bookings = () => {
             <LegacyImportModal 
                 isOpen={isLegacyImportModalOpen}
                 onClose={() => setIsLegacyImportModalOpen(false)}
+            />
+
+            <ContractModal
+                isOpen={isContractModalOpen}
+                onClose={() => { setIsContractModalOpen(false); setContractBooking(null); }}
+                booking={contractBooking}
             />
         </div>
     );
